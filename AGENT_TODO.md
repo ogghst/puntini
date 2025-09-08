@@ -6,7 +6,7 @@
 | F0-2 | 0 | P0 | feat | Definire l'interfaccia per GraphStore | ✅ |
 | F0-3 | 0 | P0 | feat | Creare i modelli Pydantic di base (Progetto, Utente, Epic, Issue) | ✅ |
 | F0-4 | 0 | P0 | infra | Creare lo skeleton dell'applicazione LangGraph | ✅ |
-| F0-5 | 0 | P0 | feat | Endpoint `hello world` in FastAPI | ⬜️ |
+| F0-5 | 0 | P0 | feat | Endpoint `hello world` in FastAPI | ✅ |
 | F0-6 | 0 | P0 | ui | Creare la shell base dell'applicazione React | ⬜️ |
 | F1-1 | 1 | P1 | feat | Implementare il flusso Extract→Validate→Upsert→Answer per Progetto, Epic, Issue, Utente | ⬜️ |
 | F1-2 | 1 | P1 | infra | Attivare e configurare l'adapter per Neo4j | ⬜️ |
