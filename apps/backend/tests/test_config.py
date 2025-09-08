@@ -11,10 +11,10 @@ from unittest.mock import patch
 
 import pytest
 
-# Add the 'apps' directory to the Python path to allow for absolute imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+# Add the parent directory to the Python path to allow for relative imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-from apps.backend.config import ConfigManager
+from config import ConfigManager
 
 
 @pytest.fixture(autouse=True)

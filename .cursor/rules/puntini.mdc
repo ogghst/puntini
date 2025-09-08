@@ -1,0 +1,7 @@
+---
+description: project scope, specification and guidelines
+globs:
+alwaysApply: true
+---
+- follow instructions in AGENTS.md. 
+- when writing python code, follow instructions in PYTHON_CODING_STANDARDS.md

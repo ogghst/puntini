@@ -1,3 +1,4 @@
+
 import json
 import logging
 import logging.handlers
@@ -99,8 +100,13 @@ class ConfigManager:
     def server(self) -> Dict[str, Any]:
         return self.get('server', {})
 
-# Global instance
-config_manager = ConfigManager(config_path=os.path.join(os.path.dirname(__file__), 'config.json'))
+# Global instance - will be created when needed
+config_manager = None
 
 def get_config() -> ConfigManager:
+    global config_manager
+    if config_manager is None:
+        # Look for config.json in the parent directory (backend folder)
+        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.json')
+        config_manager = ConfigManager(config_path=config_path)
     return config_manager
