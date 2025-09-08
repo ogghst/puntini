@@ -1,39 +1,39 @@
-## Scopo
+## Purpose
 
-L’agente assiste nella creazione e gestione di progetti di miglioramento aziendale con metodologie Agile e PMI, traducendo prompt e dialoghi in entità e relazioni su un grafo proprietà con controlli di validazione e audit. [^12][^11]
-Obiettivi: controllo granulare del flusso con LangGraph, output strutturati Pydantic, persistenza idempotente tramite GraphStore astratto, UI FastAPI+React e tracciabilità end‑to‑end. [^13][^14]
-Non obiettivi: delega completa della regia all’LLM, mutazioni senza validazione, lock‑in su un solo database o provider, o funzionalità oltre il dominio Agile/PMI nella prima release. [^12][^15]
+The agent assists in creating and managing business improvement projects using Agile and PMI methodologies, translating prompts and dialogues into entities and relationships on a property graph with validation and audit controls. [^12][^11]
+**Objectives**: granular flow control with LangGraph, structured Pydantic outputs, idempotent persistence via an abstract GraphStore, a FastAPI+React UI, and end-to-end traceability. [^13][^14]
+**Non-objectives**: complete delegation of control to the LLM, mutations without validation, lock-in to a single database or provider, or features beyond the Agile/PMI domain in the first release. [^12][^15]
 
 ## Epics
 
-- Creazione progetto di miglioramento: dal prompt si generano Progetto, Epic, Issue, Utente e relazioni canonicali con KPI iniziali e vincoli minimi di dominio. [^12][^16]
-- Richiesta informazioni: QA sul grafo con generazione NL→Cypher/nGQL e risposte contestuali su stato, dipendenze, rischi e avanzamento. [^14][^17]
-- Generazione entità e relazioni: estrazione incrementale con structured outputs e patch Pydantic validate, inclusa deduplicazione e normalizzazione chiavi. [^16][^18]
-- Modifica grafo via prompt: applicazione di patch tipizzate AddNode/UpdateProps/AddEdge/Delete con MERGE idempotente e messaggi d’errore “parlabili”. [^14][^13]
-- Governance e audit: timeline operazioni, diff leggibili, regole di approvazione e rollback sicuri per cambi sensibili. [^10][^19]
-- Interfaccia e collaborazione: dashboard React, vista board per epiche/issue, editor relazioni, e API FastAPI per integrazioni. [^19][^20]
+- **Project creation**: from a prompt, generate Project, Epic, Issue, User, and canonical relationships with initial KPIs and minimal domain constraints. [^12][^16]
+- **Information request**: QA on the graph with NL→Cypher/nGQL generation and contextual answers about status, dependencies, risks, and progress. [^14][^17]
+- **Entity and relationship generation**: incremental extraction with structured outputs and validated Pydantic patches, including key deduplication and normalization. [^16][^18]
+- **Graph modification via prompt**: application of typed AddNode/UpdateProps/AddEdge/Delete patches with idempotent MERGE and "speakable" error messages. [^14][^13]
+- **Governance and audit**: operation timeline, readable diffs, approval rules, and safe rollbacks for sensitive changes. [^10][^19]
+- **Interface and collaboration**: React dashboard, board view for epics/issues, relationship editor, and FastAPI API for integrations. [^19][^20]
 
 
-## Architettura
+## Architecture
 
-- Framework: LangGraph come runtime di orchestrazione a grafo di stato per garantire cicli plan→act→observe con condizioni e escalation deterministiche. [^13][^21]
-- Orchestrator: state machine con nodi Extract→Validate→Upsert→Answer e policy di progressive context disclosure ed escalation intelligente. [^22][^13]
-- Validation: modelli Pydantic per nodi e Patch, con structured outputs per contratti modello→tool e re‑ask mirati su failure di validazione. [^16][^18]
-- GraphStore astratto: interfaccia unica per persistenza/query su Neo4j e NebulaGraph con mapping Cypher↔nGQL incapsulato negli adapter. [^14][^23]
-- QA su grafo: catene NL→Cypher/nGQL per interrogazioni e report sintetici, mantenendo il KG come fonte autoritativa. [^14][^17]
-- API/UI: FastAPI per endpoints e contratti JSON, React per dashboard e interazioni con l’agente e il grafo. [^19][^20]
+- **Framework**: LangGraph as a stateful graph orchestration runtime to ensure plan→act→observe cycles with deterministic conditions and escalations. [^13][^21]
+- **Orchestrator**: a state machine with Extract→Validate→Upsert→Answer nodes and policies for progressive context disclosure and intelligent escalation. [^22][^13]
+- **Validation**: Pydantic models for nodes and Patches, with structured outputs for model→tool contracts and targeted re-asks on validation failure. [^16][^18]
+- **Abstract GraphStore**: a single interface for persistence/query on Neo4j and NebulaGraph with Cypher↔nGQL mapping encapsulated in adapters. [^14][^23]
+- **QA on graph**: NL→Cypher/nGQL chains for queries and synthetic reports, maintaining the KG as the authoritative source. [^14][^17]
+- **API/UI**: FastAPI for endpoints and JSON contracts, React for the dashboard and interactions with the agent and the graph. [^19][^20]
 
 
-## Struttura cartelle
+## Folder Structure
 
-- /apps/backend: FastAPI (routers, services, adapters GraphStore, auth, health) con contratti e esempi JSON per coding assistants. [^19][^10]
-- /apps/frontend: React (pages, components, services) per dashboard, board epiche/issue, editor relazioni e console agente. [^19][^20]
-- /apps/backend/agent: LangGraph workflow, nodi, prompt, tool registry, policy disclosure/escalation e test unitari. [^11][^13]
-- /apps/backend/graphstore: interfacce, Neo4jStore, NebulaStore, DDL/migrazioni e mapping di query e upsert. [^14][^23]
-- /apps/backend/models: Pydantic per Progetto, Utente, Epic, Issue e Patch/Spec, versionati per compatibilità retroattiva. [^16][^18]
-- /infra: config, env, compose/k8s, provisioning Neo4j/Nebula e script di migrazione. [^19][^10]
+- **/apps/backend**: FastAPI (routers, services, GraphStore adapters, auth, health) with contracts and JSON examples for coding assistants. [^19][^10]
+- **/apps/frontend**: React (pages, components, services) for the dashboard, epic/issue board, relationship editor, and agent console. [^19][^20]
+- **/apps/backend/agent**: LangGraph workflow, nodes, prompts, tool registry, disclosure/escalation policies, and unit tests. [^11][^13]
+- **/apps/backend/graphstore**: interfaces, Neo4jStore, NebulaStore, DDL/migrations, and query/upsert mapping. [^14][^23]
+- **/apps/backend/models**: Pydantic models for Project, User, Epic, Issue, and Patch/Spec, versioned for backward compatibility. [^16][^18]
+- **/infra**: config, env, compose/k8s, Neo4j/Nebula provisioning, and migration scripts. [^19][^10]
 
-Esempio albero
+Example tree
 
 ```
 .
@@ -47,90 +47,90 @@ Esempio albero
 ```
 
 
-## Flusso di funzionamento
+## Workflow
 
-- Orchestrazione: LangGraph coordina Extract→Validate→Upsert→Answer con edges condizionali e stato persistente, evitando overload di contesto e loop non controllati. [^13][^22]
-- Disclosure progressiva: si fornisce all’LLM solo il contesto minimo per lo step, aggiungendo error e historical context su fallimenti, con ultima fase di escalation. [^22][^24]
-- Structured outputs: il modello restituisce nodi e patch tipizzate aderenti a Pydantic con retry mirati quando la validazione non passa. [^16][^18]
-- Persistenza: GraphStore traduce patch in Cypher/nGQL idempotenti e restituisce errori “parlabili” con suggerimenti di correzione per l’LLM. [^14][^23]
-- QA: per ogni risposta si può integrare un passo NL→Cypher/nGQL per arricchire con evidenze dal grafo e citare percorsi o conteggi. [^14][^17]
-
-
-## Piano di progetto (incrementale)
-
-- Fase 0: scaffolding repo, interfaccia GraphStore, modelli Pydantic base, skeleton LangGraph, FastAPI hello e React shell. [^11][^19]
-- Fase 1 (MVP): flusso Extract→Validate→Upsert→Answer su Progetto/Epic/Issue/Utente, Neo4j attivo, TODO markdown e metriche minime. [^14][^16]
-- Fase 2: parità NebulaGraph con adapter nGQL, feature flags e QA chain per entrambi i backend, più migrazioni e test di parità. [^23][^17]
-- Fase 3: UI avanzata (board, editor relazioni), audit log/diff viewer, auth e policy di approvazione mutazioni. [^19][^20]
-- Fase 4: RAG su grafo, KPI, policy di escalation intelligenti e test E2E con hardening per produzione. [^25][^13]
+- **Orchestration**: LangGraph coordinates Extract→Validate→Upsert→Answer with conditional edges and persistent state, avoiding context overload and uncontrolled loops. [^13][^22]
+- **Progressive disclosure**: provide the LLM with only the minimum context for the step, adding error and historical context on failures, with a final escalation phase. [^22][^24]
+- **Structured outputs**: the model returns typed nodes and patches adhering to Pydantic with targeted retries when validation fails. [^16][^18]
+- **Persistence**: The GraphStore translates patches into idempotent Cypher/nGQL and returns "speakable" errors with correction suggestions for the LLM. [^14][^23]
+- **QA**: for each response, an NL→Cypher/nGQL step can be integrated to enrich it with evidence from the graph and cite paths or counts. [^14][^17]
 
 
-## Avanzamento e TODO
+## Project Plan (Incremental)
 
-- La lista TODO vive in /AGENT_TODO.md in formato tabellare con colonne per ID, Fase, Priorità (P0–P4), Tipo ([feat][fix][infra][doc]), Descrizione e Stato, più una legenda per le fasi. [^10][^19]
-- L’agente propone aggiornamenti a fine turno (aggiunte/completamenti) e chiede conferma per variazioni di scope, mantenendo audit delle modifiche. [^10][^26]
+- **Phase 0**: repo scaffolding, GraphStore interface, base Pydantic models, LangGraph skeleton, FastAPI hello world, and React shell. [^11][^19]
+- **Phase 1 (MVP)**: Extract→Validate→Upsert→Answer flow for Project/Epic/Issue/User, active Neo4j, TODO markdown, and minimal metrics. [^14][^16]
+- **Phase 2**: NebulaGraph parity with an nGQL adapter, feature flags, and a QA chain for both backends, plus migrations and parity tests. [^23][^17]
+- **Phase 3**: advanced UI (board, relationship editor), audit log/diff viewer, auth, and mutation approval policies. [^19][^20]
+- **Phase 4**: RAG on the graph, KPIs, intelligent escalation policies, and E2E tests with production hardening. [^25][^13]
 
-Esempio
+
+## Progress and TODO
+
+- The TODO list lives in /AGENT_TODO.md in a table format with columns for ID, Phase, Priority (P0–P4), Type ([feat][fix][infra][doc]), Description, and Status, plus a legend for the phases. [^10][^19]
+- The agent proposes updates at the end of each turn (additions/completions) and asks for confirmation for scope changes, maintaining an audit of modifications. [^10][^26]
+
+Example
 
 ```
-| ID | Fase | Priorità | Tipo | Descrizione | Stato |
+| ID | Phase | Priority | Type | Description | Status |
 |---|---|---|---|---|---|
-| F1-1 | 1 | P1 | feat | Implementare il flusso Extract→Validate→Upsert→Answer | ⬜️ |
-| F1-2 | 1 | P1 | infra | Attivare e configurare l'adapter per Neo4j | ⬜️ |
+| F1-1 | 1 | P1 | feat | Implement the Extract→Validate→Upsert→Answer flow | ⬜️ |
+| F1-2 | 1 | P1 | infra | Activate and configure the Neo4j adapter | ⬜️ |
 ```
 
 
-## Stile di coding
+## Coding Style
 
-- Elegante e minimale: interfacce chiare, docstring per tutti i modelli Pydantic, funzioni pure nei nodi, dipendenze iniettate, logging strutturato e test granulari. [^20][^19]
-- Agent‑friendly: docstring dei tool ricche di istruzioni, `Annotated` Pydantic per semantica dei campi, prompt brevi e few‑shots con esempi positivi/negativi per ridurre ambiguità. [^26][^24]
-- Scalabile: separazione orchestrazione/validation/persistenza/QA e versionamento degli schemi per evolvere senza breaking changes. [^19][^16]
+- **Elegant and minimal**: clear interfaces, docstrings for all Pydantic models, pure functions in nodes, injected dependencies, structured logging, and granular tests. [^20][^19]
+- **Agent-friendly**: tool docstrings rich with instructions, `Annotated` Pydantic for field semantics, short prompts, and few-shots with positive/negative examples to reduce ambiguity. [^26][^24]
+- **Scalable**: separation of orchestration/validation/persistence/QA and schema versioning to evolve without breaking changes. [^19][^16]
 
 
-## Data model (policy aggiornata)
+## Data Model (Updated Policy)
 
-- Principio: ogni entità eredita da una `BaseEntity` con un `id` univoco (UUID4). Le relazioni sono esclusivamente archi del grafo, mai attributi delle entità, per garantire chiarezza semantica, traversal efficiente e portabilità. [^8][^9]
-- Entità iniziali (nodi): Progetto, Utente, Epic, Issue con chiavi naturali stabili e proprietà minime utili a Agile/PMI. [^16][^12]
-- Catalogo relazioni canoniche: Progetto -[HAS_EPIC]-> Epic, Epic -[HAS_ISSUE]-> Issue, Issue -[ASSIGNED_TO]-> Utente, Issue -[BLOCKS]-> Issue, con direzione unica e proprietà essenziali. [^8][^27]
-- Reificazione: quando una relazione richiede proprietà ricche o gestione storica/cardinalità complesse, introdurre nodo intermedio (es. ASSIGNMENT) e collegarlo con archi semantici. [^28][^8]
-- Pydantic: si usa per validare nodi e Patch tipizzate (AddNode, UpdateProps, AddEdge, Delete), non per incapsulare relazioni come array di chiavi. [^16][^18]
-- Portabilità: il GraphStore converte Patch in Cypher (Neo4j) o nGQL (Nebula) mantenendo semantica e idempotenza via MERGE/INSERT EDGE controllati. [^14][^23]
+- **Principle**: each entity inherits from a `BaseEntity` with a unique `id` (UUID4). Relationships are exclusively graph edges, never entity attributes, to ensure semantic clarity, efficient traversal, and portability. [^8][^9]
+- **Initial entities (nodes)**: Project, User, Epic, Issue with stable natural keys and minimal properties useful for Agile/PMI. [^16][^12]
+- **Canonical relationship catalog**: Project -[HAS_EPIC]-> Epic, Epic -[HAS_ISSUE]-> Issue, Issue -[ASSIGNED_TO]-> User, Issue -[BLOCKS]-> Issue, with unique direction and essential properties. [^8][^27]
+- **Reification**: when a relationship requires rich properties or complex historical/cardinality management, introduce an intermediate node (e.g., ASSIGNMENT) and connect it with semantic edges. [^28][^8]
+- **Pydantic**: used to validate nodes and typed Patches (AddNode, UpdateProps, AddEdge, Delete), not to encapsulate relationships as key arrays. [^16][^18]
+- **Portability**: the GraphStore converts Patches into Cypher (Neo4j) or nGQL (Nebula), maintaining semantics and idempotency via controlled MERGE/INSERT EDGE. [^14][^23]
 
-Esempio Pydantic
+Pydantic Example
 
 ```python
 from pydantic import BaseModel, Field
 from typing import Optional, Literal, Dict
 
-class Progetto(BaseModel):
-    key: str = Field(..., description="Chiave unica progetto")
-    nome: str
-    descrizione: Optional[str] = None
+class Project(BaseModel):
+    key: str = Field(..., description="Unique project key")
+    name: str
+    description: Optional[str] = None
 
-class Utente(BaseModel):
+class User(BaseModel):
     user_id: str
-    nome: str
+    name: str
 
 class Epic(BaseModel):
     key: str
-    titolo: str
-    progetto_key: str
+    title: str
+    project_key: str
 
 class Issue(BaseModel):
     key: str
-    titolo: str
-    stato: Literal["open","in_progress","done","blocked"] = "open"
+    title: str
+    status: Literal["open","in_progress","done","blocked"] = "open"
 
 class NodeSpec(BaseModel):
-    label: Literal["Progetto","Utente","Epic","Issue","ASSIGNMENT"]
+    label: Literal["Project","User","Epic","Issue","ASSIGNMENT"]
     key: str
     props: Dict = {}
 
 class EdgeSpec(BaseModel):
-    src_label: Literal["Progetto","Epic","Issue","ASSIGNMENT"]
+    src_label: Literal["Project","Epic","Issue","ASSIGNMENT"]
     src_key: str
     rel: Literal["HAS_EPIC","HAS_ISSUE","ASSIGNED_TO","BLOCKS","HAS_ASSIGNMENT","ASSIGNMENT_OF"]
-    dst_label: Literal["Epic","Issue","Utente","ASSIGNMENT"]
+    dst_label: Literal["Epic","Issue","User","ASSIGNMENT"]
     dst_key: str
     props: Dict = {}
 
@@ -140,63 +140,194 @@ class Patch(BaseModel):
     edge: Optional[EdgeSpec] = None
 ```
 
-Guidelines relazioni
+Relationship Guidelines
 
-- Naming specifico e direzione univoca per relazioni per evitare ridondanze e query ambigue, privilegiando interpretazione semantica chiara. [^8][^27]
-- Proprietà sull’arco per metadati operativi, e reificazione quando lo sforzo supera la soglia di complessità gestionale. [^28][^8]
-
-
-## GraphStore astratto
-
-- Interfaccia: upsert(patches: List[Patch]) → esito, query_nl(question) → risposta, query_graph(query: {cypher|ngql}) → rows, migrazioni e health. [^14][^23]
-- Neo4jStore: mapping Patch→Cypher con MERGE/SET e vincoli di unicità su chiavi naturali, più catena NL→Cypher per QA. [^29][^14]
-- NebulaStore: mapping Patch→nGQL con CREATE TAG/EDGE e INSERT EDGE, più catena NL→nGQL per QA con differenze incapsulate. [^30][^23]
+- **Specific naming and unique direction** for relationships to avoid redundancy and ambiguous queries, favoring clear semantic interpretation. [^8][^27]
+- **Properties on the edge** for operational metadata, and reification when the effort exceeds the management complexity threshold. [^28][^8]
 
 
-## API FastAPI
+## Abstract GraphStore
 
-- Endpoint: POST /agent/act, POST /graph/patch, GET /graph/query, GET/POST /todo, GET /health, con schemi JSON e esempi per strumenti di coding. [^19][^10]
-- Sicurezza: variabili d’ambiente, API key o OAuth a livelli, e log strutturati con trace id per audit e diagnosi. [^19][^20]
-
-
-## UI React
-
-- Pagine: Dashboard, Board Epic/Issue, Editor relazioni, Console agente, TODO, con errori user‑friendly e conferme per mutazioni. [^20][^19]
-- Pattern: servizi tipizzati, cache di query e componenti riutilizzabili per scalabilità e coerenza UX. [^20][^19]
+- **Interface**: upsert(patches: List[Patch]) → result, query_nl(question) → answer, query_graph(query: {cypher|ngql}) → rows, migrations, and health. [^14][^23]
+- **Neo4jStore**: Patch→Cypher mapping with MERGE/SET and uniqueness constraints on natural keys, plus an NL→Cypher chain for QA. [^29][^14]
+- **NebulaStore**: Patch→nGQL mapping with CREATE TAG/EDGE and INSERT EDGE, plus an NL→nGQL chain for QA with encapsulated differences. [^30][^23]
 
 
-## Prompt e guardrail
+## FastAPI API
 
-- System prompt: ruoli, obiettivi, policy di disclosure/escalation, limiti di sicurezza e stile risposte brevi e verificabili. [^26][^12]
-- Few‑shots: esempi di Patch corrette/errate, errori tool “parlabili” e correzioni, e domande NL→Cypher/nGQL tipiche del dominio. [^26][^14]
-- Decoding: temperature bassa per fasi strutturate e più alta per spiegazioni, con fallback re‑ask su validation failure. [^24][^16]
-
-
-## Telemetria e qualità
-
-- Metriche: conformità schema, success rate tool, latenza per step, qualità QA, tasso di retry ed escalation. [^12][^19]
-- Logging: input/output LLM, patch applicate, query e errori con correlazione di turni, mantenendo privacy e redazione dei segreti. [^19][^20]
+- **Endpoints**: POST /agent/act, POST /graph/patch, GET /graph/query, GET/POST /todo, GET /health, with JSON schemas and examples for coding tools. [^19][^10]
+- **Security**: environment variables, API keys or OAuth at different levels, and structured logs with trace IDs for audit and diagnosis. [^19][^20]
 
 
-## Variabili d’ambiente
+## React UI
+
+- **Pages**: Dashboard, Epic/Issue Board, Relationship Editor, Agent Console, TODO, with user-friendly errors and confirmations for mutations. [^20][^19]
+- **Patterns**: typed services, query caching, and reusable components for scalability and UX consistency. [^20][^19]
+
+
+## Prompts and Guardrails
+
+- **System prompt**: roles, objectives, disclosure/escalation policies, security limits, and a style of short, verifiable answers. [^26][^12]
+- **Few-shots**: examples of correct/incorrect Patches, "speakable" tool errors and corrections, and typical domain-specific NL→Cypher/nGQL questions. [^26][^14]
+- **Decoding**: low temperature for structured phases and higher for explanations, with a re-ask fallback on validation failure. [^24][^16]
+
+
+## Telemetry and Quality
+
+- **Metrics**: schema compliance, tool success rate, latency per step, QA quality, retry and escalation rate. [^12][^19]
+- **Logging**: LLM input/output, applied patches, queries, and errors with turn correlation, maintaining privacy and redacting secrets. [^19][^20]
+
+
+## Environment Variables
 
 - GRAPH_BACKEND={neo4j|nebula}, NEO4J_URI/USER/PASS, NEBULA_ADDR/PORT/USER/PASS, LLM_API_KEY, FEATURE_FLAGS, LOG_LEVEL, UI_BASE_URL. [^19][^14]
 
 
-## Note e best practices AGENTS.md
+## Notes and Best Practices for AGENTS.md
 
-- Rendi espliciti scopo, capacità, limiti, struttura repo, comandi e esempi, così gli assistenti di coding possono eseguire e generare codice coerentemente. [^10][^31]
-- Mantieni sezioni brevi e operative con criteri di accettazione e esempi JSON/code, evitando ambiguità e duplicazioni. [^32][^19]
+- Make the purpose, capabilities, limits, repo structure, commands, and examples explicit, so coding assistants can execute and generate code consistently. [^10][^31]
+- Keep sections short and operational with acceptance criteria and JSON/code examples, avoiding ambiguity and duplication. [^32][^19]
 
 
-## Feedback richiesto
+## Feedback Requested
 
-- Preferenza per LLM/provider e modalità di structured outputs (JSON mode o function schemas) per ottimizzare conformità e latenza. [^16][^33]
-- Politiche di approvazione mutazioni: soglie per richiedere conferma umana prima del commit su grafo e livelli di audit richiesti. [^19][^10]
-- Requisiti di deployment: target cloud/on‑prem, scalabilità, SLO iniziali e ambiente di integrazione con i database a grafo. [^19][^14]
-<span style="display:none">[^1][^2][^3][^4][^5][^6][^7]</span>
+- Preference for LLM/provider and structured output mode (JSON mode or function schemas) to optimize compliance and latency. [^16][^33]
+- Mutation approval policies: thresholds for requiring human confirmation before committing to the graph and required audit levels. [^19][^10]
+- Deployment requirements: target cloud/on-prem, scalability, initial SLOs, and integration environment with the graph databases. [^19][^14]
 
-<div style="text-align: center">⁂</div>
+
+- **Phase 4**: RAG on the graph, KPIs, intelligent escalation policies, and E2E tests with production hardening. [^25][^13]
+
+
+## Progress and TODO
+
+- The TODO list lives in /AGENT_TODO.md in a table format with columns for ID, Phase, Priority (P0–P4), Type ([feat][fix][infra][doc]), Description, and Status, plus a legend for the phases. [^10][^19]
+- The agent proposes updates at the end of each turn (additions/completions) and asks for confirmation for scope changes, maintaining an audit of modifications. [^10][^26]
+
+Example
+
+```
+| ID | Phase | Priority | Type | Description | Status |
+|---|---|---|---|---|---|
+| F1-1 | 1 | P1 | feat | Implement the Extract→Validate→Upsert→Answer flow | ⬜️ |
+| F1-2 | 1 | P1 | infra | Activate and configure the Neo4j adapter | ⬜️ |
+```
+
+
+## Coding Style
+
+- **Elegant and minimal**: clear interfaces, docstrings for all Pydantic models, pure functions in nodes, injected dependencies, structured logging, and granular tests. [^20][^19]
+- **Agent-friendly**: tool docstrings rich with instructions, `Annotated` Pydantic for field semantics, short prompts, and few-shots with positive/negative examples to reduce ambiguity. [^26][^24]
+- **Scalable**: separation of orchestration/validation/persistence/QA and schema versioning to evolve without breaking changes. [^19][^16]
+
+
+## Data Model (Updated Policy)
+
+- **Principle**: each entity inherits from a `BaseEntity` with a unique `id` (UUID4). Relationships are exclusively graph edges, never entity attributes, to ensure semantic clarity, efficient traversal, and portability. [^8][^9]
+- **Initial entities (nodes)**: Project, User, Epic, Issue with stable natural keys and minimal properties useful for Agile/PMI. [^16][^12]
+- **Canonical relationship catalog**: Project -[HAS_EPIC]-> Epic, Epic -[HAS_ISSUE]-> Issue, Issue -[ASSIGNED_TO]-> User, Issue -[BLOCKS]-> Issue, with unique direction and essential properties. [^8][^27]
+- **Reification**: when a relationship requires rich properties or complex historical/cardinality management, introduce an intermediate node (e.g., ASSIGNMENT) and connect it with semantic edges. [^28][^8]
+- **Pydantic**: used to validate nodes and typed Patches (AddNode, UpdateProps, AddEdge, Delete), not to encapsulate relationships as key arrays. [^16][^18]
+- **Portability**: the GraphStore converts Patches into Cypher (Neo4j) or nGQL (Nebula), maintaining semantics and idempotency via controlled MERGE/INSERT EDGE. [^14][^23]
+
+Pydantic Example
+
+```python
+from pydantic import BaseModel, Field
+from typing import Optional, Literal, Dict
+
+class Project(BaseModel):
+    key: str = Field(..., description="Unique project key")
+    name: str
+    description: Optional[str] = None
+
+class User(BaseModel):
+    user_id: str
+    name: str
+
+class Epic(BaseModel):
+    key: str
+    title: str
+    project_key: str
+
+class Issue(BaseModel):
+    key: str
+    title: str
+    status: Literal["open","in_progress","done","blocked"] = "open"
+
+class NodeSpec(BaseModel):
+    label: Literal["Project","User","Epic","Issue","ASSIGNMENT"]
+    key: str
+    props: Dict = {}
+
+class EdgeSpec(BaseModel):
+    src_label: Literal["Project","Epic","Issue","ASSIGNMENT"]
+    src_key: str
+    rel: Literal["HAS_EPIC","HAS_ISSUE","ASSIGNED_TO","BLOCKS","HAS_ASSIGNMENT","ASSIGNMENT_OF"]
+    dst_label: Literal["Epic","Issue","User","ASSIGNMENT"]
+    dst_key: str
+    props: Dict = {}
+
+class Patch(BaseModel):
+    op: Literal["AddNode","UpdateProps","AddEdge","Delete"]
+    node: Optional[NodeSpec] = None
+    edge: Optional[EdgeSpec] = None
+```
+
+Relationship Guidelines
+
+- **Specific naming and unique direction** for relationships to avoid redundancy and ambiguous queries, favoring clear semantic interpretation. [^8][^27]
+- **Properties on the edge** for operational metadata, and reification when the effort exceeds the management complexity threshold. [^28][^8]
+
+
+## Abstract GraphStore
+
+- **Interface**: upsert(patches: List[Patch]) → result, query_nl(question) → answer, query_graph(query: {cypher|ngql}) → rows, migrations, and health. [^14][^23]
+- **Neo4jStore**: Patch→Cypher mapping with MERGE/SET and uniqueness constraints on natural keys, plus an NL→Cypher chain for QA. [^29][^14]
+- **NebulaStore**: Patch→nGQL mapping with CREATE TAG/EDGE and INSERT EDGE, plus an NL→nGQL chain for QA with encapsulated differences. [^30][^23]
+
+
+## FastAPI API
+
+- **Endpoints**: POST /agent/act, POST /graph/patch, GET /graph/query, GET/POST /todo, GET /health, with JSON schemas and examples for coding tools. [^19][^10]
+- **Security**: environment variables, API keys or OAuth at different levels, and structured logs with trace IDs for audit and diagnosis. [^19][^20]
+
+
+## React UI
+
+- **Pages**: Dashboard, Epic/Issue Board, Relationship Editor, Agent Console, TODO, with user-friendly errors and confirmations for mutations. [^20][^19]
+- **Patterns**: typed services, query caching, and reusable components for scalability and UX consistency. [^20][^19]
+
+
+## Prompts and Guardrails
+
+- **System prompt**: roles, objectives, disclosure/escalation policies, security limits, and a style of short, verifiable answers. [^26][^12]
+- **Few-shots**: examples of correct/incorrect Patches, "speakable" tool errors and corrections, and typical domain-specific NL→Cypher/nGQL questions. [^26][^14]
+- **Decoding**: low temperature for structured phases and higher for explanations, with a re-ask fallback on validation failure. [^24][^16]
+
+
+## Telemetry and Quality
+
+- **Metrics**: schema compliance, tool success rate, latency per step, QA quality, retry and escalation rate. [^12][^19]
+- **Logging**: LLM input/output, applied patches, queries, and errors with turn correlation, maintaining privacy and redacting secrets. [^19][^20]
+
+
+## Environment Variables
+
+- GRAPH_BACKEND={neo4j|nebula}, NEO4J_URI/USER/PASS, NEBULA_ADDR/PORT/USER/PASS, LLM_API_KEY, FEATURE_FLAGS, LOG_LEVEL, UI_BASE_URL. [^19][^14]
+
+
+## Notes and Best Practices for AGENTS.md
+
+- Make the purpose, capabilities, limits, repo structure, commands, and examples explicit, so coding assistants can execute and generate code consistently. [^10][^31]
+- Keep sections short and operational with acceptance criteria and JSON/code examples, avoiding ambiguity and duplication. [^32][^19]
+
+
+## Feedback Requested
+
+- Preference for LLM/provider and structured output mode (JSON mode or function schemas) to optimize compliance and latency. [^16][^33]
+- Mutation approval policies: thresholds for requiring human confirmation before committing to the graph and required audit levels. [^19][^10]
+- Deployment requirements: target cloud/on-prem, scalability, initial SLOs, and integration environment with the graph databases. [^19][^14]
 
 [^1]: https://langchain-ai.github.io/langgraph/concepts/template_applications/
 
@@ -207,7 +338,6 @@ Guidelines relazioni
 [^4]: https://www.youtube.com/watch?v=mNxAM1ETBvs
 
 [^5]: https://realpython.com/langgraph-python/
-
 [^6]: https://blog.langchain.com/how-to-build-the-ultimate-ai-automation-with-multi-agent-collaboration/
 
 [^7]: https://blog.langchain.com/building-langgraph/
@@ -263,4 +393,3 @@ Guidelines relazioni
 [^32]: https://research.aimultiple.com/agents-md/
 
 [^33]: https://platform.openai.com/docs/guides/structured-outputs
-
