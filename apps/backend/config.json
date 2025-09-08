@@ -26,8 +26,8 @@
     }
   },
   "system": {
-    "logs_path": "../logs",
-    "temp_path": "../temp",
+    "logs_path": "./logs",
+    "temp_path": "../temp"
   },
   "logging": {
     "log_level": "DEBUG",
