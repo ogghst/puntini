@@ -196,24 +196,6 @@ Relationship Guidelines
 - Deployment requirements: target cloud/on-prem, scalability, initial SLOs, and integration environment with the graph databases. [^19][^14]
 
 
-- **Phase 4**: RAG on the graph, KPIs, intelligent escalation policies, and E2E tests with production hardening. [^25][^13]
-
-
-## Progress and TODO
-
-- The TODO list lives in /AGENT_TODO.md in a table format with columns for ID, Phase, Priority (P0–P4), Type ([feat][fix][infra][doc]), Description, and Status, plus a legend for the phases. [^10][^19]
-- The agent proposes updates at the end of each turn (additions/completions) and asks for confirmation for scope changes, maintaining an audit of modifications. [^10][^26]
-
-Example
-
-```
-| ID | Phase | Priority | Type | Description | Status |
-|---|---|---|---|---|---|
-| F1-1 | 1 | P1 | feat | Implement the Extract→Validate→Upsert→Answer flow | ⬜️ |
-| F1-2 | 1 | P1 | infra | Activate and configure the Neo4j adapter | ⬜️ |
-```
-
-
 ## Coding Style
 
 - **Elegant and minimal**: clear interfaces, docstrings for all Pydantic models, pure functions in nodes, injected dependencies, structured logging, and granular tests. [^20][^19]
