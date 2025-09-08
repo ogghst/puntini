@@ -67,29 +67,29 @@ Esempio albero
 
 ## Avanzamento e TODO
 
-- La lista TODO vive in /AGENT_TODO.md con tag [feat][fix][infra][doc], priorità P0–P2, “Criteri di accettazione” e “Definizione di fatto”. [^10][^19]
+- La lista TODO vive in /AGENT_TODO.md in formato tabellare con colonne per ID, Fase, Priorità (P0–P4), Tipo ([feat][fix][infra][doc]), Descrizione e Stato, più una legenda per le fasi. [^10][^19]
 - L’agente propone aggiornamenti a fine turno (aggiunte/completamenti) e chiede conferma per variazioni di scope, mantenendo audit delle modifiche. [^10][^26]
 
 Esempio
 
 ```
-## TODO
-- [P0][feat] GraphStore Neo4j: MERGE idempotente e errori “parlabili” (DoD: AddNode/UpdateProps/AddEdge/Delete passano test)  
-- [P1][feat] GraphStore Nebula: DDL TAG/EDGE e upsert nGQL con parità API  
-- [P1][ui] Board Epic/Issue con filtri e aggiornamenti in tempo reale  
+| ID | Fase | Priorità | Tipo | Descrizione | Stato |
+|---|---|---|---|---|---|
+| F1-1 | 1 | P1 | feat | Implementare il flusso Extract→Validate→Upsert→Answer | ⬜️ |
+| F1-2 | 1 | P1 | infra | Attivare e configurare l'adapter per Neo4j | ⬜️ |
 ```
 
 
 ## Stile di coding
 
-- Elegante e minimale: interfacce chiare, funzioni pure nei nodi, dipendenze iniettate, logging strutturato e test granulari. [^20][^19]
-- Agent‑friendly: docstring dei tool ricche di istruzioni, prompt brevi e few‑shots con esempi positivi/negativi per ridurre ambiguità. [^26][^24]
+- Elegante e minimale: interfacce chiare, docstring per tutti i modelli Pydantic, funzioni pure nei nodi, dipendenze iniettate, logging strutturato e test granulari. [^20][^19]
+- Agent‑friendly: docstring dei tool ricche di istruzioni, `Annotated` Pydantic per semantica dei campi, prompt brevi e few‑shots con esempi positivi/negativi per ridurre ambiguità. [^26][^24]
 - Scalabile: separazione orchestrazione/validation/persistenza/QA e versionamento degli schemi per evolvere senza breaking changes. [^19][^16]
 
 
 ## Data model (policy aggiornata)
 
-- Principio: tutte le relazioni sono archi first‑class del grafo, non liste/ID nei nodi Pydantic, per chiarezza semantica, traversal efficiente e portabilità. [^8][^9]
+- Principio: ogni entità eredita da una `BaseEntity` con un `id` univoco (UUID4). Le relazioni sono esclusivamente archi del grafo, mai attributi delle entità, per garantire chiarezza semantica, traversal efficiente e portabilità. [^8][^9]
 - Entità iniziali (nodi): Progetto, Utente, Epic, Issue con chiavi naturali stabili e proprietà minime utili a Agile/PMI. [^16][^12]
 - Catalogo relazioni canoniche: Progetto -[HAS_EPIC]-> Epic, Epic -[HAS_ISSUE]-> Issue, Issue -[ASSIGNED_TO]-> Utente, Issue -[BLOCKS]-> Issue, con direzione unica e proprietà essenziali. [^8][^27]
 - Reificazione: quando una relazione richiede proprietà ricche o gestione storica/cardinalità complesse, introdurre nodo intermedio (es. ASSIGNMENT) e collegarlo con archi semantici. [^28][^8]
