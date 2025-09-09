@@ -29,11 +29,14 @@ def main():
         print(f"📁 Backend directory: {backend_dir}")
         print(f"⚙️  Configuration loaded from: {config.config_path}")
 
+        # Get server configuration
+        server_config = config_data.get("server", {})
+        
         # Run the server
         uvicorn.run(
             "main:app",
-            host=config_data.get("api_host", "0.0.0.0"),
-            port=config_data.get("api_port", 8000),
+            host=server_config.get("host", "0.0.0.0"),
+            port=server_config.get("port", 8000),
             reload=config_data.get("api_reload", True),
             log_level=config_data.get("log_level", "info").lower(),
             access_log=True

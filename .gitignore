@@ -329,3 +329,6 @@ storybook-static
 # Temporary folders
 tmp/
 temp/
+
+# logs
+logs/

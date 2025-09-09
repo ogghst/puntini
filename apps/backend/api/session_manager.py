@@ -8,11 +8,14 @@ and resource management.
 
 import asyncio
 import logging
-from contextlib import asynccontextmanager
-from typing import Any
+from contextlib import asynccontextmanager, suppress
+from typing import TYPE_CHECKING, Any
 from uuid import UUID, uuid4
 
 from config.config import get_config
+
+if TYPE_CHECKING:
+    from .user_session import UserSession as Session
 
 
 class SessionError(Exception):
@@ -73,10 +76,8 @@ class SessionManager:
 
         if self._cleanup_task and not self._cleanup_task.done():
             self._cleanup_task.cancel()
-            try:
+            with suppress(asyncio.CancelledError):
                 await self._cleanup_task
-            except asyncio.CancelledError:
-                pass
 
         # Cleanup all sessions
         session_ids = list(self._sessions.keys())
@@ -106,7 +107,7 @@ class SessionManager:
             SessionError: If session creation fails
         """
         # Import here to avoid circular import
-        from .user_session import UserSession as Session
+        from .user_session import UserSession
 
         if len(self._sessions) >= self._max_sessions:
             # Remove oldest session if at capacity
@@ -120,7 +121,7 @@ class SessionManager:
             self._session_locks[session_id] = session_lock
 
             # Create session
-            session = Session(
+            session = UserSession(
                 session_id=session_id,
                 user_id=user_id,
                 project_id=project_id,

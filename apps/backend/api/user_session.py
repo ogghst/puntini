@@ -8,6 +8,7 @@ with runtime orchestration and message queuing capabilities.
 import asyncio
 import logging
 from collections.abc import Awaitable, Callable
+from contextlib import suppress
 from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID
@@ -105,19 +106,15 @@ class UserSession:
             # Stop runtime task
             if self._runtime_task and not self._runtime_task.done():
                 self._runtime_task.cancel()
-                try:
+                with suppress(asyncio.CancelledError):
                     await self._runtime_task
-                except asyncio.CancelledError:
-                    pass
 
             # Stop agent tasks
-            for agent_name, task in self._agent_tasks.items():
+            for _agent_name, task in self._agent_tasks.items():
                 if not task.done():
                     task.cancel()
-                    try:
+                    with suppress(asyncio.CancelledError):
                         await task
-                    except asyncio.CancelledError:
-                        pass
 
             # Clear queues
             self._clear_queues()

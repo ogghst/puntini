@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     """
     Application lifespan manager for startup and shutdown events.
     
@@ -84,6 +84,22 @@ def create_app() -> FastAPI:
     app.include_router(todo_router)
     app.include_router(session_router)
 
+    # Add root endpoint
+    @app.get("/")
+    async def hello_world():
+        """
+        Hello world endpoint for basic API connectivity testing.
+        
+        Returns:
+            dict: Simple greeting message with API information
+        """
+        return {
+            "message": "Hello World!",
+            "api": "Business Improvement Project Management API",
+            "version": "0.1.0",
+            "status": "running"
+        }
+
     return app
 
 
@@ -91,35 +107,8 @@ def create_app() -> FastAPI:
 app = create_app()
 
 
-@app.get("/")
-async def hello_world():
-    """
-    Hello world endpoint for basic API connectivity testing.
-    
-    Returns:
-        dict: Simple greeting message with API information
-    """
-    return {
-        "message": "Hello World!",
-        "api": "Business Improvement Project Management API",
-        "version": "0.1.0",
-        "status": "running"
-    }
 
 
-@app.get("/health")
-async def health_check():
-    """
-    Health check endpoint for monitoring and load balancer health checks.
-    
-    Returns:
-        dict: Health status information
-    """
-    return {
-        "status": "healthy",
-        "service": "business-improvement-api",
-        "version": "0.1.0"
-    }
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import json
 import logging
 import logging.handlers
 import os
+from pathlib import Path
 from typing import Any
 
 
@@ -11,7 +12,7 @@ class ConfigManager:
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
-            cls._instance = super(ConfigManager, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
         return cls._instance
 
     def __init__(self, config_path: str = "config.json"):
@@ -24,7 +25,7 @@ class ConfigManager:
     def _load_config(self) -> dict[str, Any]:
         """Loads the configuration from the JSON file."""
         try:
-            with open(self.config_path) as f:
+            with Path(self.config_path).open() as f:
                 return json.load(f)
         except FileNotFoundError:
             logging.error(f"Configuration file not found at {self.config_path}")
@@ -42,10 +43,10 @@ class ConfigManager:
         system_config = self.config.get("system", {})
         logs_path = system_config.get("logs_path", "../logs")
 
-        if not os.path.exists(logs_path):
-            os.makedirs(logs_path)
+        if not Path(logs_path).exists():
+            Path(logs_path).mkdir(parents=True)
 
-        log_file = os.path.join(logs_path, "app.log")
+        log_file = Path(logs_path) / "app.log"
 
         root_logger = logging.getLogger()
         root_logger.setLevel(log_level)
@@ -108,6 +109,6 @@ def get_config() -> ConfigManager:
     global config_manager
     if config_manager is None:
         # Look for config.json in the parent directory (backend folder)
-        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json")
+        config_path = Path(__file__).parent.parent / "config.json"
         config_manager = ConfigManager(config_path=config_path)
     return config_manager

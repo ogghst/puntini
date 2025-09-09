@@ -6,13 +6,14 @@ import json
 import logging
 import os
 import sys
+from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
 import pytest
 
 # Add the parent directory to the Python path to allow for relative imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
+sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 
 from config import ConfigManager
 
@@ -51,7 +52,7 @@ def mock_config_file(tmp_path, mock_config_data: dict[str, Any]) -> str:
     Creates a temporary configuration file with mock data for testing.
     """
     config_file = tmp_path / "config.json"
-    with open(config_file, "w") as f:
+    with config_file.open("w") as f:
         json.dump(mock_config_data, f)
     return str(config_file)
 
@@ -86,7 +87,7 @@ def test_load_config_json_decode_error(tmp_path):
     Tests that a json.JSONDecodeError is raised for a malformed configuration file.
     """
     invalid_json_file = tmp_path / "invalid.json"
-    with open(invalid_json_file, "w") as f:
+    with invalid_json_file.open("w") as f:
         f.write("{'invalid': 'json'")
     with pytest.raises(json.JSONDecodeError):
         ConfigManager(config_path=str(invalid_json_file))

@@ -97,7 +97,7 @@ const ChatPage: React.FC = () => {
     };
 
     initializeSession();
-  }, [createSession]);
+  }, []); // Empty dependency array since createSession is now memoized
 
   // Convert session messages to display messages
   useEffect(() => {

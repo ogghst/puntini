@@ -8,13 +8,14 @@ to ensure proper session lifecycle management and message handling.
 import os
 import sys
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from uuid import uuid4
 
 import pytest
 import pytest_asyncio
 
 # Add the parent directory to the Python path to allow for relative imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
+sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 
 from api.session_manager import SessionManager, SessionNotFoundError
 from api.user_session import UserSession as Session
@@ -85,9 +86,9 @@ class TestSessionManager:
     async def test_list_sessions(self, session_manager):
         """Test session listing."""
         # Create multiple sessions
-        session1 = await session_manager.create_session("user1")
-        session2 = await session_manager.create_session("user2")
-        session3 = await session_manager.create_session("user1")
+        await session_manager.create_session("user1")
+        await session_manager.create_session("user2")
+        await session_manager.create_session("user1")
 
         # List all sessions
         all_sessions = await session_manager.list_sessions()

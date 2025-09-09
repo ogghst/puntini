@@ -1,12 +1,12 @@
 /**
  * Session management service for the business improvement project management system.
- * 
+ *
  * This module provides TypeScript interfaces and API functions that are compliant
  * with the backend session management system.
  */
 
 // Base API configuration
-const API_BASE_URL = 'http://localhost:8001';
+const API_BASE_URL = "http://localhost:8001";
 
 // Session-related types (compliant with backend models)
 export interface SessionInfo {
@@ -24,13 +24,13 @@ export interface SessionInfo {
   metadata: Record<string, any>;
 }
 
-export type SessionStatus = 
-  | 'initializing'
-  | 'active'
-  | 'paused'
-  | 'expired'
-  | 'error'
-  | 'cleaning_up';
+export type SessionStatus =
+  | "initializing"
+  | "active"
+  | "paused"
+  | "expired"
+  | "error"
+  | "cleaning_up";
 
 export interface Message {
   id: string;
@@ -40,7 +40,7 @@ export interface Message {
   metadata: Record<string, any>;
 }
 
-export type MessageType = 'user' | 'system' | 'agent' | 'error';
+export type MessageType = "user" | "system" | "agent" | "error";
 
 export interface SessionCreateRequest {
   user_id: string;
@@ -64,8 +64,8 @@ export interface TaskInfo {
   id: string;
   title: string;
   description?: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
+  status: "pending" | "in_progress" | "completed" | "cancelled";
+  priority: "low" | "medium" | "high" | "urgent";
   created_at: string;
   metadata: Record<string, any>;
 }
@@ -93,7 +93,7 @@ export class SessionAPIError extends Error {
     public details?: any
   ) {
     super(message);
-    this.name = 'SessionAPIError';
+    this.name = "SessionAPIError";
   }
 }
 
@@ -104,9 +104,9 @@ export class SessionAPI {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
-    
+
     const defaultHeaders = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
 
     const response = await fetch(url, {
@@ -130,9 +130,11 @@ export class SessionAPI {
   }
 
   // Session management
-  static async createSession(request: SessionCreateRequest): Promise<SessionInfo> {
-    return this.request<SessionInfo>('/sessions', {
-      method: 'POST',
+  static async createSession(
+    request: SessionCreateRequest
+  ): Promise<SessionInfo> {
+    return this.request<SessionInfo>("/sessions", {
+      method: "POST",
       body: JSON.stringify(request),
     });
   }
@@ -143,17 +145,17 @@ export class SessionAPI {
 
   static async destroySession(sessionId: string): Promise<{ message: string }> {
     return this.request<{ message: string }>(`/sessions/${sessionId}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
   }
 
   static async listSessions(userId?: string): Promise<SessionListResponse> {
-    const params = userId ? `?user_id=${encodeURIComponent(userId)}` : '';
+    const params = userId ? `?user_id=${encodeURIComponent(userId)}` : "";
     return this.request<SessionListResponse>(`/sessions${params}`);
   }
 
   static async getSessionStats(): Promise<SessionStats> {
-    return this.request<SessionStats>('/sessions/stats');
+    return this.request<SessionStats>("/sessions/stats");
   }
 
   // Message management
@@ -162,7 +164,7 @@ export class SessionAPI {
     request: MessageRequest
   ): Promise<Message> {
     return this.request<Message>(`/sessions/${sessionId}/messages`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(request),
     });
   }
@@ -171,7 +173,7 @@ export class SessionAPI {
     sessionId: string,
     timeout?: number
   ): Promise<Message | { message: string; timeout: boolean }> {
-    const params = timeout ? `?timeout=${timeout}` : '';
+    const params = timeout ? `?timeout=${timeout}` : "";
     return this.request<Message | { message: string; timeout: boolean }>(
       `/sessions/${sessionId}/messages${params}`
     );
@@ -187,7 +189,7 @@ export class SessionAPI {
     context: Record<string, any>
   ): Promise<{ message: string }> {
     return this.request<{ message: string }>(`/sessions/${sessionId}/context`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(context),
     });
   }
@@ -195,77 +197,92 @@ export class SessionAPI {
   // Task management
   static async addTask(
     sessionId: string,
-    task: Omit<TaskInfo, 'id' | 'created_at'>
+    task: Omit<TaskInfo, "id" | "created_at">
   ): Promise<{ message: string }> {
     return this.request<{ message: string }>(`/sessions/${sessionId}/tasks`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(task),
     });
   }
 
-  static async getTasks(sessionId: string): Promise<{ tasks: TaskInfo[]; count: number }> {
-    return this.request<{ tasks: TaskInfo[]; count: number }>(`/sessions/${sessionId}/tasks`);
+  static async getTasks(
+    sessionId: string
+  ): Promise<{ tasks: TaskInfo[]; count: number }> {
+    return this.request<{ tasks: TaskInfo[]; count: number }>(
+      `/sessions/${sessionId}/tasks`
+    );
   }
 }
 
 // Session management hook for React components
 export function useSession() {
-  const [currentSession, setCurrentSession] = useState<SessionInfo | null>(null);
+  const [currentSession, setCurrentSession] = useState<SessionInfo | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<SessionAPIError | null>(null);
 
-  const createSession = async (request: SessionCreateRequest) => {
+  const createSession = useCallback(async (request: SessionCreateRequest) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const session = await SessionAPI.createSession(request);
       setCurrentSession(session);
       return session;
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to create session');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to create session");
       setError(apiError);
       throw apiError;
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const destroySession = async () => {
+  const destroySession = useCallback(async () => {
     if (!currentSession) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       await SessionAPI.destroySession(currentSession.session_id);
       setCurrentSession(null);
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to destroy session');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to destroy session");
       setError(apiError);
       throw apiError;
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentSession]);
 
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     if (!currentSession) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const session = await SessionAPI.getSession(currentSession.session_id);
       setCurrentSession(session);
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to refresh session');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to refresh session");
       setError(apiError);
       throw apiError;
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentSession]);
 
   return {
     currentSession,
@@ -283,53 +300,65 @@ export function useMessages(sessionId: string | null) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<SessionAPIError | null>(null);
 
-  const sendMessage = async (request: MessageRequest) => {
-    if (!sessionId) throw new Error('No session available');
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const message = await SessionAPI.sendMessage(sessionId, request);
-      setMessages(prev => [...prev, message]);
-      return message;
-    } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to send message');
-      setError(apiError);
-      throw apiError;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const sendMessage = useCallback(
+    async (request: MessageRequest) => {
+      if (!sessionId) throw new Error("No session available");
 
-  const receiveMessage = async (timeout?: number) => {
-    if (!sessionId) throw new Error('No session available');
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const result = await SessionAPI.receiveMessage(sessionId, timeout);
-      
-      if ('timeout' in result && result.timeout) {
-        return null;
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const message = await SessionAPI.sendMessage(sessionId, request);
+        setMessages((prev) => [...prev, message]);
+        return message;
+      } catch (err) {
+        const apiError =
+          err instanceof SessionAPIError
+            ? err
+            : new SessionAPIError("Failed to send message");
+        setError(apiError);
+        throw apiError;
+      } finally {
+        setIsLoading(false);
       }
-      
-      const message = result as Message;
-      setMessages(prev => [...prev, message]);
-      return message;
-    } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to receive message');
-      setError(apiError);
-      throw apiError;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [sessionId]
+  );
 
-  const clearMessages = () => {
+  const receiveMessage = useCallback(
+    async (timeout?: number) => {
+      if (!sessionId) throw new Error("No session available");
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const result = await SessionAPI.receiveMessage(sessionId, timeout);
+
+        if ("timeout" in result && result.timeout) {
+          return null;
+        }
+
+        const message = result as Message;
+        setMessages((prev) => [...prev, message]);
+        return message;
+      } catch (err) {
+        const apiError =
+          err instanceof SessionAPIError
+            ? err
+            : new SessionAPIError("Failed to receive message");
+        setError(apiError);
+        throw apiError;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [sessionId]
+  );
+
+  const clearMessages = useCallback(() => {
     setMessages([]);
-  };
+  }, []);
 
   return {
     messages,
@@ -342,4 +371,4 @@ export function useMessages(sessionId: string | null) {
 }
 
 // Import React for hooks
-import { useState } from 'react';
+import { useCallback, useState } from "react";
