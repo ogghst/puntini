@@ -1,19 +1,19 @@
-import * as React from "react"
-import { cn } from "../../utils/utils"
+import * as React from "react";
+import { cn } from "../../utils/utils";
 
 const Tabs = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    value?: string
-    onValueChange?: (value: string) => void
+    value?: string;
+    onValueChange?: (value: string) => void;
   }
 >(({ className, value, onValueChange, ...props }, ref) => {
-  const [selectedValue, setSelectedValue] = React.useState(value || "")
+  const [selectedValue, setSelectedValue] = React.useState(value || "");
 
   const handleValueChange = (newValue: string) => {
-    setSelectedValue(newValue)
-    onValueChange?.(newValue)
-  }
+    setSelectedValue(newValue);
+    onValueChange?.(newValue);
+  };
 
   return (
     <div
@@ -27,42 +27,52 @@ const Tabs = React.forwardRef<
           return React.cloneElement(child, {
             selectedValue,
             onValueChange: handleValueChange,
-          } as any)
+          } as React.ReactElement);
         }
-        return child
+        return child;
       })}
     </div>
-  )
-})
-Tabs.displayName = "Tabs"
+  );
+});
+Tabs.displayName = "Tabs";
 
 const TabsList = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    selectedValue?: string
-    onValueChange?: (value: string) => void
+    selectedValue?: string;
+    onValueChange?: (value: string) => void;
   }
->(({ className, selectedValue, onValueChange, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
-      className
-    )}
-    {...props}
-  />
-))
-TabsList.displayName = "TabsList"
+>(
+  (
+    {
+      className,
+      selectedValue: _selectedValue,
+      onValueChange: _onValueChange,
+      ...props
+    },
+    ref
+  ) => (
+    <div
+      ref={ref}
+      className={cn(
+        "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+        className
+      )}
+      {...props}
+    />
+  )
+);
+TabsList.displayName = "TabsList";
 
 const TabsTrigger = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    selectedValue?: string
-    onValueChange?: (value: string) => void
-    value: string
+    selectedValue?: string;
+    onValueChange?: (value: string) => void;
+    value: string;
   }
 >(({ className, selectedValue, onValueChange, value, ...props }, ref) => {
-  const isSelected = selectedValue === value
+  const isSelected = selectedValue === value;
 
   return (
     <button
@@ -77,21 +87,21 @@ const TabsTrigger = React.forwardRef<
       onClick={() => onValueChange?.(value)}
       {...props}
     />
-  )
-})
-TabsTrigger.displayName = "TabsTrigger"
+  );
+});
+TabsTrigger.displayName = "TabsTrigger";
 
 const TabsContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    selectedValue?: string
-    value: string
+    selectedValue?: string;
+    value: string;
   }
 >(({ className, selectedValue, value, ...props }, ref) => {
-  const isSelected = selectedValue === value
+  const isSelected = selectedValue === value;
 
   if (!isSelected) {
-    return null
+    return null;
   }
 
   return (
@@ -103,8 +113,8 @@ const TabsContent = React.forwardRef<
       )}
       {...props}
     />
-  )
-})
-TabsContent.displayName = "TabsContent"
+  );
+});
+TabsContent.displayName = "TabsContent";
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsContent, TabsList, TabsTrigger };

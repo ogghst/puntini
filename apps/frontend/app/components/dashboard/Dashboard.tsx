@@ -1,38 +1,40 @@
 /**
  * Main Dashboard Component
- * 
+ *
  * Provides the main interface for the business improvement project management system,
  * integrating session management, project context, and task management.
  */
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { SessionManager } from '../session/SessionManager';
-import { ProjectContext } from '../project/ProjectContext';
-import { TaskManager } from '../task/TaskManager';
-import { ChatPage } from '../../chat/ChatPage';
-import { useSession, type SessionInfo } from '../../utils/session';
-import { 
-  MessageSquare, 
-  Users, 
-  FolderOpen, 
-  CheckSquare,
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+// import { Button } from '../ui/button';
+import {
   Activity,
-  Settings
-} from 'lucide-react';
+  CheckSquare,
+  FolderOpen,
+  MessageSquare,
+  Settings,
+  Users,
+} from "lucide-react";
+import { ChatPage } from "../../chat/ChatPage";
+import { useSession, type SessionInfo } from "../../utils/session";
+import { ProjectContext } from "../project/ProjectContext";
+import { SessionManager } from "../session/SessionManager";
+import { TaskManager } from "../task/TaskManager";
+import { Badge } from "../ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 export const Dashboard: React.FC = () => {
   const { currentSession } = useSession();
-  const [selectedSession, setSelectedSession] = useState<SessionInfo | null>(null);
-  const [activeTab, setActiveTab] = useState('chat');
+  const [selectedSession, setSelectedSession] = useState<SessionInfo | null>(
+    null
+  );
+  const [activeTab, setActiveTab] = useState("chat");
 
   // Handle session selection
   const handleSessionSelect = (session: SessionInfo) => {
     setSelectedSession(session);
-    setActiveTab('chat'); // Switch to chat when selecting a session
+    setActiveTab("chat"); // Switch to chat when selecting a session
   };
 
   // Get current session for context
@@ -57,7 +59,7 @@ export const Dashboard: React.FC = () => {
                 </Badge>
               )}
             </div>
-            
+
             <div className="flex items-center gap-4">
               {currentSession && (
                 <div className="text-sm text-gray-600">
@@ -66,7 +68,8 @@ export const Dashboard: React.FC = () => {
                     <span>Active</span>
                   </div>
                   <div className="text-xs text-gray-500">
-                    {currentSession.agent_count} agents, {currentSession.task_count} tasks
+                    {currentSession.agent_count} agents,{" "}
+                    {currentSession.task_count} tasks
                   </div>
                 </div>
               )}
@@ -77,7 +80,11 @@ export const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
           {/* Navigation Tabs */}
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="chat" className="flex items-center gap-2">
@@ -111,7 +118,8 @@ export const Dashboard: React.FC = () => {
                   Agent Chat
                 </CardTitle>
                 <p className="text-sm text-gray-600">
-                  Interact with AI agents to manage your business improvement projects
+                  Interact with AI agents to manage your business improvement
+                  projects
                 </p>
               </CardHeader>
               <CardContent className="p-0">
@@ -134,8 +142,8 @@ export const Dashboard: React.FC = () => {
           <TabsContent value="context" className="space-y-6">
             <ProjectContext
               sessionId={contextSession?.session_id || null}
-              onContextUpdate={(context) => {
-                console.log('Context updated:', context);
+              onContextUpdate={(_context) => {
+                // console.log('Context updated:', context);
               }}
             />
           </TabsContent>
@@ -144,8 +152,8 @@ export const Dashboard: React.FC = () => {
           <TabsContent value="tasks" className="space-y-6">
             <TaskManager
               sessionId={contextSession?.session_id || null}
-              onTaskUpdate={(tasks) => {
-                console.log('Tasks updated:', tasks);
+              onTaskUpdate={(_tasks) => {
+                // console.log('Tasks updated:', tasks);
               }}
             />
           </TabsContent>
@@ -168,10 +176,14 @@ export const Dashboard: React.FC = () => {
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">API Configuration</h3>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">
+                      <label
+                        htmlFor="backend-url"
+                        className="text-sm font-medium text-gray-700"
+                      >
                         Backend URL
                       </label>
                       <input
+                        id="backend-url"
                         type="text"
                         value="http://localhost:8001"
                         disabled
@@ -185,9 +197,14 @@ export const Dashboard: React.FC = () => {
 
                   {/* Session Configuration */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Session Configuration</h3>
+                    <h3 className="text-lg font-medium">
+                      Session Configuration
+                    </h3>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">
+                      <label
+                        htmlFor="current-session"
+                        className="text-sm font-medium text-gray-700"
+                      >
                         Current Session
                       </label>
                       <div className="p-3 bg-gray-50 rounded-md">
@@ -197,12 +214,16 @@ export const Dashboard: React.FC = () => {
                               {currentSession.session_id}
                             </p>
                             <p className="text-xs text-gray-600">
-                              Status: {currentSession.status} | 
-                              Created: {new Date(currentSession.created_at).toLocaleString()}
+                              Status: {currentSession.status} | Created:{" "}
+                              {new Date(
+                                currentSession.created_at
+                              ).toLocaleString()}
                             </p>
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-500">No active session</p>
+                          <p className="text-sm text-gray-500">
+                            No active session
+                          </p>
                         )}
                       </div>
                     </div>
@@ -211,7 +232,9 @@ export const Dashboard: React.FC = () => {
 
                 {/* Application Info */}
                 <div className="pt-4 border-t border-gray-200">
-                  <h3 className="text-lg font-medium mb-4">Application Information</h3>
+                  <h3 className="text-lg font-medium mb-4">
+                    Application Information
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                     <div>
                       <p className="font-medium text-gray-700">Version</p>

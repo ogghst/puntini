@@ -1,32 +1,32 @@
 /**
  * Session Manager Component
- * 
+ *
  * Provides a comprehensive session management interface for the business
  * improvement project management system.
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { ScrollArea } from '../ui/scroll-area';
-import { 
-  useSession, 
-  SessionAPI, 
-  type SessionInfo, 
-  type SessionStats,
-  SessionAPIError 
-} from '../../utils/session';
-import { 
-  Users, 
-  Activity, 
-  Clock, 
-  AlertCircle, 
-  RefreshCw,
+import {
+  Activity,
+  AlertCircle,
+  Clock,
+  Eye,
   Plus,
+  RefreshCw,
   Trash2,
-  Eye
-} from 'lucide-react';
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  SessionAPI,
+  SessionAPIError,
+  useSession,
+  type SessionInfo,
+  type SessionStats,
+} from "../../utils/session";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface SessionManagerProps {
   onSessionSelect?: (session: SessionInfo) => void;
@@ -35,7 +35,7 @@ interface SessionManagerProps {
 
 export const SessionManager: React.FC<SessionManagerProps> = ({
   onSessionSelect,
-  selectedSessionId
+  selectedSessionId,
 }) => {
   const { currentSession, refreshSession } = useSession();
   const [sessions, setSessions] = useState<SessionInfo[]>([]);
@@ -47,17 +47,20 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
   const loadData = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const [sessionsData, statsData] = await Promise.all([
         SessionAPI.listSessions(),
-        SessionAPI.getSessionStats()
+        SessionAPI.getSessionStats(),
       ]);
-      
+
       setSessions(sessionsData.sessions);
       setStats(statsData);
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to load data');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to load data");
       setError(apiError.message);
     } finally {
       setIsLoading(false);
@@ -75,8 +78,8 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
       try {
         await refreshSession();
         await loadData(); // Reload all data
-      } catch (err) {
-        console.error('Failed to refresh session:', err);
+      } catch {
+        // console.error('Failed to refresh session:', err);
       }
     }
   };
@@ -85,17 +88,20 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
   const handleCreateSession = async () => {
     try {
       const newSession = await SessionAPI.createSession({
-        user_id: 'frontend_user',
-        metadata: { source: 'session_manager' }
+        user_id: "frontend_user",
+        metadata: { source: "session_manager" },
       });
-      
+
       await loadData(); // Reload sessions
-      
+
       if (onSessionSelect) {
         onSessionSelect(newSession);
       }
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to create session');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to create session");
       setError(apiError.message);
     }
   };
@@ -106,7 +112,10 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
       await SessionAPI.destroySession(sessionId);
       await loadData(); // Reload sessions
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to destroy session');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to destroy session");
       setError(apiError.message);
     }
   };
@@ -114,20 +123,20 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
   // Get status badge color
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-800';
-      case 'initializing':
-        return 'bg-blue-100 text-blue-800';
-      case 'paused':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'expired':
-        return 'bg-gray-100 text-gray-800';
-      case 'error':
-        return 'bg-red-100 text-red-800';
-      case 'cleaning_up':
-        return 'bg-orange-100 text-orange-800';
+      case "active":
+        return "bg-green-100 text-green-800";
+      case "initializing":
+        return "bg-blue-100 text-blue-800";
+      case "paused":
+        return "bg-yellow-100 text-yellow-800";
+      case "expired":
+        return "bg-gray-100 text-gray-800";
+      case "error":
+        return "bg-red-100 text-red-800";
+      case "cleaning_up":
+        return "bg-orange-100 text-orange-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -137,13 +146,13 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
     const last = new Date(lastActivity);
     const diffMs = last.getTime() - created.getTime();
     const diffMins = Math.floor(diffMs / (1000 * 60));
-    
-    if (diffMins < 1) return '< 1m';
+
+    if (diffMins < 1) return "< 1m";
     if (diffMins < 60) return `${diffMins}m`;
-    
+
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours}h`;
-    
+
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays}d`;
   };
@@ -154,7 +163,9 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Session Manager</h2>
-          <p className="text-gray-600">Manage user sessions and monitor activity</p>
+          <p className="text-gray-600">
+            Manage user sessions and monitor activity
+          </p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -163,14 +174,12 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
             onClick={loadData}
             disabled={isLoading}
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
-          <Button
-            size="sm"
-            onClick={handleCreateSession}
-            disabled={isLoading}
-          >
+          <Button size="sm" onClick={handleCreateSession} disabled={isLoading}>
             <Plus className="h-4 w-4 mr-2" />
             New Session
           </Button>
@@ -203,7 +212,7 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
@@ -215,7 +224,7 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
@@ -227,7 +236,7 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
@@ -251,12 +260,16 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Session {currentSession.session_id.slice(0, 8)}...</p>
-                <p className="text-sm text-gray-600">
-                  Created: {new Date(currentSession.created_at).toLocaleString()}
+                <p className="font-medium">
+                  Session {currentSession.session_id.slice(0, 8)}...
                 </p>
                 <p className="text-sm text-gray-600">
-                  Agents: {currentSession.agent_count} | Tasks: {currentSession.task_count}
+                  Created:{" "}
+                  {new Date(currentSession.created_at).toLocaleString()}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Agents: {currentSession.agent_count} | Tasks:{" "}
+                  {currentSession.task_count}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -285,12 +298,12 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
           <ScrollArea className="h-96">
             <div className="space-y-2">
               {sessions.map((session) => (
-                <div
+                <button
                   key={session.session_id}
-                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                  className={`w-full text-left p-4 border rounded-lg cursor-pointer transition-colors ${
                     selectedSessionId === session.session_id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 hover:border-gray-300"
                   }`}
                   onClick={() => onSessionSelect?.(session)}
                 >
@@ -298,7 +311,8 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <p className="font-medium">
-                          {session.user_id} - {session.session_id.slice(0, 8)}...
+                          {session.user_id} - {session.session_id.slice(0, 8)}
+                          ...
                         </p>
                         <Badge className={getStatusBadgeColor(session.status)}>
                           {session.status}
@@ -309,7 +323,7 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
                           </Badge>
                         )}
                       </div>
-                      
+
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                         <div>
                           <p className="font-medium">Created</p>
@@ -317,19 +331,29 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
                         </div>
                         <div>
                           <p className="font-medium">Last Activity</p>
-                          <p>{new Date(session.last_activity).toLocaleString()}</p>
+                          <p>
+                            {new Date(session.last_activity).toLocaleString()}
+                          </p>
                         </div>
                         <div>
                           <p className="font-medium">Duration</p>
-                          <p>{formatDuration(session.created_at, session.last_activity)}</p>
+                          <p>
+                            {formatDuration(
+                              session.created_at,
+                              session.last_activity
+                            )}
+                          </p>
                         </div>
                         <div>
                           <p className="font-medium">Resources</p>
-                          <p>{session.agent_count} agents, {session.task_count} tasks</p>
+                          <p>
+                            {session.agent_count} agents, {session.task_count}{" "}
+                            tasks
+                          </p>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2 ml-4">
                       <Button
                         variant="outline"
@@ -354,9 +378,9 @@ export const SessionManager: React.FC<SessionManagerProps> = ({
                       </Button>
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
-              
+
               {sessions.length === 0 && !isLoading && (
                 <div className="text-center py-8 text-gray-500">
                   No sessions found

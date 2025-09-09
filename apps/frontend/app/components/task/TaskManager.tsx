@@ -1,119 +1,125 @@
 /**
  * Task Manager Component
- * 
+ *
  * Manages tasks within a session, providing interface for creating, viewing,
  * and managing project tasks.
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Badge } from '../ui/badge';
-import { ScrollArea } from '../ui/scroll-area';
-import { 
-  SessionAPI, 
-  type TaskInfo,
-  SessionAPIError 
-} from '../../utils/session';
-import { 
-  CheckSquare, 
-  Plus, 
-  Edit3, 
-  Save, 
-  X, 
-  RefreshCw,
-  Clock,
+import {
   AlertCircle,
   CheckCircle,
+  CheckSquare,
   Circle,
-  Trash2,
-  Filter
-} from 'lucide-react';
+  Clock,
+  Edit3,
+  // Trash2,
+  Filter,
+  Plus,
+  RefreshCw,
+  Save,
+  X,
+} from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  SessionAPI,
+  SessionAPIError,
+  type TaskInfo,
+} from "../../utils/session";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
+import { Textarea } from "../ui/textarea";
 
 interface TaskManagerProps {
   sessionId: string | null;
   onTaskUpdate?: (tasks: TaskInfo[]) => void;
 }
 
-type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
-type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
+type TaskStatus = "pending" | "in_progress" | "completed" | "cancelled";
+type TaskPriority = "low" | "medium" | "high" | "urgent";
 
 export const TaskManager: React.FC<TaskManagerProps> = ({
   sessionId,
-  onTaskUpdate
+  onTaskUpdate,
 }) => {
   const [tasks, setTasks] = useState<TaskInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [editingTask, setEditingTask] = useState<string | null>(null);
+  // const [editingTask, setEditingTask] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<{
     status?: TaskStatus;
     priority?: TaskPriority;
   }>({});
-  
+
   const [newTask, setNewTask] = useState<Partial<TaskInfo>>({
-    title: '',
-    description: '',
-    status: 'pending',
-    priority: 'medium'
+    title: "",
+    description: "",
+    status: "pending",
+    priority: "medium",
   });
 
   // Load tasks
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     if (!sessionId) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await SessionAPI.getTasks(sessionId);
       setTasks(response.tasks);
-      
+
       if (onTaskUpdate) {
         onTaskUpdate(response.tasks);
       }
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to load tasks');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to load tasks");
       setError(apiError.message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sessionId, onTaskUpdate]);
 
   // Load tasks on session change
   useEffect(() => {
     loadTasks();
-  }, [sessionId]);
+  }, [sessionId, loadTasks]);
 
   // Create new task
   const handleCreateTask = async () => {
     if (!sessionId || !newTask.title?.trim()) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       await SessionAPI.addTask(sessionId, {
         title: newTask.title,
-        description: newTask.description || '',
-        status: newTask.status || 'pending',
-        priority: newTask.priority || 'medium',
-        metadata: {}
+        description: newTask.description || "",
+        status: newTask.status || "pending",
+        priority: newTask.priority || "medium",
+        metadata: {},
       });
-      
+
       await loadTasks(); // Reload tasks
       setNewTask({
-        title: '',
-        description: '',
-        status: 'pending',
-        priority: 'medium'
+        title: "",
+        description: "",
+        status: "pending",
+        priority: "medium",
       });
       setIsCreating(false);
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to create task');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to create task");
       setError(apiError.message);
     } finally {
       setIsLoading(false);
@@ -123,10 +129,10 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   // Cancel creating task
   const handleCancelCreate = () => {
     setNewTask({
-      title: '',
-      description: '',
-      status: 'pending',
-      priority: 'medium'
+      title: "",
+      description: "",
+      status: "pending",
+      priority: "medium",
     });
     setIsCreating(false);
   };
@@ -137,52 +143,52 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   };
 
   // Cancel editing
-  const handleCancelEdit = () => {
-    setEditingTask(null);
-  };
+  // const handleCancelEdit = () => {
+  //   setEditingTask(null);
+  // };
 
   // Get status badge color
   const getStatusBadgeColor = (status: TaskStatus) => {
     switch (status) {
-      case 'pending':
-        return 'bg-gray-100 text-gray-800';
-      case 'in_progress':
-        return 'bg-blue-100 text-blue-800';
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
+      case "pending":
+        return "bg-gray-100 text-gray-800";
+      case "in_progress":
+        return "bg-blue-100 text-blue-800";
+      case "completed":
+        return "bg-green-100 text-green-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   // Get priority badge color
   const getPriorityBadgeColor = (priority: TaskPriority) => {
     switch (priority) {
-      case 'low':
-        return 'bg-green-100 text-green-800';
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'high':
-        return 'bg-orange-100 text-orange-800';
-      case 'urgent':
-        return 'bg-red-100 text-red-800';
+      case "low":
+        return "bg-green-100 text-green-800";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "high":
+        return "bg-orange-100 text-orange-800";
+      case "urgent":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   // Get status icon
   const getStatusIcon = (status: TaskStatus) => {
     switch (status) {
-      case 'pending':
+      case "pending":
         return <Circle className="h-4 w-4" />;
-      case 'in_progress':
+      case "in_progress":
         return <Clock className="h-4 w-4" />;
-      case 'completed':
+      case "completed":
         return <CheckCircle className="h-4 w-4" />;
-      case 'cancelled':
+      case "cancelled":
         return <X className="h-4 w-4" />;
       default:
         return <Circle className="h-4 w-4" />;
@@ -190,7 +196,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   };
 
   // Filter tasks
-  const filteredTasks = tasks.filter(task => {
+  const filteredTasks = tasks.filter((task) => {
     if (filter.status && task.status !== filter.status) return false;
     if (filter.priority && task.priority !== filter.priority) return false;
     return true;
@@ -199,10 +205,10 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   // Get task counts by status
   const taskCounts = {
     total: tasks.length,
-    pending: tasks.filter(t => t.status === 'pending').length,
-    in_progress: tasks.filter(t => t.status === 'in_progress').length,
-    completed: tasks.filter(t => t.status === 'completed').length,
-    cancelled: tasks.filter(t => t.status === 'cancelled').length
+    pending: tasks.filter((t) => t.status === "pending").length,
+    in_progress: tasks.filter((t) => t.status === "in_progress").length,
+    completed: tasks.filter((t) => t.status === "completed").length,
+    cancelled: tasks.filter((t) => t.status === "cancelled").length,
   };
 
   if (!sessionId) {
@@ -234,7 +240,9 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             onClick={loadTasks}
             disabled={isLoading}
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
           <Button
@@ -273,7 +281,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -285,7 +293,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -297,7 +305,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -309,7 +317,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -334,13 +342,21 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
         <CardContent>
           <div className="flex gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">Status</label>
+              <label
+                htmlFor="status-filter"
+                className="text-sm font-medium text-gray-700"
+              >
+                Status
+              </label>
               <select
-                value={filter.status || ''}
-                onChange={(e) => setFilter(prev => ({ 
-                  ...prev, 
-                  status: e.target.value as TaskStatus || undefined 
-                }))}
+                id="status-filter"
+                value={filter.status || ""}
+                onChange={(e) =>
+                  setFilter((prev) => ({
+                    ...prev,
+                    status: (e.target.value as TaskStatus) || undefined,
+                  }))
+                }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               >
                 <option value="">All Statuses</option>
@@ -350,15 +366,23 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
                 <option value="cancelled">Cancelled</option>
               </select>
             </div>
-            
+
             <div>
-              <label className="text-sm font-medium text-gray-700">Priority</label>
+              <label
+                htmlFor="priority-filter"
+                className="text-sm font-medium text-gray-700"
+              >
+                Priority
+              </label>
               <select
-                value={filter.priority || ''}
-                onChange={(e) => setFilter(prev => ({ 
-                  ...prev, 
-                  priority: e.target.value as TaskPriority || undefined 
-                }))}
+                id="priority-filter"
+                value={filter.priority || ""}
+                onChange={(e) =>
+                  setFilter((prev) => ({
+                    ...prev,
+                    priority: (e.target.value as TaskPriority) || undefined,
+                  }))
+                }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               >
                 <option value="">All Priorities</option>
@@ -380,32 +404,62 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">Title</label>
+              <label
+                htmlFor="task-title"
+                className="text-sm font-medium text-gray-700"
+              >
+                Title
+              </label>
               <Input
-                value={newTask.title || ''}
-                onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
+                id="task-title"
+                value={newTask.title || ""}
+                onChange={(e) =>
+                  setNewTask((prev) => ({ ...prev, title: e.target.value }))
+                }
                 placeholder="Enter task title"
                 className="mt-1"
               />
             </div>
-            
+
             <div>
-              <label className="text-sm font-medium text-gray-700">Description</label>
+              <label
+                htmlFor="task-description"
+                className="text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
               <Textarea
-                value={newTask.description || ''}
-                onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
+                id="task-description"
+                value={newTask.description || ""}
+                onChange={(e) =>
+                  setNewTask((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 placeholder="Enter task description"
                 rows={3}
                 className="mt-1"
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-gray-700">Status</label>
+                <label
+                  htmlFor="new-task-status"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Status
+                </label>
                 <select
-                  value={newTask.status || 'pending'}
-                  onChange={(e) => setNewTask(prev => ({ ...prev, status: e.target.value as TaskStatus }))}
+                  id="new-task-status"
+                  value={newTask.status || "pending"}
+                  onChange={(e) =>
+                    setNewTask((prev) => ({
+                      ...prev,
+                      status: e.target.value as TaskStatus,
+                    }))
+                  }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 >
                   <option value="pending">Pending</option>
@@ -414,12 +468,23 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
                   <option value="cancelled">Cancelled</option>
                 </select>
               </div>
-              
+
               <div>
-                <label className="text-sm font-medium text-gray-700">Priority</label>
+                <label
+                  htmlFor="new-task-priority"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Priority
+                </label>
                 <select
-                  value={newTask.priority || 'medium'}
-                  onChange={(e) => setNewTask(prev => ({ ...prev, priority: e.target.value as TaskPriority }))}
+                  id="new-task-priority"
+                  value={newTask.priority || "medium"}
+                  onChange={(e) =>
+                    setNewTask((prev) => ({
+                      ...prev,
+                      priority: e.target.value as TaskPriority,
+                    }))
+                  }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 >
                   <option value="low">Low</option>
@@ -429,7 +494,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
                 </select>
               </div>
             </div>
-            
+
             <div className="flex gap-2">
               <Button
                 onClick={handleCreateTask}
@@ -493,23 +558,28 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
                           <Badge className={getStatusBadgeColor(task.status)}>
                             {task.status}
                           </Badge>
-                          <Badge className={getPriorityBadgeColor(task.priority)}>
+                          <Badge
+                            className={getPriorityBadgeColor(task.priority)}
+                          >
                             {task.priority}
                           </Badge>
                         </div>
-                        
+
                         {task.description && (
                           <p className="text-sm text-gray-600 mb-2">
                             {task.description}
                           </p>
                         )}
-                        
+
                         <div className="flex items-center gap-4 text-xs text-gray-500">
                           <span>ID: {task.id}</span>
-                          <span>Created: {new Date(task.created_at).toLocaleString()}</span>
+                          <span>
+                            Created:{" "}
+                            {new Date(task.created_at).toLocaleString()}
+                          </span>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center gap-2 ml-4">
                         <Button
                           variant="outline"

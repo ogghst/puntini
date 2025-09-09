@@ -74,7 +74,6 @@ const ChatPage: React.FC = () => {
   const {
     messages: sessionMessages,
     sendMessage,
-    receiveMessage,
     isLoading: messageLoading,
   } = useMessages(currentSession?.session_id || null);
 
@@ -87,7 +86,7 @@ const ChatPage: React.FC = () => {
           metadata: { source: "chat_page" },
         });
       } catch (err) {
-        console.error("Failed to create session:", err);
+        // console.error("Failed to create session:", err);
         setError(
           err instanceof SessionAPIError
             ? err.message
@@ -97,7 +96,7 @@ const ChatPage: React.FC = () => {
     };
 
     initializeSession();
-  }, []); // Empty dependency array since createSession is now memoized
+  }, [createSession]); // Include createSession in dependencies
 
   // Convert session messages to display messages
   useEffect(() => {
@@ -112,7 +111,7 @@ const ChatPage: React.FC = () => {
             content = msg.content;
           } else if (Array.isArray(msg.content)) {
             content = msg.content
-              .map((item: any) =>
+              .map((item: unknown) =>
                 typeof item === "string" ? item : JSON.stringify(item)
               )
               .join(" ");
@@ -187,7 +186,7 @@ const ChatPage: React.FC = () => {
 
         setInput("");
       } catch (err) {
-        console.error("Failed to send message:", err);
+        // console.error("Failed to send message:", err);
         setError(
           err instanceof SessionAPIError
             ? err.message

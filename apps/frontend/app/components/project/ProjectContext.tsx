@@ -1,31 +1,31 @@
 /**
  * Project Context Component
- * 
+ *
  * Manages project context and provides interface for viewing and updating
  * project-specific information within a session.
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Badge } from '../ui/badge';
-import { ScrollArea } from '../ui/scroll-area';
-import { 
-  SessionAPI, 
-  type ProjectContext as ProjectContextType,
-  SessionAPIError 
-} from '../../utils/session';
-import { 
-  FolderOpen, 
-  Edit3, 
-  Save, 
-  X, 
-  RefreshCw,
+import {
+  Edit3,
+  FolderOpen,
+  Info,
   Plus,
-  Info
-} from 'lucide-react';
+  RefreshCw,
+  Save,
+  X,
+} from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  SessionAPI,
+  SessionAPIError,
+  type ProjectContext as ProjectContextType,
+} from "../../utils/session";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
+import { Textarea } from "../ui/textarea";
 
 interface ProjectContextProps {
   sessionId: string | null;
@@ -34,7 +34,7 @@ interface ProjectContextProps {
 
 export const ProjectContext: React.FC<ProjectContextProps> = ({
   sessionId,
-  onContextUpdate
+  onContextUpdate,
 }) => {
   const [context, setContext] = useState<ProjectContextType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,46 +43,52 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
   const [editData, setEditData] = useState<Record<string, any>>({});
 
   // Load project context
-  const loadContext = async () => {
+  const loadContext = useCallback(async () => {
     if (!sessionId) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const contextData = await SessionAPI.getProjectContext(sessionId);
       setContext(contextData);
       setEditData(contextData.project_context);
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to load project context');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to load project context");
       setError(apiError.message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sessionId]);
 
   // Load context on session change
   useEffect(() => {
     loadContext();
-  }, [sessionId]);
+  }, [sessionId, loadContext]);
 
   // Save context changes
   const handleSave = async () => {
     if (!sessionId) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       await SessionAPI.updateProjectContext(sessionId, editData);
       await loadContext(); // Reload to get updated data
       setIsEditing(false);
-      
+
       if (onContextUpdate) {
         onContextUpdate(editData);
       }
     } catch (err) {
-      const apiError = err instanceof SessionAPIError ? err : new SessionAPIError('Failed to save project context');
+      const apiError =
+        err instanceof SessionAPIError
+          ? err
+          : new SessionAPIError("Failed to save project context");
       setError(apiError.message);
     } finally {
       setIsLoading(false);
@@ -97,15 +103,15 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
 
   // Add new context field
   const handleAddField = () => {
-    const key = prompt('Enter field name:');
+    const key = prompt("Enter field name:");
     if (key && !editData[key]) {
-      setEditData(prev => ({ ...prev, [key]: '' }));
+      setEditData((prev) => ({ ...prev, [key]: "" }));
     }
   };
 
   // Remove context field
   const handleRemoveField = (key: string) => {
-    setEditData(prev => {
+    setEditData((prev) => {
       const newData = { ...prev };
       delete newData[key];
       return newData;
@@ -114,16 +120,16 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
 
   // Update field value
   const handleFieldChange = (key: string, value: any) => {
-    setEditData(prev => ({ ...prev, [key]: value }));
+    setEditData((prev) => ({ ...prev, [key]: value }));
   };
 
   // Render context field
   const renderField = (key: string, value: any) => {
-    const isString = typeof value === 'string';
-    const isNumber = typeof value === 'number';
-    const isBoolean = typeof value === 'boolean';
-    const isObject = typeof value === 'object' && value !== null;
-    
+    const isString = typeof value === "string";
+    const isNumber = typeof value === "number";
+    const isBoolean = typeof value === "boolean";
+    const isObject = typeof value === "object" && value !== null;
+
     if (isEditing) {
       if (isBoolean) {
         return (
@@ -258,7 +264,9 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
             onClick={loadContext}
             disabled={isLoading}
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
           {!isEditing ? (
@@ -272,11 +280,7 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
             </Button>
           ) : (
             <div className="flex gap-2">
-              <Button
-                size="sm"
-                onClick={handleSave}
-                disabled={isLoading}
-              >
+              <Button size="sm" onClick={handleSave} disabled={isLoading}>
                 <Save className="h-4 w-4 mr-2" />
                 Save
               </Button>
@@ -312,11 +316,7 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
           <div className="flex items-center justify-between">
             <CardTitle>Context Data</CardTitle>
             {isEditing && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleAddField}
-              >
+              <Button variant="outline" size="sm" onClick={handleAddField}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Field
               </Button>
@@ -376,9 +376,7 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-4">
-              <Badge variant="secondary">
-                {context.task_count} tasks
-              </Badge>
+              <Badge variant="secondary">{context.task_count} tasks</Badge>
               <p className="text-sm text-gray-600">
                 {context.tasks.length} tasks loaded
               </p>
