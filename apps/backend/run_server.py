@@ -6,10 +6,10 @@ This script provides a convenient way to start the FastAPI development server
 with proper configuration and logging.
 """
 
-import uvicorn
 import sys
-import os
 from pathlib import Path
+
+import uvicorn
 
 # Add the backend directory to Python path
 backend_dir = Path(__file__).parent
@@ -24,11 +24,11 @@ def main():
         # Get configuration
         config = ConfigManager()
         config_data = config.config
-        
+
         print("🚀 Starting Business Improvement Project Management API")
         print(f"📁 Backend directory: {backend_dir}")
         print(f"⚙️  Configuration loaded from: {config.config_path}")
-        
+
         # Run the server
         uvicorn.run(
             "main:app",
@@ -38,7 +38,7 @@ def main():
             log_level=config_data.get("log_level", "info").lower(),
             access_log=True
         )
-        
+
     except KeyboardInterrupt:
         print("\n🛑 Server stopped by user")
     except Exception as e:

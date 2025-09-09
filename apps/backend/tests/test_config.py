@@ -6,13 +6,13 @@ import json
 import logging
 import os
 import sys
-from typing import Any, Dict
+from typing import Any
 from unittest.mock import patch
 
 import pytest
 
 # Add the parent directory to the Python path to allow for relative imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 
 from config import ConfigManager
 
@@ -26,7 +26,7 @@ def reset_singleton():
 
 
 @pytest.fixture
-def mock_config_data() -> Dict[str, Any]:
+def mock_config_data() -> dict[str, Any]:
     """
     Provides a dictionary with mock configuration data for testing.
     """
@@ -46,12 +46,12 @@ def mock_config_data() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def mock_config_file(tmp_path, mock_config_data: Dict[str, Any]) -> str:
+def mock_config_file(tmp_path, mock_config_data: dict[str, Any]) -> str:
     """
     Creates a temporary configuration file with mock data for testing.
     """
     config_file = tmp_path / "config.json"
-    with open(config_file, 'w') as f:
+    with open(config_file, "w") as f:
         json.dump(mock_config_data, f)
     return str(config_file)
 
@@ -65,7 +65,7 @@ def test_config_manager_is_singleton(mock_config_file: str):
     assert cm1 is cm2
 
 
-def test_load_config_success(mock_config_file: str, mock_config_data: Dict[str, Any]):
+def test_load_config_success(mock_config_file: str, mock_config_data: dict[str, Any]):
     """
     Tests that the configuration is loaded successfully from a valid JSON file.
     """
@@ -86,7 +86,7 @@ def test_load_config_json_decode_error(tmp_path):
     Tests that a json.JSONDecodeError is raised for a malformed configuration file.
     """
     invalid_json_file = tmp_path / "invalid.json"
-    with open(invalid_json_file, 'w') as f:
+    with open(invalid_json_file, "w") as f:
         f.write("{'invalid': 'json'")
     with pytest.raises(json.JSONDecodeError):
         ConfigManager(config_path=str(invalid_json_file))
@@ -101,7 +101,7 @@ def test_get_method(mock_config_file: str):
     assert cm.get("non_existent_key", "default_value") == "default_value"
 
 
-def test_properties(mock_config_file: str, mock_config_data: Dict[str, Any]):
+def test_properties(mock_config_file: str, mock_config_data: dict[str, Any]):
     """
     Tests the property getters for accessing specific configuration sections.
     """
@@ -120,7 +120,7 @@ def test_setup_logging_creates_log_dir(mock_exists, mock_makedirs, mock_config_f
     """
     Tests that the logging setup creates the log directory if it does not exist.
     """
-    with patch('logging.handlers.RotatingFileHandler') as mock_handler:
+    with patch("logging.handlers.RotatingFileHandler") as mock_handler:
         mock_handler.return_value.level = logging.NOTSET
         ConfigManager(config_path=mock_config_file)
         # The log path is retrieved from the mock config data

@@ -1,7 +1,7 @@
-from typing import TypedDict, Annotated
-import operator
+from typing import TypedDict
 
-from langgraph.graph import StateGraph, END
+from langgraph.graph import END, StateGraph
+
 
 # The state of our graph
 class AgentState(TypedDict):

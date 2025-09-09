@@ -5,3 +5,4 @@ alwaysApply: true
 ---
 - follow instructions in AGENTS.md. 
 - when writing python code, follow instructions in PYTHON_CODING_STANDARDS.md
+- python codebase is in apps/backend folder. always activate the venv from here prior to start any activity
