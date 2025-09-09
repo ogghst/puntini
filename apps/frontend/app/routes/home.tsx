@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Activity, MessageSquare, Users, CheckSquare } from "lucide-react";
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_props: Route.MetaArgs) {
   return [
     { title: "Business Improvement Project Management" },
     { name: "description", content: "AI-powered project management for business improvement initiatives" },

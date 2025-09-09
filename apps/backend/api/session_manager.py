@@ -8,7 +8,7 @@ and resource management.
 
 import asyncio
 import logging
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -34,7 +34,7 @@ class SessionManager:
     """
     Manages user sessions and provides core infrastructure for handling
     individual user interactions between the backend and frontend.
-    
+
     Main responsibilities:
     - Session Lifecycle: Handles creation, retrieval, and cleanup of user sessions
     - Concurrency Control: Uses async locks to ensure thread-safe session management
@@ -46,7 +46,7 @@ class SessionManager:
     """
 
     def __init__(self):
-        self._sessions: dict[UUID, Session] = {}
+        self._sessions: dict[UUID, "Session"] = {}  # noqa: F821, UP037
         self._session_locks: dict[UUID, asyncio.Lock] = {}
         self._cleanup_task: asyncio.Task | None = None
         self._shutdown_event = asyncio.Event()
@@ -73,10 +73,8 @@ class SessionManager:
 
         if self._cleanup_task and not self._cleanup_task.done():
             self._cleanup_task.cancel()
-            try:
+            with suppress(asyncio.CancelledError):
                 await self._cleanup_task
-            except asyncio.CancelledError:
-                pass
 
         # Cleanup all sessions
         session_ids = list(self._sessions.keys())
@@ -90,23 +88,23 @@ class SessionManager:
         user_id: str,
         project_id: UUID | None = None,
         metadata: dict[str, Any] | None = None
-    ) -> "Session":
+    ) -> "Session":  # noqa: F821
         """
         Create a new user session.
-        
+
         Args:
             user_id: Unique identifier for the user
             project_id: Optional project context for the session
             metadata: Optional metadata for the session
-            
+
         Returns:
             Session: The created session instance
-            
+
         Raises:
             SessionError: If session creation fails
         """
         # Import here to avoid circular import
-        from .user_session import UserSession as Session
+        from .user_session import UserSession as Session  # noqa: PLC0415
 
         if len(self._sessions) >= self._max_sessions:
             # Remove oldest session if at capacity
@@ -143,16 +141,16 @@ class SessionManager:
                 del self._session_locks[session_id]
             raise SessionError(f"Failed to create session: {e}") from e
 
-    async def get_session(self, session_id: UUID) -> "Session":
+    async def get_session(self, session_id: UUID) -> "Session":  # noqa: F821
         """
         Retrieve an existing session.
-        
+
         Args:
             session_id: The session identifier
-            
+
         Returns:
             Session: The session instance
-            
+
         Raises:
             SessionNotFoundError: If session doesn't exist
         """
@@ -171,10 +169,10 @@ class SessionManager:
     async def destroy_session(self, session_id: UUID) -> bool:
         """
         Destroy a session and cleanup its resources.
-        
+
         Args:
             session_id: The session identifier
-            
+
         Returns:
             bool: True if session was destroyed, False if not found
         """
@@ -201,13 +199,13 @@ class SessionManager:
             self._logger.error(f"Error destroying session {session_id}: {e}")
             return False
 
-    async def list_sessions(self, user_id: str | None = None) -> list["Session"]:
+    async def list_sessions(self, user_id: str | None = None) -> list["Session"]:  # noqa: F821
         """
         List all active sessions, optionally filtered by user.
-        
+
         Args:
             user_id: Optional user filter
-            
+
         Returns:
             List[Session]: List of active sessions
         """
@@ -221,7 +219,7 @@ class SessionManager:
     def register_agent(self, agent_name: str, agent_class: Any):
         """
         Register an agent class for automatic session initialization.
-        
+
         Args:
             agent_name: Name of the agent
             agent_class: Agent class to register

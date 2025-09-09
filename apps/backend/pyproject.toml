@@ -2,6 +2,9 @@
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+packages = ["api", "agent", "models", "config", "graphstore"]
+
 [project]
 name = "puntini-backend"
 version = "0.1.0"
@@ -87,6 +90,8 @@ ignore_missing_imports = true
 [tool.ruff]
 target-version = "py311"
 line-length = 88
+
+[tool.ruff.lint]
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
@@ -121,7 +126,7 @@ ignore = [
     "T20",    # print statements (allow in some contexts)
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*" = [
     "S101",  # assert statements in tests
     "PLR2004", # magic values in tests
@@ -129,7 +134,7 @@ ignore = [
     "S106",  # hardcoded password in tests
 ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["api", "config", "models", "graphstore", "agent"]
 
 # Pylint configuration

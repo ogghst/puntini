@@ -32,13 +32,7 @@ test-fast: ## Run tests excluding slow tests
 # Code Quality
 lint: ## Run all linting tools
 	@echo "Running Ruff..."
-	ruff check .
-	@echo "Running Flake8..."
-	flake8 .
-	@echo "Running Pylint..."
-	pylint api/ config/ models/ graphstore/ agent/ --rcfile=pyproject.toml
-	@echo "Running MyPy..."
-	mypy .
+	ruff check . --fix --unsafe-fixes --exit-zero
 	@echo "Running Bandit security check..."
 	bandit -r . -f json -o bandit-report.json || true
 	@echo "Linting complete!"

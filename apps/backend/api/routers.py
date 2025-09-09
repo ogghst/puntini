@@ -32,7 +32,7 @@ session_router = APIRouter(prefix="/sessions", tags=["sessions"])
 async def health_status():
     """
     Detailed health status endpoint.
-    
+
     Returns:
         dict: Detailed health information
     """
@@ -52,7 +52,7 @@ async def health_status():
 async def agent_action():
     """
     Placeholder for agent action endpoint.
-    
+
     This will be implemented in Phase 1 for the Extract→Validate→Upsert→Answer flow.
     """
     return {
@@ -65,7 +65,7 @@ async def agent_action():
 async def graph_patch():
     """
     Placeholder for graph patch endpoint.
-    
+
     This will be implemented in Phase 1 for graph modifications.
     """
     return {
@@ -78,7 +78,7 @@ async def graph_patch():
 async def graph_query():
     """
     Placeholder for graph query endpoint.
-    
+
     This will be implemented in Phase 1 for graph queries.
     """
     return {
@@ -91,7 +91,7 @@ async def graph_query():
 async def get_todos():
     """
     Placeholder for TODO list endpoint.
-    
+
     This will be implemented in Phase 1 for TODO management.
     """
     return {
@@ -104,7 +104,7 @@ async def get_todos():
 async def create_todo():
     """
     Placeholder for TODO creation endpoint.
-    
+
     This will be implemented in Phase 1 for TODO management.
     """
     return {
@@ -127,7 +127,7 @@ async def create_session(
 ):
     """
     Create a new user session.
-    
+
     Creates a new session with the specified user and optional project context.
     The session will be automatically initialized with available agents.
     """
@@ -139,7 +139,7 @@ async def create_session(
         )
         return SessionResponse(**session.session_info)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to create session: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to create session: {e!s}") from e
 
 
 @session_router.get("/{session_id}", response_model=SessionResponse)
@@ -149,7 +149,7 @@ async def get_session(
 ):
     """
     Get session information.
-    
+
     Retrieves detailed information about a specific session including
     status, activity, and resource counts.
     """
@@ -157,9 +157,9 @@ async def get_session(
         session = await session_manager.get_session(session_id)
         return SessionResponse(**session.session_info)
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail="Session not found") from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get session: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to get session: {e!s}") from e
 
 
 @session_router.delete("/{session_id}")
@@ -169,7 +169,7 @@ async def destroy_session(
 ):
     """
     Destroy a session.
-    
+
     Permanently destroys the session and cleans up all associated resources.
     """
     try:
@@ -178,7 +178,7 @@ async def destroy_session(
             raise HTTPException(status_code=404, detail="Session not found")
         return {"message": "Session destroyed successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to destroy session: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to destroy session: {e!s}") from e
 
 
 @session_router.get("/", response_model=SessionListResponse)
@@ -188,7 +188,7 @@ async def list_sessions(
 ):
     """
     List active sessions.
-    
+
     Lists all active sessions, optionally filtered by user ID.
     """
     try:
@@ -202,7 +202,7 @@ async def list_sessions(
             active_count=active_count
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to list sessions: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to list sessions: {e!s}") from e
 
 
 @session_router.post("/{session_id}/messages", response_model=MessageResponse)
@@ -213,7 +213,7 @@ async def send_message(
 ):
     """
     Send a message to a session.
-    
+
     Sends a message to the specified session for processing by agents.
     """
     try:
@@ -233,9 +233,9 @@ async def send_message(
             metadata=request.metadata or {}
         )
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail="Session not found") from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to send message: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to send message: {e!s}") from e
 
 
 @session_router.get("/{session_id}/messages")
@@ -246,7 +246,7 @@ async def receive_messages(
 ):
     """
     Receive messages from a session.
-    
+
     Retrieves messages from the session's output queue.
     """
     try:
@@ -264,9 +264,9 @@ async def receive_messages(
             metadata=message.metadata
         )
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail="Session not found") from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to receive message: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to receive message: {e!s}") from e
 
 
 @session_router.get("/{session_id}/context")
@@ -276,7 +276,7 @@ async def get_project_context(
 ):
     """
     Get project context for a session.
-    
+
     Retrieves the current project context and task information.
     """
     try:
@@ -290,9 +290,9 @@ async def get_project_context(
             "task_count": len(tasks)
         }
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail="Session not found") from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get context: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to get context: {e!s}") from e
 
 
 @session_router.put("/{session_id}/context")
@@ -303,7 +303,7 @@ async def update_project_context(
 ):
     """
     Update project context for a session.
-    
+
     Updates the project context with new information.
     """
     try:
@@ -311,9 +311,9 @@ async def update_project_context(
         await session.update_project_context(context)
         return {"message": "Project context updated successfully"}
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail="Session not found") from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to update context: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to update context: {e!s}") from e
 
 
 @session_router.post("/{session_id}/tasks")
@@ -324,7 +324,7 @@ async def add_task(
 ):
     """
     Add a task to a session.
-    
+
     Adds a new task to the session's task queue.
     """
     try:
@@ -332,9 +332,9 @@ async def add_task(
         await session.add_task(task)
         return {"message": "Task added successfully"}
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail="Session not found") from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to add task: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to add task: {e!s}") from e
 
 
 @session_router.get("/{session_id}/tasks")
@@ -344,7 +344,7 @@ async def get_tasks(
 ):
     """
     Get tasks for a session.
-    
+
     Retrieves all tasks associated with the session.
     """
     try:
@@ -352,9 +352,9 @@ async def get_tasks(
         tasks = await session.get_tasks()
         return {"tasks": tasks, "count": len(tasks)}
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail="Session not found") from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get tasks: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to get tasks: {e!s}") from e
 
 
 @session_router.get("/stats", response_model=SessionStats)
@@ -363,7 +363,7 @@ async def get_session_stats(
 ):
     """
     Get session statistics.
-    
+
     Retrieves comprehensive statistics about all sessions.
     """
     try:
@@ -390,4 +390,4 @@ async def get_session_stats(
             average_session_duration=avg_duration
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get session stats: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to get session stats: {e!s}") from e

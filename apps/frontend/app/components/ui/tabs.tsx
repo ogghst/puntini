@@ -42,7 +42,7 @@ const TabsList = React.forwardRef<
     selectedValue?: string
     onValueChange?: (value: string) => void
   }
->(({ className, selectedValue, onValueChange, ...props }, ref) => (
+>(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(

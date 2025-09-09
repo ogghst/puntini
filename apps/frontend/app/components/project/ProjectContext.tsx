@@ -5,7 +5,7 @@
  * project-specific information within a session.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -43,7 +43,7 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
   const [editData, setEditData] = useState<Record<string, any>>({});
 
   // Load project context
-  const loadContext = async () => {
+  const loadContext = useCallback(async () => {
     if (!sessionId) return;
     
     setIsLoading(true);
@@ -59,12 +59,12 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sessionId]);
 
   // Load context on session change
   useEffect(() => {
     loadContext();
-  }, [sessionId]);
+  }, [loadContext]);
 
   // Save context changes
   const handleSave = async () => {

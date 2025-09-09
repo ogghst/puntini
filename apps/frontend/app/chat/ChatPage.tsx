@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
+import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { useSession, useMessages, SessionAPIError, type Message as SessionMessage } from '../utils/session';
 
@@ -61,7 +61,7 @@ const ChatPage: React.FC = () => {
   
   // Use session management hooks
   const { currentSession, isLoading: sessionLoading, error: sessionError, createSession } = useSession();
-  const { messages: sessionMessages, sendMessage, receiveMessage, isLoading: messageLoading } = useMessages(currentSession?.session_id || null);
+  const { messages: sessionMessages, sendMessage, isLoading: messageLoading } = useMessages(currentSession?.session_id || null);
 
   // Create session on component mount
   useEffect(() => {

@@ -5,7 +5,7 @@
  * and managing project tasks.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -28,7 +28,6 @@ import {
   AlertCircle,
   CheckCircle,
   Circle,
-  Trash2,
   Filter
 } from 'lucide-react';
 
@@ -47,7 +46,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   const [tasks, setTasks] = useState<TaskInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [editingTask, setEditingTask] = useState<string | null>(null);
+  const [, setEditingTask] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<{
     status?: TaskStatus;
@@ -62,7 +61,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   });
 
   // Load tasks
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     if (!sessionId) return;
     
     setIsLoading(true);
@@ -81,12 +80,12 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sessionId, onTaskUpdate]);
 
   // Load tasks on session change
   useEffect(() => {
     loadTasks();
-  }, [sessionId]);
+  }, [loadTasks]);
 
   // Create new task
   const handleCreateTask = async () => {
@@ -134,11 +133,6 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   // Start editing task
   const handleStartEdit = (task: TaskInfo) => {
     setEditingTask(task.id);
-  };
-
-  // Cancel editing
-  const handleCancelEdit = () => {
-    setEditingTask(null);
   };
 
   // Get status badge color

@@ -6,6 +6,7 @@ with runtime orchestration and message queuing capabilities.
 """
 
 import asyncio
+import contextlib
 import logging
 from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime, timedelta
@@ -19,7 +20,7 @@ from models.session import Message, MessageType, SessionInfo, SessionStatus, Tas
 class UserSession:
     """
     Manages individual user sessions with runtime orchestration and message queuing.
-    
+
     Main responsibilities:
     - Session Management: Creates and manages individual user sessions with unique IDs
     - Runtime Orchestration: Initializes and controls the agent runtime for each session
@@ -105,19 +106,15 @@ class UserSession:
             # Stop runtime task
             if self._runtime_task and not self._runtime_task.done():
                 self._runtime_task.cancel()
-                try:
+                with contextlib.suppress(asyncio.CancelledError):
                     await self._runtime_task
-                except asyncio.CancelledError:
-                    pass
 
             # Stop agent tasks
-            for agent_name, task in self._agent_tasks.items():
+            for _agent_name, task in self._agent_tasks.items():
                 if not task.done():
                     task.cancel()
-                    try:
+                    with contextlib.suppress(asyncio.CancelledError):
                         await task
-                    except asyncio.CancelledError:
-                        pass
 
             # Clear queues
             self._clear_queues()
@@ -143,12 +140,12 @@ class UserSession:
     ) -> str:
         """
         Send a message to the session.
-        
+
         Args:
             content: Message content
             message_type: Type of message
             metadata: Optional message metadata
-            
+
         Returns:
             str: Message ID
         """
@@ -171,10 +168,10 @@ class UserSession:
     async def receive_message(self, timeout: float | None = None) -> Message | None:
         """
         Receive a message from the session.
-        
+
         Args:
             timeout: Optional timeout in seconds
-            
+
         Returns:
             Message: The received message, or None if timeout
         """
@@ -200,7 +197,7 @@ class UserSession:
     ):
         """
         Register a message handler for a specific message type.
-        
+
         Args:
             message_type: Type of message to handle
             handler: Async function to handle the message
