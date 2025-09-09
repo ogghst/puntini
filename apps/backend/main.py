@@ -5,13 +5,21 @@ This module provides the main FastAPI application with basic endpoints
 for the Phase 0 scaffolding requirements.
 """
 
+import logging
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-import logging
 
+from api.routers import (
+    agent_router,
+    graph_router,
+    health_router,
+    session_router,
+    todo_router,
+)
+from api.session_manager import get_session_manager
 from config.config import ConfigManager
-from api.routers import health_router, agent_router, graph_router, todo_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     """
     Application lifespan manager for startup and shutdown events.
     
@@ -30,11 +38,20 @@ async def lifespan(app: FastAPI):
     logger.info("Starting FastAPI application...")
     config = ConfigManager()
     logger.info(f"Configuration loaded: {config.config}")
-    
+
+    # Initialize session manager
+    session_manager = get_session_manager()
+    await session_manager.start()
+    logger.info("Session manager started")
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down FastAPI application...")
+
+    # Stop session manager
+    await session_manager.stop()
+    logger.info("Session manager stopped")
 
 
 def create_app() -> FastAPI:
@@ -50,7 +67,7 @@ def create_app() -> FastAPI:
         version="0.1.0",
         lifespan=lifespan
     )
-    
+
     # Add CORS middleware for frontend integration
     app.add_middleware(
         CORSMiddleware,
@@ -59,13 +76,30 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
+
     # Include API routers
     app.include_router(health_router)
     app.include_router(agent_router)
     app.include_router(graph_router)
     app.include_router(todo_router)
-    
+    app.include_router(session_router)
+
+    # Add root endpoint
+    @app.get("/")
+    async def hello_world():
+        """
+        Hello world endpoint for basic API connectivity testing.
+        
+        Returns:
+            dict: Simple greeting message with API information
+        """
+        return {
+            "message": "Hello World!",
+            "api": "Business Improvement Project Management API",
+            "version": "0.1.0",
+            "status": "running"
+        }
+
     return app
 
 
@@ -73,44 +107,17 @@ def create_app() -> FastAPI:
 app = create_app()
 
 
-@app.get("/")
-async def hello_world():
-    """
-    Hello world endpoint for basic API connectivity testing.
-    
-    Returns:
-        dict: Simple greeting message with API information
-    """
-    return {
-        "message": "Hello World!",
-        "api": "Business Improvement Project Management API",
-        "version": "0.1.0",
-        "status": "running"
-    }
 
 
-@app.get("/health")
-async def health_check():
-    """
-    Health check endpoint for monitoring and load balancer health checks.
-    
-    Returns:
-        dict: Health status information
-    """
-    return {
-        "status": "healthy",
-        "service": "business-improvement-api",
-        "version": "0.1.0"
-    }
 
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     # Get configuration
     config = ConfigManager()
     config_data = config.config
-    
+
     # Run the server
     uvicorn.run(
         "main:app",

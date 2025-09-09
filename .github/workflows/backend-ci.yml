@@ -1,0 +1,174 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "apps/backend/**"
+      - ".github/workflows/backend-ci.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "apps/backend/**"
+      - ".github/workflows/backend-ci.yml"
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11, 3.12]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('apps/backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        working-directory: ./apps/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install pre-commit
+        run: |
+          pip install pre-commit
+          pre-commit install
+
+      - name: Run Ruff linter
+        working-directory: ./apps/backend
+        run: |
+          ruff check . --output-format=github
+
+      - name: Run Black formatter check
+        working-directory: ./apps/backend
+        run: |
+          black --check --diff .
+
+      - name: Run isort import sorting check
+        working-directory: ./apps/backend
+        run: |
+          isort --check-only --diff .
+
+      - name: Run Flake8 linter
+        working-directory: ./apps/backend
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+
+      - name: Run MyPy type checker
+        working-directory: ./apps/backend
+        run: |
+          mypy . --ignore-missing-imports
+
+      - name: Run Bandit security linter
+        working-directory: ./apps/backend
+        run: |
+          bandit -r . -f json -o bandit-report.json || true
+          bandit -r . -ll
+
+      - name: Run Pylint
+        working-directory: ./apps/backend
+        run: |
+          pylint api/ config/ models/ graphstore/ agent/ --rcfile=pyproject.toml --output-format=json > pylint-report.json || true
+
+      - name: Run tests
+        working-directory: ./apps/backend
+        run: |
+          python -m pytest --cov=. --cov-report=xml --cov-report=html --junitxml=test-results.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./apps/backend/coverage.xml
+          flags: backend
+          name: backend-coverage
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results-${{ matrix.python-version }}
+          path: |
+            apps/backend/test-results.xml
+            apps/backend/coverage.xml
+            apps/backend/htmlcov/
+            apps/backend/bandit-report.json
+            apps/backend/pylint-report.json
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        working-directory: ./apps/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Safety check
+        working-directory: ./apps/backend
+        run: |
+          safety check --json --output safety-report.json || true
+          safety check
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-reports
+          path: |
+            apps/backend/safety-report.json
+            apps/backend/bandit-report.json
+
+  build-and-deploy:
+    needs: [lint-and-test, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        working-directory: ./apps/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run final tests
+        working-directory: ./apps/backend
+        run: |
+          python -m pytest
+
+      - name: Build application
+        working-directory: ./apps/backend
+        run: |
+          echo "Build commands would go here"
+          # python setup.py build
+
+      - name: Deploy to staging
+        run: |
+          echo "Deployment commands would go here"
+          # Add deployment steps here

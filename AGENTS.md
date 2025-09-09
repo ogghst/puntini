@@ -19,6 +19,7 @@ The agent assists in creating and managing business improvement projects using A
 ### Backend Components
 - **Framework**: LangGraph as a stateful graph orchestration runtime to ensure plan→act→observe cycles with deterministic conditions and escalations. [^13][^21]
 - **Orchestrator**: a state machine with Extract→Validate→Upsert→Answer nodes and policies for progressive context disclosure and intelligent escalation. [^22][^13]
+- **Session Management**: Core infrastructure for handling individual user interactions with lifecycle management, concurrency control, and agent registration. [^34][^35]
 - **Validation**: Pydantic models for nodes and Patches, with structured outputs for model→tool contracts and targeted re-asks on validation failure. [^16][^18]
 - **Abstract GraphStore**: a single interface for persistence/query on Neo4j and NebulaGraph with Cypher↔nGQL mapping encapsulated in adapters. [^14][^23]
 - **QA on graph**: NL→Cypher/nGQL chains for queries and synthetic reports, maintaining the KG as the authoritative source. [^14][^17]
@@ -40,9 +41,10 @@ The agent assists in creating and managing business improvement projects using A
 
 - **/apps/backend**: FastAPI (routers, services, GraphStore adapters, auth, health) with contracts and JSON examples for coding assistants. [^19][^10]
 - **/apps/backend/agent**: LangGraph workflow, nodes, prompts, tool registry, disclosure/escalation policies, and unit tests. [^11][^13]
+- **/apps/backend/api**: FastAPI routers, session management, and endpoint implementations with comprehensive session handling. [^34][^35]
 - **/apps/backend/config**: Configuration management with ConfigManager singleton, environment setup, and logging configuration. [^19][^10]
 - **/apps/backend/graphstore**: interfaces, Neo4jStore, NebulaStore, DDL/migrations, and query/upsert mapping. [^14][^23]
-- **/apps/backend/models**: Pydantic models for Project, User, Epic, Issue, and Patch/Spec, versioned for backward compatibility. [^16][^18]
+- **/apps/backend/models**: Pydantic models for Project, User, Epic, Issue, Session, and Patch/Spec, versioned for backward compatibility. [^16][^18]
 - **/apps/backend/tests**: Unit tests organized by module with proper test isolation and fixtures. [^19][^20]
 
 ### Backend Test Organization
@@ -56,7 +58,16 @@ The agent assists in creating and managing business improvement projects using A
 ### Backend API (FastAPI)
 
 - **Endpoints**: POST /agent/act, POST /graph/patch, GET /graph/query, GET/POST /todo, GET /health, with JSON schemas and examples for coding tools. [^19][^10]
+- **Session Management**: POST /sessions, GET /sessions/{id}, DELETE /sessions/{id}, POST /sessions/{id}/messages, GET /sessions/{id}/context, with comprehensive session lifecycle management. [^34][^35]
 - **Security**: environment variables, API keys or OAuth at different levels, and structured logs with trace IDs for audit and diagnosis. [^19][^20]
+
+### Session Management Architecture
+
+- **SessionManager**: Centralized session lifecycle management with thread-safe operations, automatic cleanup, and agent registration. Handles session creation, retrieval, destruction, and resource management. [^34][^35]
+- **Session Class**: Individual session instances with runtime orchestration, message queuing, project context management, and task tracking. Each session maintains its own agent runtime and communication queues. [^34][^35]
+- **Message Routing**: Asynchronous message processing with typed message handlers, input/output queues, and real-time communication between frontend and multi-agent system. [^34][^35]
+- **Concurrency Control**: Async locks and context managers ensure thread-safe session operations and prevent race conditions in multi-user environments. [^34][^35]
+- **Resource Management**: Automatic cleanup of expired sessions, memory management, and graceful shutdown of agent tasks and runtime resources. [^34][^35]
 
 ### Coding Standards
 
@@ -86,6 +97,11 @@ The agent assists in creating and managing business improvement projects using A
 │  |  ├─ agent/
 │  |  |  ├─ __init__.py
 │  |  |  └─ graph.py
+│  |  ├─ api/
+│  |  |  ├─ __init__.py
+│  |  |  ├─ routers.py
+│  |  |  ├─ session_manager.py
+│  |  |  └─ session.py
 │  |  ├─ config/
 │  |  |  ├─ __init__.py
 │  |  |  └─ config.py
@@ -96,12 +112,14 @@ The agent assists in creating and managing business improvement projects using A
 │  |  |  ├─ __init__.py
 │  |  |  ├─ base.py
 │  |  |  ├─ domain.py
-│  |  |  └─ graph.py
+│  |  |  ├─ graph.py
+│  |  |  └─ session.py
 │  |  ├─ tests/
 │  |  |  ├─ test_config.py
 │  |  |  └─ test_placeholder.py
 │  |  ├─ __init__.py
 │  |  ├─ config.json
+│  |  ├─ main.py
 │  |  └─ requirements.txt
 │  └─ frontend/
 └─ infra/
@@ -304,3 +322,7 @@ Relationship Guidelines
 [^32]: https://research.aimultiple.com/agents-md/
 
 [^33]: https://platform.openai.com/docs/guides/structured-outputs
+
+[^34]: https://docs.python.org/3/library/asyncio.html
+
+[^35]: https://fastapi.tiangolo.com/advanced/async-sql-databases/

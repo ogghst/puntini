@@ -1,7 +1,7 @@
-from typing import TypedDict, Annotated
-import operator
+from typing import TypedDict
 
-from langgraph.graph import StateGraph, END
+from langgraph.graph import END, StateGraph
+
 
 # The state of our graph
 class AgentState(TypedDict):
@@ -11,7 +11,7 @@ class AgentState(TypedDict):
     upsert_results: dict
     response: str
 
-def extract(state: AgentState):
+def extract(_state: AgentState):
     """
     Placeholder for the entity extraction node.
     """
@@ -27,7 +27,7 @@ def validate(state: AgentState):
     # In a real implementation, this would use Pydantic models to validate.
     return {"validated_entities": state["extracted_entities"]}
 
-def upsert(state: AgentState):
+def upsert(_state: AgentState):
     """
     Placeholder for the graph upsert node.
     """
@@ -35,7 +35,7 @@ def upsert(state: AgentState):
     # In a real implementation, this would call the GraphStore.
     return {"upsert_results": {"success": True}}
 
-def answer(state: AgentState):
+def answer(_state: AgentState):
     """
     Placeholder for the final response generation node.
     """
@@ -62,9 +62,3 @@ workflow.add_edge("answer", END)
 # Compile the app
 app = workflow.compile()
 
-# You can uncomment the following lines to visualize the graph
-# from IPython.display import Image, display
-# try:
-#     display(Image(app.get_graph(xray=True).draw_mermaid_png()))
-# except:
-#     pass

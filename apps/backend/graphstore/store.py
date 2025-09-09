@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Literal
+from typing import Any, Literal
 
 from ..models.graph import Patch
 
@@ -11,7 +11,7 @@ class GraphStore(ABC):
     """
 
     @abstractmethod
-    def upsert(self, patches: List[Patch]) -> Dict[str, Any]:
+    def upsert(self, patches: list[Patch]) -> dict[str, Any]:
         """
         Applies a list of idempotent patch operations to the graph.
         
@@ -24,7 +24,7 @@ class GraphStore(ABC):
         pass
 
     @abstractmethod
-    def query_graph(self, query: str, engine: Literal["cypher", "ngql"] = "cypher") -> List[Dict[str, Any]]:
+    def query_graph(self, query: str, engine: Literal["cypher", "ngql"] = "cypher") -> list[dict[str, Any]]:
         """
         Executes a raw query against the graph database.
         
@@ -38,7 +38,7 @@ class GraphStore(ABC):
         pass
 
     @abstractmethod
-    def health(self) -> Dict[str, Any]:
+    def health(self) -> dict[str, Any]:
         """
         Checks the health of the connection to the graph database.
         

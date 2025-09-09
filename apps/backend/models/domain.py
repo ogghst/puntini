@@ -1,12 +1,15 @@
-from typing import Optional, Literal, Annotated
+from typing import Annotated, Literal
 from uuid import UUID
+
 from pydantic import Field
+
 from .base import BaseEntity
+
 
 class Progetto(BaseEntity):
     """Represents a project."""
     nome: Annotated[str, Field(description="The name of the project.")]
-    descrizione: Annotated[Optional[str], Field(description="A brief description of the project.")] = None
+    descrizione: Annotated[str | None, Field(description="A brief description of the project.")] = None
 
 class Utente(BaseEntity):
     """Represents a user."""
