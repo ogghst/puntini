@@ -28,7 +28,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Cache pip dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('apps/backend/requirements.txt') }}
@@ -89,23 +89,28 @@ jobs:
           python -m pytest --cov=. --cov-report=xml --cov-report=html --junitxml=test-results.xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           file: ./apps/backend/coverage.xml
           flags: backend
           name: backend-coverage
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v3
+      - name: Prepare artifacts
+        if: always()
+        run: |
+          mkdir -p ci-cd/backend
+          mv apps/backend/test-results.xml ci-cd/backend/
+          mv apps/backend/coverage.xml ci-cd/backend/
+          mv apps/backend/htmlcov ci-cd/backend/
+          mv apps/backend/bandit-report.json ci-cd/backend/
+          mv apps/backend/pylint-report.json ci-cd/backend/
+
+      - name: Upload lint and test reports
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results-${{ matrix.python-version }}
-          path: |
-            apps/backend/test-results.xml
-            apps/backend/coverage.xml
-            apps/backend/htmlcov/
-            apps/backend/bandit-report.json
-            apps/backend/pylint-report.json
+          name: backend-lint-test-reports-${{ matrix.python-version }}
+          path: ci-cd/
 
   security-scan:
     runs-on: ubuntu-latest
@@ -118,33 +123,41 @@ jobs:
           python-version: 3.11
 
       - name: Install dependencies
-        working-directory: ./apps/backend
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r apps/backend/requirements.txt
+          pip install safety
 
       - name: Run Safety check
-        working-directory: ./apps/backend
         run: |
-          safety check --json --output safety-report.json || true
-          safety check
+          safety check --file=apps/backend/requirements.txt --json --output safety-report.json || true
+          safety check --file=apps/backend/requirements.txt
+
+      - name: Prepare artifacts
+        if: always()
+        run: |
+          mkdir -p ci-cd/backend
+          mv safety-report.json ci-cd/backend/
 
       - name: Upload security reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: security-reports
-          path: |
-            apps/backend/safety-report.json
-            apps/backend/bandit-report.json
+          name: backend-security-reports
+          path: ci-cd/
 
-  build-and-deploy:
+  package-and-deploy:
     needs: [lint-and-test, security-scan]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
 
       - name: Set up Python
         uses: actions/setup-python@v4
