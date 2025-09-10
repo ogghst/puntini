@@ -1,27 +1,31 @@
-from typing import Annotated, Literal
-from uuid import UUID
+"""Domain models for the backend."""
 
-from pydantic import Field
+from enum import Enum
 
 from .base import BaseEntity
 
 
-class Progetto(BaseEntity):
-    """Represents a project."""
-    nome: Annotated[str, Field(description="The name of the project.")]
-    descrizione: Annotated[str | None, Field(description="A brief description of the project.")] = None
+class Priority(str, Enum):
+    """Priority levels for tasks."""
 
-class Utente(BaseEntity):
-    """Represents a user."""
-    user_id: Annotated[str, Field(description="The user's unique ID from an external system.")]
-    nome: Annotated[str, Field(description="The user's full name.")]
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
 
-class Epic(BaseEntity):
-    """Represents an epic within a project."""
-    titolo: Annotated[str, Field(description="The title of the epic.")]
-    progetto_id: Annotated[UUID, Field(description="The ID of the project this epic belongs to.")]
 
-class Issue(BaseEntity):
-    """Represents an issue within an epic."""
-    titolo: Annotated[str, Field(description="The title of the issue.")]
-    stato: Annotated[Literal["open","in_progress","done","blocked"], Field(description="The current status of the issue.")] = "open"
+class TaskStatus(str, Enum):
+    """Status levels for tasks."""
+
+    PENDING = "pending"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+
+
+class Task(BaseEntity):
+    """Task model."""
+
+    id: str
+    name: str
+    description: str | None = None
+    status: TaskStatus = TaskStatus.PENDING
+    priority: Priority = Priority.MEDIUM

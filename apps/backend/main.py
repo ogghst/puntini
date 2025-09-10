@@ -1,5 +1,4 @@
-"""
-FastAPI main application for the business improvement project management system.
+"""FastAPI main application for the business improvement project management system.
 
 This module provides the main FastAPI application with basic endpoints
 for the Phase 0 scaffolding requirements.
@@ -28,9 +27,8 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    """
-    Application lifespan manager for startup and shutdown events.
-    
+    """Application lifespan manager for startup and shutdown events.
+
     This handles initialization and cleanup of resources when the FastAPI
     application starts and stops.
     """
@@ -55,17 +53,17 @@ async def lifespan(_app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    """
-    Create and configure the FastAPI application.
-    
+    """Create and configure the FastAPI application.
+
     Returns:
         FastAPI: Configured FastAPI application instance
+
     """
     app = FastAPI(
         title="Business Improvement Project Management API",
         description="API for managing business improvement projects using Agile and PMI methodologies",
         version="0.1.0",
-        lifespan=lifespan
+        lifespan=lifespan,
     )
 
     # Add CORS middleware for frontend integration
@@ -87,17 +85,17 @@ def create_app() -> FastAPI:
     # Add root endpoint
     @app.get("/")
     async def hello_world():
-        """
-        Hello world endpoint for basic API connectivity testing.
-        
+        """Hello world endpoint for basic API connectivity testing.
+
         Returns:
             dict: Simple greeting message with API information
+
         """
         return {
             "message": "Hello World!",
             "api": "Business Improvement Project Management API",
             "version": "0.1.0",
-            "status": "running"
+            "status": "running",
         }
 
     return app
@@ -105,10 +103,6 @@ def create_app() -> FastAPI:
 
 # Create the FastAPI application instance
 app = create_app()
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -121,8 +115,8 @@ if __name__ == "__main__":
     # Run the server
     uvicorn.run(
         "main:app",
-        host=config_data.get("api_host", "0.0.0.0"),
+        host=config_data.get("api_host", "0.0.0.0"),  # noqa: S104
         port=config_data.get("api_port", 8000),
         reload=config_data.get("api_reload", True),
-        log_level=config_data.get("log_level", "info").lower()
+        log_level=config_data.get("log_level", "info").lower(),
     )

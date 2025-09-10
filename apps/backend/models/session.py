@@ -1,5 +1,4 @@
-"""
-Session-related Pydantic models for the business improvement project management system.
+"""Session-related Pydantic models for the business improvement project management system.
 
 This module contains Pydantic models for session management, including
 session data structures, message types, and API request/response models.
@@ -15,6 +14,7 @@ from pydantic import BaseModel, Field
 
 class SessionStatus(str, Enum):
     """Session status enumeration."""
+
     INITIALIZING = "initializing"
     ACTIVE = "active"
     PAUSED = "paused"
@@ -25,6 +25,7 @@ class SessionStatus(str, Enum):
 
 class MessageType(str, Enum):
     """Message type enumeration."""
+
     USER = "user"
     SYSTEM = "system"
     AGENT = "agent"
@@ -33,6 +34,7 @@ class MessageType(str, Enum):
 
 class SessionInfo(BaseModel):
     """Session information model."""
+
     session_id: UUID = Field(..., description="Unique session identifier")
     user_id: str = Field(..., description="User identifier")
     project_id: UUID | None = Field(None, description="Project context identifier")
@@ -44,27 +46,36 @@ class SessionInfo(BaseModel):
     is_active: bool = Field(..., description="Whether the session is active")
     agent_count: int = Field(..., description="Number of active agents")
     task_count: int = Field(..., description="Number of pending tasks")
-    metadata: dict[str, Any] = Field(default_factory=dict, description="Session metadata")
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Session metadata"
+    )
 
 
 class Message(BaseModel):
     """Message model for session communication."""
+
     id: str = Field(..., description="Unique message identifier")
     content: Any = Field(..., description="Message content")
     timestamp: datetime = Field(..., description="Message timestamp")
     message_type: MessageType = Field(..., description="Type of message")
-    metadata: dict[str, Any] = Field(default_factory=dict, description="Message metadata")
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Message metadata"
+    )
 
 
 class SessionCreateRequest(BaseModel):
     """Request model for creating a new session."""
+
     user_id: str = Field(..., description="User identifier")
     project_id: UUID | None = Field(None, description="Optional project context")
-    metadata: dict[str, Any] | None = Field(None, description="Optional session metadata")
+    metadata: dict[str, Any] | None = Field(
+        None, description="Optional session metadata"
+    )
 
 
 class SessionResponse(BaseModel):
     """Response model for session information."""
+
     session_id: UUID = Field(..., description="Session identifier")
     user_id: str = Field(..., description="User identifier")
     project_id: UUID | None = Field(None, description="Project context identifier")
@@ -81,13 +92,19 @@ class SessionResponse(BaseModel):
 
 class MessageRequest(BaseModel):
     """Request model for sending a message to a session."""
+
     content: Any = Field(..., description="Message content")
-    message_type: MessageType = Field(default=MessageType.USER, description="Type of message")
-    metadata: dict[str, Any] | None = Field(None, description="Optional message metadata")
+    message_type: MessageType = Field(
+        default=MessageType.USER, description="Type of message"
+    )
+    metadata: dict[str, Any] | None = Field(
+        None, description="Optional message metadata"
+    )
 
 
 class MessageResponse(BaseModel):
     """Response model for message information."""
+
     message_id: str = Field(..., description="Message identifier")
     content: Any = Field(..., description="Message content")
     timestamp: str = Field(..., description="Message timestamp (ISO format)")
@@ -97,11 +114,13 @@ class MessageResponse(BaseModel):
 
 class ProjectContextUpdate(BaseModel):
     """Model for updating project context."""
+
     context: dict[str, Any] = Field(..., description="Project context data")
 
 
 class TaskInfo(BaseModel):
     """Model for task information."""
+
     id: str = Field(..., description="Task identifier")
     title: str = Field(..., description="Task title")
     description: str | None = Field(None, description="Task description")
@@ -117,6 +136,7 @@ class TaskInfo(BaseModel):
 
 class SessionListResponse(BaseModel):
     """Response model for listing sessions."""
+
     sessions: list[SessionResponse] = Field(..., description="List of sessions")
     total_count: int = Field(..., description="Total number of sessions")
     active_count: int = Field(..., description="Number of active sessions")
@@ -124,6 +144,7 @@ class SessionListResponse(BaseModel):
 
 class SessionStats(BaseModel):
     """Session statistics model."""
+
     total_sessions: int = Field(..., description="Total number of sessions")
     active_sessions: int = Field(..., description="Number of active sessions")
     expired_sessions: int = Field(..., description="Number of expired sessions")

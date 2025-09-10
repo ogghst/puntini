@@ -97,7 +97,7 @@ fi
 
 # 8. Safety - Dependency vulnerability check
 print_status "Running Safety dependency check..."
-if safety check --json --output reports/safety-report.json; then
+if safety check --output json > reports/safety-report.json; then
     print_success "Safety check passed"
 else
     print_warning "Safety found dependency vulnerabilities (see reports/safety-report.json)"

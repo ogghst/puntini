@@ -1,5 +1,4 @@
-"""
-Models package for the business improvement project management system.
+"""Models package for the business improvement project management system.
 
 This package contains all Pydantic models used throughout the application,
 including domain entities, graph operations, and session management.
@@ -39,5 +38,5 @@ __all__ = [
     "SessionStats",
     "SessionStatus",
     "TaskInfo",
-    "Utente"
+    "Utente",
 ]

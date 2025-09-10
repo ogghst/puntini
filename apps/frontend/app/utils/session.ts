@@ -21,7 +21,7 @@ export interface SessionInfo {
   is_active: boolean;
   agent_count: number;
   task_count: number;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export type SessionStatus =
@@ -34,10 +34,10 @@ export type SessionStatus =
 
 export interface Message {
   id: string;
-  content: any;
+  content: unknown;
   timestamp: string;
   message_type: MessageType;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export type MessageType = "user" | "system" | "agent" | "error";
@@ -45,17 +45,17 @@ export type MessageType = "user" | "system" | "agent" | "error";
 export interface SessionCreateRequest {
   user_id: string;
   project_id?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface MessageRequest {
-  content: any;
+  content: unknown;
   message_type?: MessageType;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ProjectContext {
-  project_context: Record<string, any>;
+  project_context: Record<string, unknown>;
   tasks: TaskInfo[];
   task_count: number;
 }
@@ -67,7 +67,7 @@ export interface TaskInfo {
   status: "pending" | "in_progress" | "completed" | "cancelled";
   priority: "low" | "medium" | "high" | "urgent";
   created_at: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface SessionListResponse {
@@ -90,7 +90,7 @@ export class SessionAPIError extends Error {
   constructor(
     message: string,
     public status?: number,
-    public details?: any
+    public details?: unknown
   ) {
     super(message);
     this.name = "SessionAPIError";
@@ -186,7 +186,7 @@ export class SessionAPI {
 
   static async updateProjectContext(
     sessionId: string,
-    context: Record<string, any>
+    context: Record<string, unknown>
   ): Promise<{ message: string }> {
     return this.request<{ message: string }>(`/sessions/${sessionId}/context`, {
       method: "PUT",

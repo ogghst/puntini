@@ -332,3 +332,6 @@ temp/
 
 # logs
 logs/
+
+# project specific
+apps/backend/reports/
