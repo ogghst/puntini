@@ -1,11 +1,9 @@
-"""
-Unit tests for session management functionality.
+"""Unit tests for session management functionality.
 
 This module contains tests for SessionManager and Session classes
 to ensure proper session lifecycle management and message handling.
 """
 
-import os
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -42,9 +40,7 @@ class TestSessionManager:
         project_id = uuid4()
 
         session = await session_manager.create_session(
-            user_id=user_id,
-            project_id=project_id,
-            metadata={"test": "data"}
+            user_id=user_id, project_id=project_id, metadata={"test": "data"}
         )
 
         assert session.user_id == user_id
@@ -102,6 +98,7 @@ class TestSessionManager:
     @pytest.mark.asyncio
     async def test_agent_registration(self, session_manager):
         """Test agent registration."""
+
         class MockAgent:
             def __init__(self, session):
                 self.session = session
@@ -123,7 +120,7 @@ class TestSession:
             session_id=uuid4(),
             user_id="test_user",
             project_id=uuid4(),
-            metadata={"test": "data"}
+            metadata={"test": "data"},
         )
 
     @pytest.mark.asyncio
@@ -141,9 +138,7 @@ class TestSession:
         await session.initialize()
 
         message_id = await session.send_message(
-            content="Hello, world!",
-            message_type="user",
-            metadata={"test": "message"}
+            content="Hello, world!", message_type="user", metadata={"test": "message"}
         )
 
         assert message_id is not None

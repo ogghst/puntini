@@ -1,5 +1,4 @@
-"""
-Session management infrastructure for handling user interactions.
+"""Session management infrastructure for handling user interactions.
 
 This module provides the core infrastructure for managing individual user sessions
 between the backend and frontend, including agent registration, message routing,
@@ -14,30 +13,35 @@ from uuid import UUID, uuid4
 
 from config.config import get_config
 
+from .user_session import UserSession
+
 if TYPE_CHECKING:
     from .user_session import UserSession as Session
 
 
 class SessionError(Exception):
     """Base exception for session-related errors."""
+
     pass
 
 
 class SessionNotFoundError(SessionError):
     """Raised when a session is not found."""
+
     pass
 
 
 class SessionTimeoutError(SessionError):
     """Raised when a session operation times out."""
+
     pass
 
 
 class SessionManager:
-    """
-    Manages user sessions and provides core infrastructure for handling
+    """Manages user sessions and provides core infrastructure for handling.
+
     individual user interactions between the backend and frontend.
-    
+
     Main responsibilities:
     - Session Lifecycle: Handles creation, retrieval, and cleanup of user sessions
     - Concurrency Control: Uses async locks to ensure thread-safe session management
@@ -49,6 +53,7 @@ class SessionManager:
     """
 
     def __init__(self):
+        """Initialize the session manager."""
         self._sessions: dict[UUID, Session] = {}
         self._session_locks: dict[UUID, asyncio.Lock] = {}
         self._cleanup_task: asyncio.Task | None = None
@@ -57,8 +62,12 @@ class SessionManager:
         self._logger = logging.getLogger(__name__)
 
         # Session configuration
-        self._session_timeout = self._config.get("session_timeout", 3600)  # 1 hour default
-        self._cleanup_interval = self._config.get("cleanup_interval", 300)  # 5 minutes default
+        self._session_timeout = self._config.get(
+            "session_timeout", 3600
+        )  # 1 hour default
+        self._cleanup_interval = self._config.get(
+            "cleanup_interval", 300
+        )  # 5 minutes default
         self._max_sessions = self._config.get("max_sessions", 1000)
 
         # Agent registry for automatic registration
@@ -90,25 +99,22 @@ class SessionManager:
         self,
         user_id: str,
         project_id: UUID | None = None,
-        metadata: dict[str, Any] | None = None
+        metadata: dict[str, Any] | None = None,
     ) -> "Session":
-        """
-        Create a new user session.
-        
+        """Create a new user session.
+
         Args:
             user_id: Unique identifier for the user
             project_id: Optional project context for the session
             metadata: Optional metadata for the session
-            
+
         Returns:
             Session: The created session instance
-            
+
         Raises:
             SessionError: If session creation fails
-        """
-        # Import here to avoid circular import
-        from .user_session import UserSession
 
+        """
         if len(self._sessions) >= self._max_sessions:
             # Remove oldest session if at capacity
             await self._cleanup_oldest_session()
@@ -126,7 +132,7 @@ class SessionManager:
                 user_id=user_id,
                 project_id=project_id,
                 metadata=metadata or {},
-                manager=self
+                manager=self,
             )
 
             # Initialize session
@@ -145,17 +151,17 @@ class SessionManager:
             raise SessionError(f"Failed to create session: {e}") from e
 
     async def get_session(self, session_id: UUID) -> "Session":
-        """
-        Retrieve an existing session.
-        
+        """Retrieve an existing session.
+
         Args:
             session_id: The session identifier
-            
+
         Returns:
             Session: The session instance
-            
+
         Raises:
             SessionNotFoundError: If session doesn't exist
+
         """
         if session_id not in self._sessions:
             raise SessionNotFoundError(f"Session {session_id} not found")
@@ -170,14 +176,14 @@ class SessionManager:
         return session
 
     async def destroy_session(self, session_id: UUID) -> bool:
-        """
-        Destroy a session and cleanup its resources.
-        
+        """Destroy a session and cleanup its resources.
+
         Args:
             session_id: The session identifier
-            
+
         Returns:
             bool: True if session was destroyed, False if not found
+
         """
         if session_id not in self._sessions:
             return False
@@ -203,14 +209,14 @@ class SessionManager:
             return False
 
     async def list_sessions(self, user_id: str | None = None) -> list["Session"]:
-        """
-        List all active sessions, optionally filtered by user.
-        
+        """List all active sessions, optionally filtered by user.
+
         Args:
             user_id: Optional user filter
-            
+
         Returns:
             List[Session]: List of active sessions
+
         """
         sessions = list(self._sessions.values())
 
@@ -220,12 +226,12 @@ class SessionManager:
         return sessions
 
     def register_agent(self, agent_name: str, agent_class: Any):
-        """
-        Register an agent class for automatic session initialization.
-        
+        """Register an agent class for automatic session initialization.
+
         Args:
             agent_name: Name of the agent
             agent_class: Agent class to register
+
         """
         self._agent_registry[agent_name] = agent_class
         self._logger.info(f"Registered agent: {agent_name}")
@@ -266,12 +272,13 @@ class SessionManager:
 
         # Find oldest session by creation time
         oldest_session_id = min(
-            self._sessions.keys(),
-            key=lambda sid: self._sessions[sid].created_at
+            self._sessions.keys(), key=lambda sid: self._sessions[sid].created_at
         )
 
         await self.destroy_session(oldest_session_id)
-        self._logger.info(f"Removed oldest session {oldest_session_id} due to capacity limit")
+        self._logger.info(
+            f"Removed oldest session {oldest_session_id} due to capacity limit"
+        )
 
     @asynccontextmanager
     async def session_lock(self, session_id: UUID):
@@ -299,7 +306,7 @@ _session_manager: SessionManager | None = None
 
 def get_session_manager() -> SessionManager:
     """Get the global session manager instance."""
-    global _session_manager
+    global _session_manager  # noqa: PLW0603
     if _session_manager is None:
         _session_manager = SessionManager()
     return _session_manager

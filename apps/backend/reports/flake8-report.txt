@@ -1,0 +1,1305 @@
+./__init__.py:1:1: D104 Missing docstring in public package
+./agent/__init__.py:1:1: D104 Missing docstring in public package
+./agent/graph.py:1:1: D100 Missing docstring in public module
+./agent/graph.py:7:1: D101 Missing docstring in public class
+./agent/graph.py:14:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:15:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:15:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:22:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:23:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:23:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:30:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:31:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:31:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:38:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:39:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:39:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:43:80: E501 line too long (80 > 79 characters)
+./agent/graph.py:47:1: E305 expected 2 blank lines after class or function definition, found 1
+./agent/graph.py:64:1: W391 blank line at end of file
+./api/routers.py:22:80: E501 line too long (89 > 79 characters)
+./api/routers.py:29:80: E501 line too long (89 > 79 characters)
+./api/routers.py:39:1: W293 blank line contains whitespace
+./api/routers.py:49:80: E501 line too long (94 > 79 characters)
+./api/routers.py:50:80: E501 line too long (90 > 79 characters)
+./api/routers.py:57:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:59:1: W293 blank line contains whitespace
+./api/routers.py:60:80: E501 line too long (84 > 79 characters)
+./api/routers.py:70:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:72:1: W293 blank line contains whitespace
+./api/routers.py:83:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:85:1: W293 blank line contains whitespace
+./api/routers.py:96:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:98:1: W293 blank line contains whitespace
+./api/routers.py:109:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:111:1: W293 blank line contains whitespace
+./api/routers.py:131:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:135:1: W293 blank line contains whitespace
+./api/routers.py:141:1: W293 blank line contains whitespace
+./api/routers.py:142:80: E501 line too long (82 > 79 characters)
+./api/routers.py:145:1: W293 blank line contains whitespace
+./api/routers.py:149:80: E501 line too long (103 > 79 characters)
+./api/routers.py:151:33: W291 trailing whitespace
+./api/routers.py:152:80: E501 line too long (100 > 79 characters)
+./api/routers.py:154:1: W293 blank line contains whitespace
+./api/routers.py:156:1: W293 blank line contains whitespace
+./api/routers.py:158:80: E501 line too long (99 > 79 characters)
+./api/routers.py:182:80: E501 line too long (94 > 79 characters)
+./api/routers.py:187:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:191:1: W293 blank line contains whitespace
+./api/routers.py:202:80: E501 line too long (98 > 79 characters)
+./api/routers.py:204:80: E501 line too long (102 > 79 characters)
+./api/routers.py:218:80: E501 line too long (97 > 79 characters)
+./api/routers.py:224:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:228:1: W293 blank line contains whitespace
+./api/routers.py:252:80: E501 line too long (91 > 79 characters)
+./api/routers.py:258:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:262:1: W293 blank line contains whitespace
+./api/routers.py:271:80: E501 line too long (95 > 79 characters)
+./api/routers.py:278:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:282:1: W293 blank line contains whitespace
+./api/routers.py:312:80: E501 line too long (93 > 79 characters)
+./api/routers.py:319:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:323:1: W293 blank line contains whitespace
+./api/routers.py:345:80: E501 line too long (92 > 79 characters)
+./api/routers.py:352:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:356:1: W293 blank line contains whitespace
+./api/routers.py:376:80: E501 line too long (95 > 79 characters)
+./api/routers.py:382:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:386:1: W293 blank line contains whitespace
+./api/routers.py:402:80: E501 line too long (91 > 79 characters)
+./api/routers.py:409:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:413:1: W293 blank line contains whitespace
+./api/routers.py:423:80: E501 line too long (94 > 79 characters)
+./api/routers.py:430:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:434:1: W293 blank line contains whitespace
+./api/routers.py:444:80: E501 line too long (88 > 79 characters)
+./api/routers.py:450:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:454:1: W293 blank line contains whitespace
+./api/routers.py:464:80: E501 line too long (89 > 79 characters)
+./api/session_manager.py:4:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:5:80: E501 line too long (80 > 79 characters)
+./api/session_manager.py:22:1: D204 1 blank line required after class docstring
+./api/session_manager.py:27:1: D204 1 blank line required after class docstring
+./api/session_manager.py:32:1: D204 1 blank line required after class docstring
+./api/session_manager.py:37:1: D205 1 blank line required between summary line and description
+./api/session_manager.py:37:1: D400 First line should end with a period
+./api/session_manager.py:40:1: W293 blank line contains whitespace
+./api/session_manager.py:42:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:43:80: E501 line too long (84 > 79 characters)
+./api/session_manager.py:45:80: E501 line too long (92 > 79 characters)
+./api/session_manager.py:47:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:48:80: E501 line too long (87 > 79 characters)
+./api/session_manager.py:51:1: D107 Missing docstring in __init__
+./api/session_manager.py:60:80: E501 line too long (91 > 79 characters)
+./api/session_manager.py:61:80: E501 line too long (95 > 79 characters)
+./api/session_manager.py:97:1: W293 blank line contains whitespace
+./api/session_manager.py:102:1: W293 blank line contains whitespace
+./api/session_manager.py:105:1: W293 blank line contains whitespace
+./api/session_manager.py:138:80: E501 line too long (81 > 79 characters)
+./api/session_manager.py:150:1: W293 blank line contains whitespace
+./api/session_manager.py:153:1: W293 blank line contains whitespace
+./api/session_manager.py:156:1: W293 blank line contains whitespace
+./api/session_manager.py:175:1: W293 blank line contains whitespace
+./api/session_manager.py:178:1: W293 blank line contains whitespace
+./api/session_manager.py:205:80: E501 line too long (81 > 79 characters)
+./api/session_manager.py:208:1: W293 blank line contains whitespace
+./api/session_manager.py:211:1: W293 blank line contains whitespace
+./api/session_manager.py:225:1: W293 blank line contains whitespace
+./api/session_manager.py:260:80: E501 line too long (85 > 79 characters)
+./api/session_manager.py:274:80: E501 line too long (94 > 79 characters)
+./api/user_session.py:17:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:22:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:23:1: W293 blank line contains whitespace
+./api/user_session.py:25:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:26:80: E501 line too long (88 > 79 characters)
+./api/user_session.py:27:80: E501 line too long (103 > 79 characters)
+./api/user_session.py:30:1: D107 Missing docstring in __init__
+./api/user_session.py:48:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:53:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:93:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:97:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:129:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:132:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:143:1: W293 blank line contains whitespace
+./api/user_session.py:148:1: W293 blank line contains whitespace
+./api/user_session.py:152:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:165:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:168:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:171:1: W293 blank line contains whitespace
+./api/user_session.py:174:1: W293 blank line contains whitespace
+./api/user_session.py:200:1: W293 blank line contains whitespace
+./api/user_session.py:206:80: E501 line too long (88 > 79 characters)
+./api/user_session.py:216:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:251:1: D401 First line should be in imperative mood; try rephrasing
+./api/user_session.py:252:80: E501 line too long (81 > 79 characters)
+./api/user_session.py:268:80: E501 line too long (95 > 79 characters)
+./api/user_session.py:300:80: E501 line too long (91 > 79 characters)
+./api/user_session.py:313:80: E501 line too long (103 > 79 characters)
+./api/user_session.py:318:80: E501 line too long (82 > 79 characters)
+./api/user_session.py:319:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:320:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:335:80: E501 line too long (82 > 79 characters)
+./api/user_session.py:362:80: E501 line too long (98 > 79 characters)
+./api/user_session.py:365:80: E501 line too long (83 > 79 characters)
+./config/__init__.py:1:1: D200 One-line docstring should fit on one line with quotes
+./config/config.py:1:1: D100 Missing docstring in public module
+./config/config.py:5:1: F401 'os' imported but unused
+./config/config.py:10:1: D101 Missing docstring in public class
+./config/config.py:13:1: D102 Missing docstring in public method
+./config/config.py:18:1: D107 Missing docstring in __init__
+./config/config.py:26:1: D401 First line should be in imperative mood
+./config/config.py:31:80: E501 line too long (80 > 79 characters)
+./config/config.py:38:1: D401 First line should be in imperative mood
+./config/config.py:58:80: E501 line too long (93 > 79 characters)
+./config/config.py:78:1: D401 First line should be in imperative mood
+./config/config.py:82:1: D102 Missing docstring in public method
+./config/config.py:86:1: D102 Missing docstring in public method
+./config/config.py:90:1: D102 Missing docstring in public method
+./config/config.py:94:1: D102 Missing docstring in public method
+./config/config.py:98:1: D102 Missing docstring in public method
+./config/config.py:102:1: D102 Missing docstring in public method
+./config/config.py:106:1: E305 expected 2 blank lines after class or function definition, found 1
+./config/config.py:108:1: D103 Missing docstring in public function
+./config/config.py:108:1: E302 expected 2 blank lines, found 1
+./graphstore/__init__.py:1:1: D104 Missing docstring in public package
+./graphstore/store.py:1:1: D100 Missing docstring in public module
+./graphstore/store.py:8:1: D205 1 blank line required between summary line and description
+./graphstore/store.py:10:80: E501 line too long (85 > 79 characters)
+./graphstore/store.py:15:1: D401 First line should be in imperative mood
+./graphstore/store.py:17:1: W293 blank line contains whitespace
+./graphstore/store.py:19:80: E501 line too long (85 > 79 characters)
+./graphstore/store.py:20:1: W293 blank line contains whitespace
+./graphstore/store.py:27:80: E501 line too long (108 > 79 characters)
+./graphstore/store.py:28:1: D401 First line should be in imperative mood
+./graphstore/store.py:30:1: W293 blank line contains whitespace
+./graphstore/store.py:34:1: W293 blank line contains whitespace
+./graphstore/store.py:42:1: D401 First line should be in imperative mood
+./graphstore/store.py:44:1: W293 blank line contains whitespace
+./main.py:2:80: E501 line too long (80 > 79 characters)
+./main.py:33:1: W293 blank line contains whitespace
+./main.py:60:1: W293 blank line contains whitespace
+./main.py:66:80: E501 line too long (103 > 79 characters)
+./main.py:92:1: W293 blank line contains whitespace
+./main.py:114:1: E303 too many blank lines (6)
+./models/base.py:1:1: D100 Missing docstring in public module
+./models/base.py:8:1: D204 1 blank line required after class docstring
+./models/base.py:9:80: E501 line too long (110 > 79 characters)
+./models/domain.py:1:1: D100 Missing docstring in public module
+./models/domain.py:10:1: D204 1 blank line required after class docstring
+./models/domain.py:12:80: E501 line too long (103 > 79 characters)
+./models/domain.py:14:1: E302 expected 2 blank lines, found 1
+./models/domain.py:15:1: D204 1 blank line required after class docstring
+./models/domain.py:16:80: E501 line too long (95 > 79 characters)
+./models/domain.py:19:1: E302 expected 2 blank lines, found 1
+./models/domain.py:20:1: D204 1 blank line required after class docstring
+./models/domain.py:22:80: E501 line too long (98 > 79 characters)
+./models/domain.py:24:1: E302 expected 2 blank lines, found 1
+./models/domain.py:25:1: D204 1 blank line required after class docstring
+./models/domain.py:27:36: E231 missing whitespace after ','
+./models/domain.py:27:50: E231 missing whitespace after ','
+./models/domain.py:27:57: E231 missing whitespace after ','
+./models/domain.py:27:80: E501 line too long (132 > 79 characters)
+./models/graph.py:1:1: D100 Missing docstring in public module
+./models/graph.py:7:1: D204 1 blank line required after class docstring
+./models/graph.py:8:40: E231 missing whitespace after ','
+./models/graph.py:8:49: E231 missing whitespace after ','
+./models/graph.py:8:56: E231 missing whitespace after ','
+./models/graph.py:8:64: E231 missing whitespace after ','
+./models/graph.py:8:80: E501 line too long (123 > 79 characters)
+./models/graph.py:10:80: E501 line too long (94 > 79 characters)
+./models/graph.py:12:1: E302 expected 2 blank lines, found 1
+./models/graph.py:13:1: D204 1 blank line required after class docstring
+./models/graph.py:14:44: E231 missing whitespace after ','
+./models/graph.py:14:51: E231 missing whitespace after ','
+./models/graph.py:14:59: E231 missing whitespace after ','
+./models/graph.py:14:80: E501 line too long (125 > 79 characters)
+./models/graph.py:15:80: E501 line too long (84 > 79 characters)
+./models/graph.py:16:38: E231 missing whitespace after ','
+./models/graph.py:16:50: E231 missing whitespace after ','
+./models/graph.py:16:64: E231 missing whitespace after ','
+./models/graph.py:16:73: E231 missing whitespace after ','
+./models/graph.py:16:80: E501 line too long (159 > 79 characters)
+./models/graph.py:16:90: E231 missing whitespace after ','
+./models/graph.py:17:40: E231 missing whitespace after ','
+./models/graph.py:17:48: E231 missing whitespace after ','
+./models/graph.py:17:57: E231 missing whitespace after ','
+./models/graph.py:17:80: E501 line too long (128 > 79 characters)
+./models/graph.py:18:80: E501 line too long (89 > 79 characters)
+./models/graph.py:19:80: E501 line too long (94 > 79 characters)
+./models/graph.py:21:1: E302 expected 2 blank lines, found 1
+./models/graph.py:22:1: D204 1 blank line required after class docstring
+./models/graph.py:23:36: E231 missing whitespace after ','
+./models/graph.py:23:50: E231 missing whitespace after ','
+./models/graph.py:23:60: E231 missing whitespace after ','
+./models/graph.py:23:80: E501 line too long (118 > 79 characters)
+./models/graph.py:24:80: E501 line too long (107 > 79 characters)
+./models/graph.py:25:80: E501 line too long (107 > 79 characters)
+./models/session.py:2:80: E501 line too long (87 > 79 characters)
+./models/session.py:17:1: D204 1 blank line required after class docstring
+./models/session.py:27:1: D204 1 blank line required after class docstring
+./models/session.py:35:1: D204 1 blank line required after class docstring
+./models/session.py:38:80: E501 line too long (83 > 79 characters)
+./models/session.py:42:80: E501 line too long (81 > 79 characters)
+./models/session.py:43:80: E501 line too long (80 > 79 characters)
+./models/session.py:47:80: E501 line too long (90 > 79 characters)
+./models/session.py:51:1: D204 1 blank line required after class docstring
+./models/session.py:56:80: E501 line too long (90 > 79 characters)
+./models/session.py:60:1: D204 1 blank line required after class docstring
+./models/session.py:62:80: E501 line too long (81 > 79 characters)
+./models/session.py:63:80: E501 line too long (90 > 79 characters)
+./models/session.py:67:1: D204 1 blank line required after class docstring
+./models/session.py:70:80: E501 line too long (83 > 79 characters)
+./models/session.py:73:80: E501 line too long (87 > 79 characters)
+./models/session.py:74:80: E501 line too long (81 > 79 characters)
+./models/session.py:75:80: E501 line too long (80 > 79 characters)
+./models/session.py:83:1: D204 1 blank line required after class docstring
+./models/session.py:85:80: E501 line too long (94 > 79 characters)
+./models/session.py:86:80: E501 line too long (90 > 79 characters)
+./models/session.py:90:1: D204 1 blank line required after class docstring
+./models/session.py:99:1: D204 1 blank line required after class docstring
+./models/session.py:104:1: D204 1 blank line required after class docstring
+./models/session.py:108:80: E501 line too long (80 > 79 characters)
+./models/session.py:115:80: E501 line too long (87 > 79 characters)
+./models/session.py:119:1: D204 1 blank line required after class docstring
+./models/session.py:120:80: E501 line too long (80 > 79 characters)
+./models/session.py:126:1: D204 1 blank line required after class docstring
+./models/session.py:129:80: E501 line too long (80 > 79 characters)
+./models/session.py:130:80: E501 line too long (85 > 79 characters)
+./models/session.py:131:80: E501 line too long (84 > 79 characters)
+./run_server.py:18:1: E402 module level import not at top of file
+./run_server.py:34:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:8:1: F401 'json' imported but unused
+./tests/test_api_endpoints.py:9:1: F401 'os' imported but unused
+./tests/test_api_endpoints.py:15:1: F401 'pytest_asyncio' imported but unused
+./tests/test_api_endpoints.py:21:1: E402 module level import not at top of file
+./tests/test_api_endpoints.py:22:1: E402 module level import not at top of file
+./tests/test_api_endpoints.py:27:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:28:80: E501 line too long (82 > 79 characters)
+./tests/test_api_endpoints.py:35:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:44:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:62:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:73:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:98:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:101:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:114:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:117:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:128:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:138:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:140:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:144:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:154:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:169:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:173:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:187:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:199:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:202:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:214:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:218:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:221:80: E501 line too long (81 > 79 characters)
+./tests/test_api_endpoints.py:227:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:242:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:249:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:250:80: E501 line too long (85 > 79 characters)
+./tests/test_api_endpoints.py:252:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:262:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:263:80: E501 line too long (90 > 79 characters)
+./tests/test_api_endpoints.py:272:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:275:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:279:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:290:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:293:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:305:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:308:80: E501 line too long (83 > 79 characters)
+./tests/test_api_endpoints.py:310:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:320:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:325:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:335:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:338:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:352:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:361:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:370:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:379:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:388:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:423:1: W293 blank line contains whitespace
+./tests/test_config.py:1:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:7:1: F401 'os' imported but unused
+./tests/test_config.py:18:1: E402 module level import not at top of file
+./tests/test_config.py:23:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:23:1: D401 First line should be in imperative mood
+./tests/test_config.py:24:80: E501 line too long (90 > 79 characters)
+./tests/test_config.py:31:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:31:1: D401 First line should be in imperative mood
+./tests/test_config.py:51:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:51:1: D401 First line should be in imperative mood
+./tests/test_config.py:61:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:62:80: E501 line too long (82 > 79 characters)
+./tests/test_config.py:69:80: E501 line too long (86 > 79 characters)
+./tests/test_config.py:70:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:78:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:79:80: E501 line too long (86 > 79 characters)
+./tests/test_config.py:86:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:87:80: E501 line too long (83 > 79 characters)
+./tests/test_config.py:97:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:106:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:120:80: E501 line too long (90 > 79 characters)
+./tests/test_config.py:121:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:122:80: E501 line too long (80 > 79 characters)
+./tests/test_placeholder.py:1:1: D100 Missing docstring in public module
+./tests/test_placeholder.py:2:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_session_management.py:8:1: F401 'os' imported but unused
+./tests/test_session_management.py:20:1: E402 module level import not at top of file
+./tests/test_session_management.py:21:1: E402 module level import not at top of file
+./tests/test_session_management.py:22:1: E402 module level import not at top of file
+./tests/test_session_management.py:62:80: E501 line too long (81 > 79 characters)
+11    B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+7     D100 Missing docstring in public module
+2     D101 Missing docstring in public class
+7     D102 Missing docstring in public method
+1     D103 Missing docstring in public function
+3     D104 Missing docstring in public package
+3     D107 Missing docstring in __init__
+20    D200 One-line docstring should fit on one line with quotes
+23    D204 1 blank line required after class docstring
+2     D205 1 blank line required between summary line and description
+1     D400 First line should end with a period
+19    D401 First line should be in imperative mood; try rephrasing
+21    E231 missing whitespace after ','
+10    E302 expected 2 blank lines, found 1
+1     E303 too many blank lines (6)
+2     E305 expected 2 blank lines after class or function definition, found 1
+7     E402 module level import not at top of file
+118   E501 line too long (80 > 79 characters)
+6     F401 'os' imported but unused
+1     W291 trailing whitespace
+88    W293 blank line contains whitespace
+1     W391 blank line at end of file
+./__init__.py:1:1: D104 Missing docstring in public package
+./agent/__init__.py:1:1: D104 Missing docstring in public package
+./agent/graph.py:1:1: D100 Missing docstring in public module
+./agent/graph.py:7:1: D101 Missing docstring in public class
+./agent/graph.py:14:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:15:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:15:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:22:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:23:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:23:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:30:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:31:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:31:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:38:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:39:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:39:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:43:80: E501 line too long (80 > 79 characters)
+./agent/graph.py:47:1: E305 expected 2 blank lines after class or function definition, found 1
+./agent/graph.py:64:1: W391 blank line at end of file
+./api/routers.py:22:80: E501 line too long (89 > 79 characters)
+./api/routers.py:29:80: E501 line too long (89 > 79 characters)
+./api/routers.py:39:1: W293 blank line contains whitespace
+./api/routers.py:49:80: E501 line too long (94 > 79 characters)
+./api/routers.py:50:80: E501 line too long (90 > 79 characters)
+./api/routers.py:57:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:59:1: W293 blank line contains whitespace
+./api/routers.py:60:80: E501 line too long (84 > 79 characters)
+./api/routers.py:70:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:72:1: W293 blank line contains whitespace
+./api/routers.py:83:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:85:1: W293 blank line contains whitespace
+./api/routers.py:96:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:98:1: W293 blank line contains whitespace
+./api/routers.py:109:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:111:1: W293 blank line contains whitespace
+./api/routers.py:131:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:135:1: W293 blank line contains whitespace
+./api/routers.py:141:1: W293 blank line contains whitespace
+./api/routers.py:142:80: E501 line too long (82 > 79 characters)
+./api/routers.py:145:1: W293 blank line contains whitespace
+./api/routers.py:149:80: E501 line too long (103 > 79 characters)
+./api/routers.py:151:33: W291 trailing whitespace
+./api/routers.py:152:80: E501 line too long (100 > 79 characters)
+./api/routers.py:154:1: W293 blank line contains whitespace
+./api/routers.py:156:1: W293 blank line contains whitespace
+./api/routers.py:158:80: E501 line too long (99 > 79 characters)
+./api/routers.py:182:80: E501 line too long (94 > 79 characters)
+./api/routers.py:187:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:191:1: W293 blank line contains whitespace
+./api/routers.py:202:80: E501 line too long (98 > 79 characters)
+./api/routers.py:204:80: E501 line too long (102 > 79 characters)
+./api/routers.py:218:80: E501 line too long (97 > 79 characters)
+./api/routers.py:224:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:228:1: W293 blank line contains whitespace
+./api/routers.py:252:80: E501 line too long (91 > 79 characters)
+./api/routers.py:258:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:262:1: W293 blank line contains whitespace
+./api/routers.py:271:80: E501 line too long (95 > 79 characters)
+./api/routers.py:278:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:282:1: W293 blank line contains whitespace
+./api/routers.py:312:80: E501 line too long (93 > 79 characters)
+./api/routers.py:319:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:323:1: W293 blank line contains whitespace
+./api/routers.py:345:80: E501 line too long (92 > 79 characters)
+./api/routers.py:352:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:356:1: W293 blank line contains whitespace
+./api/routers.py:376:80: E501 line too long (95 > 79 characters)
+./api/routers.py:382:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:386:1: W293 blank line contains whitespace
+./api/routers.py:402:80: E501 line too long (91 > 79 characters)
+./api/routers.py:409:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:413:1: W293 blank line contains whitespace
+./api/routers.py:423:80: E501 line too long (94 > 79 characters)
+./api/routers.py:430:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:434:1: W293 blank line contains whitespace
+./api/routers.py:444:80: E501 line too long (88 > 79 characters)
+./api/routers.py:450:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:454:1: W293 blank line contains whitespace
+./api/routers.py:464:80: E501 line too long (89 > 79 characters)
+./api/session_manager.py:4:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:5:80: E501 line too long (80 > 79 characters)
+./api/session_manager.py:22:1: D204 1 blank line required after class docstring
+./api/session_manager.py:27:1: D204 1 blank line required after class docstring
+./api/session_manager.py:32:1: D204 1 blank line required after class docstring
+./api/session_manager.py:37:1: D205 1 blank line required between summary line and description
+./api/session_manager.py:37:1: D400 First line should end with a period
+./api/session_manager.py:40:1: W293 blank line contains whitespace
+./api/session_manager.py:42:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:43:80: E501 line too long (84 > 79 characters)
+./api/session_manager.py:45:80: E501 line too long (92 > 79 characters)
+./api/session_manager.py:47:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:48:80: E501 line too long (87 > 79 characters)
+./api/session_manager.py:51:1: D107 Missing docstring in __init__
+./api/session_manager.py:60:80: E501 line too long (91 > 79 characters)
+./api/session_manager.py:61:80: E501 line too long (95 > 79 characters)
+./api/session_manager.py:97:1: W293 blank line contains whitespace
+./api/session_manager.py:102:1: W293 blank line contains whitespace
+./api/session_manager.py:105:1: W293 blank line contains whitespace
+./api/session_manager.py:138:80: E501 line too long (81 > 79 characters)
+./api/session_manager.py:150:1: W293 blank line contains whitespace
+./api/session_manager.py:153:1: W293 blank line contains whitespace
+./api/session_manager.py:156:1: W293 blank line contains whitespace
+./api/session_manager.py:175:1: W293 blank line contains whitespace
+./api/session_manager.py:178:1: W293 blank line contains whitespace
+./api/session_manager.py:205:80: E501 line too long (81 > 79 characters)
+./api/session_manager.py:208:1: W293 blank line contains whitespace
+./api/session_manager.py:211:1: W293 blank line contains whitespace
+./api/session_manager.py:225:1: W293 blank line contains whitespace
+./api/session_manager.py:260:80: E501 line too long (85 > 79 characters)
+./api/session_manager.py:274:80: E501 line too long (94 > 79 characters)
+./api/user_session.py:17:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:22:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:23:1: W293 blank line contains whitespace
+./api/user_session.py:25:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:26:80: E501 line too long (88 > 79 characters)
+./api/user_session.py:27:80: E501 line too long (103 > 79 characters)
+./api/user_session.py:30:1: D107 Missing docstring in __init__
+./api/user_session.py:48:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:53:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:93:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:97:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:129:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:132:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:143:1: W293 blank line contains whitespace
+./api/user_session.py:148:1: W293 blank line contains whitespace
+./api/user_session.py:152:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:165:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:168:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:171:1: W293 blank line contains whitespace
+./api/user_session.py:174:1: W293 blank line contains whitespace
+./api/user_session.py:200:1: W293 blank line contains whitespace
+./api/user_session.py:206:80: E501 line too long (88 > 79 characters)
+./api/user_session.py:216:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:251:1: D401 First line should be in imperative mood; try rephrasing
+./api/user_session.py:252:80: E501 line too long (81 > 79 characters)
+./api/user_session.py:268:80: E501 line too long (95 > 79 characters)
+./api/user_session.py:300:80: E501 line too long (91 > 79 characters)
+./api/user_session.py:313:80: E501 line too long (103 > 79 characters)
+./api/user_session.py:318:80: E501 line too long (82 > 79 characters)
+./api/user_session.py:319:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:320:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:335:80: E501 line too long (82 > 79 characters)
+./api/user_session.py:362:80: E501 line too long (98 > 79 characters)
+./api/user_session.py:365:80: E501 line too long (83 > 79 characters)
+./config/__init__.py:1:1: D200 One-line docstring should fit on one line with quotes
+./config/config.py:1:1: D100 Missing docstring in public module
+./config/config.py:5:1: F401 'os' imported but unused
+./config/config.py:10:1: D101 Missing docstring in public class
+./config/config.py:13:1: D102 Missing docstring in public method
+./config/config.py:18:1: D107 Missing docstring in __init__
+./config/config.py:26:1: D401 First line should be in imperative mood
+./config/config.py:31:80: E501 line too long (80 > 79 characters)
+./config/config.py:38:1: D401 First line should be in imperative mood
+./config/config.py:58:80: E501 line too long (93 > 79 characters)
+./config/config.py:78:1: D401 First line should be in imperative mood
+./config/config.py:82:1: D102 Missing docstring in public method
+./config/config.py:86:1: D102 Missing docstring in public method
+./config/config.py:90:1: D102 Missing docstring in public method
+./config/config.py:94:1: D102 Missing docstring in public method
+./config/config.py:98:1: D102 Missing docstring in public method
+./config/config.py:102:1: D102 Missing docstring in public method
+./config/config.py:106:1: E305 expected 2 blank lines after class or function definition, found 1
+./config/config.py:108:1: D103 Missing docstring in public function
+./config/config.py:108:1: E302 expected 2 blank lines, found 1
+./graphstore/__init__.py:1:1: D104 Missing docstring in public package
+./graphstore/store.py:1:1: D100 Missing docstring in public module
+./graphstore/store.py:8:1: D205 1 blank line required between summary line and description
+./graphstore/store.py:10:80: E501 line too long (85 > 79 characters)
+./graphstore/store.py:15:1: D401 First line should be in imperative mood
+./graphstore/store.py:17:1: W293 blank line contains whitespace
+./graphstore/store.py:19:80: E501 line too long (85 > 79 characters)
+./graphstore/store.py:20:1: W293 blank line contains whitespace
+./graphstore/store.py:27:80: E501 line too long (108 > 79 characters)
+./graphstore/store.py:28:1: D401 First line should be in imperative mood
+./graphstore/store.py:30:1: W293 blank line contains whitespace
+./graphstore/store.py:34:1: W293 blank line contains whitespace
+./graphstore/store.py:42:1: D401 First line should be in imperative mood
+./graphstore/store.py:44:1: W293 blank line contains whitespace
+./main.py:2:80: E501 line too long (80 > 79 characters)
+./main.py:33:1: W293 blank line contains whitespace
+./main.py:60:1: W293 blank line contains whitespace
+./main.py:66:80: E501 line too long (103 > 79 characters)
+./main.py:92:1: W293 blank line contains whitespace
+./main.py:114:1: E303 too many blank lines (6)
+./models/base.py:1:1: D100 Missing docstring in public module
+./models/base.py:8:1: D204 1 blank line required after class docstring
+./models/base.py:9:80: E501 line too long (110 > 79 characters)
+./models/domain.py:1:1: D100 Missing docstring in public module
+./models/domain.py:10:1: D204 1 blank line required after class docstring
+./models/domain.py:12:80: E501 line too long (103 > 79 characters)
+./models/domain.py:14:1: E302 expected 2 blank lines, found 1
+./models/domain.py:15:1: D204 1 blank line required after class docstring
+./models/domain.py:16:80: E501 line too long (95 > 79 characters)
+./models/domain.py:19:1: E302 expected 2 blank lines, found 1
+./models/domain.py:20:1: D204 1 blank line required after class docstring
+./models/domain.py:22:80: E501 line too long (98 > 79 characters)
+./models/domain.py:24:1: E302 expected 2 blank lines, found 1
+./models/domain.py:25:1: D204 1 blank line required after class docstring
+./models/domain.py:27:36: E231 missing whitespace after ','
+./models/domain.py:27:50: E231 missing whitespace after ','
+./models/domain.py:27:57: E231 missing whitespace after ','
+./models/domain.py:27:80: E501 line too long (132 > 79 characters)
+./models/graph.py:1:1: D100 Missing docstring in public module
+./models/graph.py:7:1: D204 1 blank line required after class docstring
+./models/graph.py:8:40: E231 missing whitespace after ','
+./models/graph.py:8:49: E231 missing whitespace after ','
+./models/graph.py:8:56: E231 missing whitespace after ','
+./models/graph.py:8:64: E231 missing whitespace after ','
+./models/graph.py:8:80: E501 line too long (123 > 79 characters)
+./models/graph.py:10:80: E501 line too long (94 > 79 characters)
+./models/graph.py:12:1: E302 expected 2 blank lines, found 1
+./models/graph.py:13:1: D204 1 blank line required after class docstring
+./models/graph.py:14:44: E231 missing whitespace after ','
+./models/graph.py:14:51: E231 missing whitespace after ','
+./models/graph.py:14:59: E231 missing whitespace after ','
+./models/graph.py:14:80: E501 line too long (125 > 79 characters)
+./models/graph.py:15:80: E501 line too long (84 > 79 characters)
+./models/graph.py:16:38: E231 missing whitespace after ','
+./models/graph.py:16:50: E231 missing whitespace after ','
+./models/graph.py:16:64: E231 missing whitespace after ','
+./models/graph.py:16:73: E231 missing whitespace after ','
+./models/graph.py:16:80: E501 line too long (159 > 79 characters)
+./models/graph.py:16:90: E231 missing whitespace after ','
+./models/graph.py:17:40: E231 missing whitespace after ','
+./models/graph.py:17:48: E231 missing whitespace after ','
+./models/graph.py:17:57: E231 missing whitespace after ','
+./models/graph.py:17:80: E501 line too long (128 > 79 characters)
+./models/graph.py:18:80: E501 line too long (89 > 79 characters)
+./models/graph.py:19:80: E501 line too long (94 > 79 characters)
+./models/graph.py:21:1: E302 expected 2 blank lines, found 1
+./models/graph.py:22:1: D204 1 blank line required after class docstring
+./models/graph.py:23:36: E231 missing whitespace after ','
+./models/graph.py:23:50: E231 missing whitespace after ','
+./models/graph.py:23:60: E231 missing whitespace after ','
+./models/graph.py:23:80: E501 line too long (118 > 79 characters)
+./models/graph.py:24:80: E501 line too long (107 > 79 characters)
+./models/graph.py:25:80: E501 line too long (107 > 79 characters)
+./models/session.py:2:80: E501 line too long (87 > 79 characters)
+./models/session.py:17:1: D204 1 blank line required after class docstring
+./models/session.py:27:1: D204 1 blank line required after class docstring
+./models/session.py:35:1: D204 1 blank line required after class docstring
+./models/session.py:38:80: E501 line too long (83 > 79 characters)
+./models/session.py:42:80: E501 line too long (81 > 79 characters)
+./models/session.py:43:80: E501 line too long (80 > 79 characters)
+./models/session.py:47:80: E501 line too long (90 > 79 characters)
+./models/session.py:51:1: D204 1 blank line required after class docstring
+./models/session.py:56:80: E501 line too long (90 > 79 characters)
+./models/session.py:60:1: D204 1 blank line required after class docstring
+./models/session.py:62:80: E501 line too long (81 > 79 characters)
+./models/session.py:63:80: E501 line too long (90 > 79 characters)
+./models/session.py:67:1: D204 1 blank line required after class docstring
+./models/session.py:70:80: E501 line too long (83 > 79 characters)
+./models/session.py:73:80: E501 line too long (87 > 79 characters)
+./models/session.py:74:80: E501 line too long (81 > 79 characters)
+./models/session.py:75:80: E501 line too long (80 > 79 characters)
+./models/session.py:83:1: D204 1 blank line required after class docstring
+./models/session.py:85:80: E501 line too long (94 > 79 characters)
+./models/session.py:86:80: E501 line too long (90 > 79 characters)
+./models/session.py:90:1: D204 1 blank line required after class docstring
+./models/session.py:99:1: D204 1 blank line required after class docstring
+./models/session.py:104:1: D204 1 blank line required after class docstring
+./models/session.py:108:80: E501 line too long (80 > 79 characters)
+./models/session.py:115:80: E501 line too long (87 > 79 characters)
+./models/session.py:119:1: D204 1 blank line required after class docstring
+./models/session.py:120:80: E501 line too long (80 > 79 characters)
+./models/session.py:126:1: D204 1 blank line required after class docstring
+./models/session.py:129:80: E501 line too long (80 > 79 characters)
+./models/session.py:130:80: E501 line too long (85 > 79 characters)
+./models/session.py:131:80: E501 line too long (84 > 79 characters)
+./run_server.py:18:1: E402 module level import not at top of file
+./run_server.py:34:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:8:1: F401 'json' imported but unused
+./tests/test_api_endpoints.py:9:1: F401 'os' imported but unused
+./tests/test_api_endpoints.py:15:1: F401 'pytest_asyncio' imported but unused
+./tests/test_api_endpoints.py:21:1: E402 module level import not at top of file
+./tests/test_api_endpoints.py:22:1: E402 module level import not at top of file
+./tests/test_api_endpoints.py:27:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:28:80: E501 line too long (82 > 79 characters)
+./tests/test_api_endpoints.py:35:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:44:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:62:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:73:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:98:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:101:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:114:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:117:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:128:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:138:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:140:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:144:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:154:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:169:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:173:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:187:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:199:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:202:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:214:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:218:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:221:80: E501 line too long (81 > 79 characters)
+./tests/test_api_endpoints.py:227:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:242:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:249:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:250:80: E501 line too long (85 > 79 characters)
+./tests/test_api_endpoints.py:252:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:262:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:263:80: E501 line too long (90 > 79 characters)
+./tests/test_api_endpoints.py:272:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:275:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:279:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:290:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:293:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:305:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:308:80: E501 line too long (83 > 79 characters)
+./tests/test_api_endpoints.py:310:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:320:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:325:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:335:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:338:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:352:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:361:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:370:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:379:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:388:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:423:1: W293 blank line contains whitespace
+./tests/test_config.py:1:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:7:1: F401 'os' imported but unused
+./tests/test_config.py:18:1: E402 module level import not at top of file
+./tests/test_config.py:23:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:23:1: D401 First line should be in imperative mood
+./tests/test_config.py:24:80: E501 line too long (90 > 79 characters)
+./tests/test_config.py:31:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:31:1: D401 First line should be in imperative mood
+./tests/test_config.py:51:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:51:1: D401 First line should be in imperative mood
+./tests/test_config.py:61:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:62:80: E501 line too long (82 > 79 characters)
+./tests/test_config.py:69:80: E501 line too long (86 > 79 characters)
+./tests/test_config.py:70:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:78:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:79:80: E501 line too long (86 > 79 characters)
+./tests/test_config.py:86:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:87:80: E501 line too long (83 > 79 characters)
+./tests/test_config.py:97:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:106:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:120:80: E501 line too long (90 > 79 characters)
+./tests/test_config.py:121:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:122:80: E501 line too long (80 > 79 characters)
+./tests/test_placeholder.py:1:1: D100 Missing docstring in public module
+./tests/test_placeholder.py:2:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_session_management.py:8:1: F401 'os' imported but unused
+./tests/test_session_management.py:20:1: E402 module level import not at top of file
+./tests/test_session_management.py:21:1: E402 module level import not at top of file
+./tests/test_session_management.py:22:1: E402 module level import not at top of file
+./tests/test_session_management.py:62:80: E501 line too long (81 > 79 characters)
+11    B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+7     D100 Missing docstring in public module
+2     D101 Missing docstring in public class
+7     D102 Missing docstring in public method
+1     D103 Missing docstring in public function
+3     D104 Missing docstring in public package
+3     D107 Missing docstring in __init__
+20    D200 One-line docstring should fit on one line with quotes
+23    D204 1 blank line required after class docstring
+2     D205 1 blank line required between summary line and description
+1     D400 First line should end with a period
+19    D401 First line should be in imperative mood; try rephrasing
+21    E231 missing whitespace after ','
+10    E302 expected 2 blank lines, found 1
+1     E303 too many blank lines (6)
+2     E305 expected 2 blank lines after class or function definition, found 1
+7     E402 module level import not at top of file
+118   E501 line too long (80 > 79 characters)
+6     F401 'os' imported but unused
+1     W291 trailing whitespace
+88    W293 blank line contains whitespace
+1     W391 blank line at end of file
+./__init__.py:1:1: D104 Missing docstring in public package
+./agent/__init__.py:1:1: D104 Missing docstring in public package
+./agent/graph.py:1:1: D100 Missing docstring in public module
+./agent/graph.py:7:1: D101 Missing docstring in public class
+./agent/graph.py:14:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:15:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:15:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:22:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:23:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:23:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:30:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:31:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:31:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:38:1: E302 expected 2 blank lines, found 1
+./agent/graph.py:39:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:39:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:43:80: E501 line too long (80 > 79 characters)
+./agent/graph.py:47:1: E305 expected 2 blank lines after class or function definition, found 1
+./agent/graph.py:64:1: W391 blank line at end of file
+./api/routers.py:22:80: E501 line too long (89 > 79 characters)
+./api/routers.py:29:80: E501 line too long (89 > 79 characters)
+./api/routers.py:39:1: W293 blank line contains whitespace
+./api/routers.py:49:80: E501 line too long (94 > 79 characters)
+./api/routers.py:50:80: E501 line too long (90 > 79 characters)
+./api/routers.py:57:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:59:1: W293 blank line contains whitespace
+./api/routers.py:60:80: E501 line too long (84 > 79 characters)
+./api/routers.py:70:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:72:1: W293 blank line contains whitespace
+./api/routers.py:83:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:85:1: W293 blank line contains whitespace
+./api/routers.py:96:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:98:1: W293 blank line contains whitespace
+./api/routers.py:109:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:111:1: W293 blank line contains whitespace
+./api/routers.py:131:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:135:1: W293 blank line contains whitespace
+./api/routers.py:141:1: W293 blank line contains whitespace
+./api/routers.py:142:80: E501 line too long (82 > 79 characters)
+./api/routers.py:145:1: W293 blank line contains whitespace
+./api/routers.py:149:80: E501 line too long (103 > 79 characters)
+./api/routers.py:151:33: W291 trailing whitespace
+./api/routers.py:152:80: E501 line too long (100 > 79 characters)
+./api/routers.py:154:1: W293 blank line contains whitespace
+./api/routers.py:156:1: W293 blank line contains whitespace
+./api/routers.py:158:80: E501 line too long (99 > 79 characters)
+./api/routers.py:182:80: E501 line too long (94 > 79 characters)
+./api/routers.py:187:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:191:1: W293 blank line contains whitespace
+./api/routers.py:202:80: E501 line too long (98 > 79 characters)
+./api/routers.py:204:80: E501 line too long (102 > 79 characters)
+./api/routers.py:218:80: E501 line too long (97 > 79 characters)
+./api/routers.py:224:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:228:1: W293 blank line contains whitespace
+./api/routers.py:252:80: E501 line too long (91 > 79 characters)
+./api/routers.py:258:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:262:1: W293 blank line contains whitespace
+./api/routers.py:271:80: E501 line too long (95 > 79 characters)
+./api/routers.py:278:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:282:1: W293 blank line contains whitespace
+./api/routers.py:312:80: E501 line too long (93 > 79 characters)
+./api/routers.py:319:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:323:1: W293 blank line contains whitespace
+./api/routers.py:345:80: E501 line too long (92 > 79 characters)
+./api/routers.py:352:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:356:1: W293 blank line contains whitespace
+./api/routers.py:376:80: E501 line too long (95 > 79 characters)
+./api/routers.py:382:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:386:1: W293 blank line contains whitespace
+./api/routers.py:402:80: E501 line too long (91 > 79 characters)
+./api/routers.py:409:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:413:1: W293 blank line contains whitespace
+./api/routers.py:423:80: E501 line too long (94 > 79 characters)
+./api/routers.py:430:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:434:1: W293 blank line contains whitespace
+./api/routers.py:444:80: E501 line too long (88 > 79 characters)
+./api/routers.py:450:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:454:1: W293 blank line contains whitespace
+./api/routers.py:464:80: E501 line too long (89 > 79 characters)
+./api/session_manager.py:4:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:5:80: E501 line too long (80 > 79 characters)
+./api/session_manager.py:22:1: D204 1 blank line required after class docstring
+./api/session_manager.py:27:1: D204 1 blank line required after class docstring
+./api/session_manager.py:32:1: D204 1 blank line required after class docstring
+./api/session_manager.py:37:1: D205 1 blank line required between summary line and description
+./api/session_manager.py:37:1: D400 First line should end with a period
+./api/session_manager.py:40:1: W293 blank line contains whitespace
+./api/session_manager.py:42:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:43:80: E501 line too long (84 > 79 characters)
+./api/session_manager.py:45:80: E501 line too long (92 > 79 characters)
+./api/session_manager.py:47:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:48:80: E501 line too long (87 > 79 characters)
+./api/session_manager.py:51:1: D107 Missing docstring in __init__
+./api/session_manager.py:60:80: E501 line too long (91 > 79 characters)
+./api/session_manager.py:61:80: E501 line too long (95 > 79 characters)
+./api/session_manager.py:97:1: W293 blank line contains whitespace
+./api/session_manager.py:102:1: W293 blank line contains whitespace
+./api/session_manager.py:105:1: W293 blank line contains whitespace
+./api/session_manager.py:138:80: E501 line too long (81 > 79 characters)
+./api/session_manager.py:150:1: W293 blank line contains whitespace
+./api/session_manager.py:153:1: W293 blank line contains whitespace
+./api/session_manager.py:156:1: W293 blank line contains whitespace
+./api/session_manager.py:175:1: W293 blank line contains whitespace
+./api/session_manager.py:178:1: W293 blank line contains whitespace
+./api/session_manager.py:205:80: E501 line too long (81 > 79 characters)
+./api/session_manager.py:208:1: W293 blank line contains whitespace
+./api/session_manager.py:211:1: W293 blank line contains whitespace
+./api/session_manager.py:225:1: W293 blank line contains whitespace
+./api/session_manager.py:260:80: E501 line too long (85 > 79 characters)
+./api/session_manager.py:274:80: E501 line too long (94 > 79 characters)
+./api/user_session.py:17:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:22:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:23:1: W293 blank line contains whitespace
+./api/user_session.py:25:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:26:80: E501 line too long (88 > 79 characters)
+./api/user_session.py:27:80: E501 line too long (103 > 79 characters)
+./api/user_session.py:30:1: D107 Missing docstring in __init__
+./api/user_session.py:48:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:53:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:93:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:97:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:129:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:132:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:143:1: W293 blank line contains whitespace
+./api/user_session.py:148:1: W293 blank line contains whitespace
+./api/user_session.py:152:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:165:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:168:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:171:1: W293 blank line contains whitespace
+./api/user_session.py:174:1: W293 blank line contains whitespace
+./api/user_session.py:200:1: W293 blank line contains whitespace
+./api/user_session.py:206:80: E501 line too long (88 > 79 characters)
+./api/user_session.py:216:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:251:1: D401 First line should be in imperative mood; try rephrasing
+./api/user_session.py:252:80: E501 line too long (81 > 79 characters)
+./api/user_session.py:268:80: E501 line too long (95 > 79 characters)
+./api/user_session.py:300:80: E501 line too long (91 > 79 characters)
+./api/user_session.py:313:80: E501 line too long (103 > 79 characters)
+./api/user_session.py:318:80: E501 line too long (82 > 79 characters)
+./api/user_session.py:319:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:320:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:335:80: E501 line too long (82 > 79 characters)
+./api/user_session.py:362:80: E501 line too long (98 > 79 characters)
+./api/user_session.py:365:80: E501 line too long (83 > 79 characters)
+./config/__init__.py:1:1: D200 One-line docstring should fit on one line with quotes
+./config/config.py:1:1: D100 Missing docstring in public module
+./config/config.py:5:1: F401 'os' imported but unused
+./config/config.py:10:1: D101 Missing docstring in public class
+./config/config.py:13:1: D102 Missing docstring in public method
+./config/config.py:18:1: D107 Missing docstring in __init__
+./config/config.py:26:1: D401 First line should be in imperative mood
+./config/config.py:31:80: E501 line too long (80 > 79 characters)
+./config/config.py:38:1: D401 First line should be in imperative mood
+./config/config.py:58:80: E501 line too long (93 > 79 characters)
+./config/config.py:78:1: D401 First line should be in imperative mood
+./config/config.py:82:1: D102 Missing docstring in public method
+./config/config.py:86:1: D102 Missing docstring in public method
+./config/config.py:90:1: D102 Missing docstring in public method
+./config/config.py:94:1: D102 Missing docstring in public method
+./config/config.py:98:1: D102 Missing docstring in public method
+./config/config.py:102:1: D102 Missing docstring in public method
+./config/config.py:106:1: E305 expected 2 blank lines after class or function definition, found 1
+./config/config.py:108:1: D103 Missing docstring in public function
+./config/config.py:108:1: E302 expected 2 blank lines, found 1
+./graphstore/__init__.py:1:1: D104 Missing docstring in public package
+./graphstore/store.py:1:1: D100 Missing docstring in public module
+./graphstore/store.py:8:1: D205 1 blank line required between summary line and description
+./graphstore/store.py:10:80: E501 line too long (85 > 79 characters)
+./graphstore/store.py:15:1: D401 First line should be in imperative mood
+./graphstore/store.py:17:1: W293 blank line contains whitespace
+./graphstore/store.py:19:80: E501 line too long (85 > 79 characters)
+./graphstore/store.py:20:1: W293 blank line contains whitespace
+./graphstore/store.py:27:80: E501 line too long (108 > 79 characters)
+./graphstore/store.py:28:1: D401 First line should be in imperative mood
+./graphstore/store.py:30:1: W293 blank line contains whitespace
+./graphstore/store.py:34:1: W293 blank line contains whitespace
+./graphstore/store.py:42:1: D401 First line should be in imperative mood
+./graphstore/store.py:44:1: W293 blank line contains whitespace
+./main.py:2:80: E501 line too long (80 > 79 characters)
+./main.py:33:1: W293 blank line contains whitespace
+./main.py:60:1: W293 blank line contains whitespace
+./main.py:66:80: E501 line too long (103 > 79 characters)
+./main.py:92:1: W293 blank line contains whitespace
+./main.py:114:1: E303 too many blank lines (6)
+./models/base.py:1:1: D100 Missing docstring in public module
+./models/base.py:8:1: D204 1 blank line required after class docstring
+./models/base.py:9:80: E501 line too long (110 > 79 characters)
+./models/domain.py:1:1: D100 Missing docstring in public module
+./models/domain.py:10:1: D204 1 blank line required after class docstring
+./models/domain.py:12:80: E501 line too long (103 > 79 characters)
+./models/domain.py:14:1: E302 expected 2 blank lines, found 1
+./models/domain.py:15:1: D204 1 blank line required after class docstring
+./models/domain.py:16:80: E501 line too long (95 > 79 characters)
+./models/domain.py:19:1: E302 expected 2 blank lines, found 1
+./models/domain.py:20:1: D204 1 blank line required after class docstring
+./models/domain.py:22:80: E501 line too long (98 > 79 characters)
+./models/domain.py:24:1: E302 expected 2 blank lines, found 1
+./models/domain.py:25:1: D204 1 blank line required after class docstring
+./models/domain.py:27:36: E231 missing whitespace after ','
+./models/domain.py:27:50: E231 missing whitespace after ','
+./models/domain.py:27:57: E231 missing whitespace after ','
+./models/domain.py:27:80: E501 line too long (132 > 79 characters)
+./models/graph.py:1:1: D100 Missing docstring in public module
+./models/graph.py:7:1: D204 1 blank line required after class docstring
+./models/graph.py:8:40: E231 missing whitespace after ','
+./models/graph.py:8:49: E231 missing whitespace after ','
+./models/graph.py:8:56: E231 missing whitespace after ','
+./models/graph.py:8:64: E231 missing whitespace after ','
+./models/graph.py:8:80: E501 line too long (123 > 79 characters)
+./models/graph.py:10:80: E501 line too long (94 > 79 characters)
+./models/graph.py:12:1: E302 expected 2 blank lines, found 1
+./models/graph.py:13:1: D204 1 blank line required after class docstring
+./models/graph.py:14:44: E231 missing whitespace after ','
+./models/graph.py:14:51: E231 missing whitespace after ','
+./models/graph.py:14:59: E231 missing whitespace after ','
+./models/graph.py:14:80: E501 line too long (125 > 79 characters)
+./models/graph.py:15:80: E501 line too long (84 > 79 characters)
+./models/graph.py:16:38: E231 missing whitespace after ','
+./models/graph.py:16:50: E231 missing whitespace after ','
+./models/graph.py:16:64: E231 missing whitespace after ','
+./models/graph.py:16:73: E231 missing whitespace after ','
+./models/graph.py:16:80: E501 line too long (159 > 79 characters)
+./models/graph.py:16:90: E231 missing whitespace after ','
+./models/graph.py:17:40: E231 missing whitespace after ','
+./models/graph.py:17:48: E231 missing whitespace after ','
+./models/graph.py:17:57: E231 missing whitespace after ','
+./models/graph.py:17:80: E501 line too long (128 > 79 characters)
+./models/graph.py:18:80: E501 line too long (89 > 79 characters)
+./models/graph.py:19:80: E501 line too long (94 > 79 characters)
+./models/graph.py:21:1: E302 expected 2 blank lines, found 1
+./models/graph.py:22:1: D204 1 blank line required after class docstring
+./models/graph.py:23:36: E231 missing whitespace after ','
+./models/graph.py:23:50: E231 missing whitespace after ','
+./models/graph.py:23:60: E231 missing whitespace after ','
+./models/graph.py:23:80: E501 line too long (118 > 79 characters)
+./models/graph.py:24:80: E501 line too long (107 > 79 characters)
+./models/graph.py:25:80: E501 line too long (107 > 79 characters)
+./models/session.py:2:80: E501 line too long (87 > 79 characters)
+./models/session.py:17:1: D204 1 blank line required after class docstring
+./models/session.py:27:1: D204 1 blank line required after class docstring
+./models/session.py:35:1: D204 1 blank line required after class docstring
+./models/session.py:38:80: E501 line too long (83 > 79 characters)
+./models/session.py:42:80: E501 line too long (81 > 79 characters)
+./models/session.py:43:80: E501 line too long (80 > 79 characters)
+./models/session.py:47:80: E501 line too long (90 > 79 characters)
+./models/session.py:51:1: D204 1 blank line required after class docstring
+./models/session.py:56:80: E501 line too long (90 > 79 characters)
+./models/session.py:60:1: D204 1 blank line required after class docstring
+./models/session.py:62:80: E501 line too long (81 > 79 characters)
+./models/session.py:63:80: E501 line too long (90 > 79 characters)
+./models/session.py:67:1: D204 1 blank line required after class docstring
+./models/session.py:70:80: E501 line too long (83 > 79 characters)
+./models/session.py:73:80: E501 line too long (87 > 79 characters)
+./models/session.py:74:80: E501 line too long (81 > 79 characters)
+./models/session.py:75:80: E501 line too long (80 > 79 characters)
+./models/session.py:83:1: D204 1 blank line required after class docstring
+./models/session.py:85:80: E501 line too long (94 > 79 characters)
+./models/session.py:86:80: E501 line too long (90 > 79 characters)
+./models/session.py:90:1: D204 1 blank line required after class docstring
+./models/session.py:99:1: D204 1 blank line required after class docstring
+./models/session.py:104:1: D204 1 blank line required after class docstring
+./models/session.py:108:80: E501 line too long (80 > 79 characters)
+./models/session.py:115:80: E501 line too long (87 > 79 characters)
+./models/session.py:119:1: D204 1 blank line required after class docstring
+./models/session.py:120:80: E501 line too long (80 > 79 characters)
+./models/session.py:126:1: D204 1 blank line required after class docstring
+./models/session.py:129:80: E501 line too long (80 > 79 characters)
+./models/session.py:130:80: E501 line too long (85 > 79 characters)
+./models/session.py:131:80: E501 line too long (84 > 79 characters)
+./run_server.py:18:1: E402 module level import not at top of file
+./run_server.py:34:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:8:1: F401 'json' imported but unused
+./tests/test_api_endpoints.py:9:1: F401 'os' imported but unused
+./tests/test_api_endpoints.py:15:1: F401 'pytest_asyncio' imported but unused
+./tests/test_api_endpoints.py:21:1: E402 module level import not at top of file
+./tests/test_api_endpoints.py:22:1: E402 module level import not at top of file
+./tests/test_api_endpoints.py:27:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:28:80: E501 line too long (82 > 79 characters)
+./tests/test_api_endpoints.py:35:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:44:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:62:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:73:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:98:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:101:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:114:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:117:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:128:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:138:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:140:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:144:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:154:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:169:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:173:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:187:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:199:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:202:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:214:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:218:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:221:80: E501 line too long (81 > 79 characters)
+./tests/test_api_endpoints.py:227:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:242:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:249:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:250:80: E501 line too long (85 > 79 characters)
+./tests/test_api_endpoints.py:252:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:262:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:263:80: E501 line too long (90 > 79 characters)
+./tests/test_api_endpoints.py:272:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:275:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:279:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:290:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:293:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:305:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:308:80: E501 line too long (83 > 79 characters)
+./tests/test_api_endpoints.py:310:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:320:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:325:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:335:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:338:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:352:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:361:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:370:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:379:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:388:1: W293 blank line contains whitespace
+./tests/test_api_endpoints.py:423:1: W293 blank line contains whitespace
+./tests/test_config.py:1:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:7:1: F401 'os' imported but unused
+./tests/test_config.py:18:1: E402 module level import not at top of file
+./tests/test_config.py:23:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:23:1: D401 First line should be in imperative mood
+./tests/test_config.py:24:80: E501 line too long (90 > 79 characters)
+./tests/test_config.py:31:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:31:1: D401 First line should be in imperative mood
+./tests/test_config.py:51:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:51:1: D401 First line should be in imperative mood
+./tests/test_config.py:61:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:62:80: E501 line too long (82 > 79 characters)
+./tests/test_config.py:69:80: E501 line too long (86 > 79 characters)
+./tests/test_config.py:70:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:78:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:79:80: E501 line too long (86 > 79 characters)
+./tests/test_config.py:86:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:87:80: E501 line too long (83 > 79 characters)
+./tests/test_config.py:97:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:106:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:120:80: E501 line too long (90 > 79 characters)
+./tests/test_config.py:121:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:122:80: E501 line too long (80 > 79 characters)
+./tests/test_placeholder.py:1:1: D100 Missing docstring in public module
+./tests/test_placeholder.py:2:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_session_management.py:8:1: F401 'os' imported but unused
+./tests/test_session_management.py:20:1: E402 module level import not at top of file
+./tests/test_session_management.py:21:1: E402 module level import not at top of file
+./tests/test_session_management.py:22:1: E402 module level import not at top of file
+./tests/test_session_management.py:62:80: E501 line too long (81 > 79 characters)
+11    B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+7     D100 Missing docstring in public module
+2     D101 Missing docstring in public class
+7     D102 Missing docstring in public method
+1     D103 Missing docstring in public function
+3     D104 Missing docstring in public package
+3     D107 Missing docstring in __init__
+20    D200 One-line docstring should fit on one line with quotes
+23    D204 1 blank line required after class docstring
+2     D205 1 blank line required between summary line and description
+1     D400 First line should end with a period
+19    D401 First line should be in imperative mood; try rephrasing
+21    E231 missing whitespace after ','
+10    E302 expected 2 blank lines, found 1
+1     E303 too many blank lines (6)
+2     E305 expected 2 blank lines after class or function definition, found 1
+7     E402 module level import not at top of file
+118   E501 line too long (80 > 79 characters)
+6     F401 'os' imported but unused
+1     W291 trailing whitespace
+88    W293 blank line contains whitespace
+1     W391 blank line at end of file
+./__init__.py:1:1: D104 Missing docstring in public package
+./agent/__init__.py:1:1: D104 Missing docstring in public package
+./agent/graph.py:1:1: D100 Missing docstring in public module
+./agent/graph.py:7:1: D101 Missing docstring in public class
+./agent/graph.py:16:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:16:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:25:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:25:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:34:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:34:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:43:1: D200 One-line docstring should fit on one line with quotes
+./agent/graph.py:43:1: D401 First line should be in imperative mood; try rephrasing
+./agent/graph.py:47:80: E501 line too long (80 > 79 characters)
+./api/routers.py:56:80: E501 line too long (94 > 79 characters)
+./api/routers.py:57:80: E501 line too long (87 > 79 characters)
+./api/routers.py:64:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:67:80: E501 line too long (84 > 79 characters)
+./api/routers.py:77:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:90:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:103:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:116:1: D401 First line should be in imperative mood; try rephrasing
+./api/routers.py:139:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:149:80: E501 line too long (82 > 79 characters)
+./api/routers.py:157:80: E501 line too long (91 > 79 characters)
+./api/routers.py:161:80: E501 line too long (101 > 79 characters)
+./api/routers.py:168:80: E501 line too long (90 > 79 characters)
+./api/routers.py:200:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:244:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:280:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:302:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:347:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:382:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:414:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:426:80: E501 line too long (85 > 79 characters)
+./api/routers.py:439:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:462:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/routers.py:476:80: E501 line too long (88 > 79 characters)
+./api/routers.py:482:39: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+./api/session_manager.py:4:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:5:80: E501 line too long (80 > 79 characters)
+./api/session_manager.py:42:1: D205 1 blank line required between summary line and description
+./api/session_manager.py:42:1: D400 First line should end with a period
+./api/session_manager.py:47:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:48:80: E501 line too long (84 > 79 characters)
+./api/session_manager.py:50:80: E501 line too long (92 > 79 characters)
+./api/session_manager.py:52:80: E501 line too long (82 > 79 characters)
+./api/session_manager.py:53:80: E501 line too long (87 > 79 characters)
+./api/session_manager.py:56:1: D107 Missing docstring in __init__
+./api/session_manager.py:144:80: E501 line too long (81 > 79 characters)
+./api/session_manager.py:211:80: E501 line too long (81 > 79 characters)
+./api/session_manager.py:266:80: E501 line too long (85 > 79 characters)
+./api/session_manager.py:275:80: E501 line too long (81 > 79 characters)
+./api/user_session.py:17:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:22:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:25:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:26:80: E501 line too long (88 > 79 characters)
+./api/user_session.py:27:80: E501 line too long (103 > 79 characters)
+./api/user_session.py:30:1: D107 Missing docstring in __init__
+./api/user_session.py:48:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:53:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:93:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:97:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:129:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:132:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:152:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:165:80: E501 line too long (85 > 79 characters)
+./api/user_session.py:168:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:193:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:203:80: E501 line too long (88 > 79 characters)
+./api/user_session.py:213:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:248:1: D401 First line should be in imperative mood; try rephrasing
+./api/user_session.py:249:80: E501 line too long (81 > 79 characters)
+./api/user_session.py:315:80: E501 line too long (87 > 79 characters)
+./api/user_session.py:321:80: E501 line too long (82 > 79 characters)
+./api/user_session.py:322:80: E501 line too long (86 > 79 characters)
+./api/user_session.py:323:80: E501 line too long (84 > 79 characters)
+./api/user_session.py:338:80: E501 line too long (82 > 79 characters)
+./api/user_session.py:366:80: E501 line too long (83 > 79 characters)
+./api/user_session.py:370:80: E501 line too long (83 > 79 characters)
+./config/__init__.py:1:1: D200 One-line docstring should fit on one line with quotes
+./config/config.py:1:1: D100 Missing docstring in public module
+./config/config.py:8:1: D101 Missing docstring in public class
+./config/config.py:11:1: D102 Missing docstring in public method
+./config/config.py:16:1: D107 Missing docstring in __init__
+./config/config.py:24:1: D401 First line should be in imperative mood
+./config/config.py:29:80: E501 line too long (80 > 79 characters)
+./config/config.py:36:1: D401 First line should be in imperative mood
+./config/config.py:78:1: D401 First line should be in imperative mood
+./config/config.py:82:1: D102 Missing docstring in public method
+./config/config.py:86:1: D102 Missing docstring in public method
+./config/config.py:90:1: D102 Missing docstring in public method
+./config/config.py:94:1: D102 Missing docstring in public method
+./config/config.py:98:1: D102 Missing docstring in public method
+./config/config.py:102:1: D102 Missing docstring in public method
+./config/config.py:110:1: D103 Missing docstring in public function
+./graphstore/__init__.py:1:1: D104 Missing docstring in public package
+./graphstore/store.py:1:1: D100 Missing docstring in public module
+./graphstore/store.py:8:1: D205 1 blank line required between summary line and description
+./graphstore/store.py:10:80: E501 line too long (85 > 79 characters)
+./graphstore/store.py:15:1: D401 First line should be in imperative mood
+./graphstore/store.py:19:80: E501 line too long (85 > 79 characters)
+./graphstore/store.py:30:1: D401 First line should be in imperative mood
+./graphstore/store.py:44:1: D401 First line should be in imperative mood
+./main.py:2:80: E501 line too long (80 > 79 characters)
+./main.py:66:80: E501 line too long (103 > 79 characters)
+./models/base.py:1:1: D100 Missing docstring in public module
+./models/base.py:10:80: E501 line too long (88 > 79 characters)
+./models/domain.py:1:1: D100 Missing docstring in public module
+./models/graph.py:1:1: D100 Missing docstring in public module
+./models/graph.py:26:80: E501 line too long (84 > 79 characters)
+./models/graph.py:58:80: E501 line too long (87 > 79 characters)
+./models/graph.py:61:80: E501 line too long (87 > 79 characters)
+./models/session.py:2:80: E501 line too long (87 > 79 characters)
+./models/session.py:41:80: E501 line too long (83 > 79 characters)
+./models/session.py:45:80: E501 line too long (81 > 79 characters)
+./models/session.py:46:80: E501 line too long (80 > 79 characters)
+./models/session.py:71:80: E501 line too long (81 > 79 characters)
+./models/session.py:82:80: E501 line too long (83 > 79 characters)
+./models/session.py:85:80: E501 line too long (87 > 79 characters)
+./models/session.py:86:80: E501 line too long (81 > 79 characters)
+./models/session.py:87:80: E501 line too long (80 > 79 characters)
+./models/session.py:128:80: E501 line too long (80 > 79 characters)
+./models/session.py:135:80: E501 line too long (87 > 79 characters)
+./models/session.py:141:80: E501 line too long (80 > 79 characters)
+./models/session.py:151:80: E501 line too long (80 > 79 characters)
+./models/session.py:152:80: E501 line too long (85 > 79 characters)
+./models/session.py:153:80: E501 line too long (84 > 79 characters)
+./tests/test_api_endpoints.py:18:1: E402 module level import not at top of file
+./tests/test_api_endpoints.py:19:1: E402 module level import not at top of file
+./tests/test_api_endpoints.py:24:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:25:80: E501 line too long (82 > 79 characters)
+./tests/test_api_endpoints.py:32:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:41:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_api_endpoints.py:214:80: E501 line too long (81 > 79 characters)
+./tests/test_api_endpoints.py:243:80: E501 line too long (85 > 79 characters)
+./tests/test_api_endpoints.py:303:80: E501 line too long (83 > 79 characters)
+./tests/test_config.py:1:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:17:1: E402 module level import not at top of file
+./tests/test_config.py:22:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:22:1: D401 First line should be in imperative mood
+./tests/test_config.py:23:80: E501 line too long (90 > 79 characters)
+./tests/test_config.py:30:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:30:1: D401 First line should be in imperative mood
+./tests/test_config.py:50:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:50:1: D401 First line should be in imperative mood
+./tests/test_config.py:60:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:61:80: E501 line too long (82 > 79 characters)
+./tests/test_config.py:68:80: E501 line too long (86 > 79 characters)
+./tests/test_config.py:69:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:77:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:78:80: E501 line too long (86 > 79 characters)
+./tests/test_config.py:85:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:86:80: E501 line too long (83 > 79 characters)
+./tests/test_config.py:96:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:105:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:122:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_config.py:123:80: E501 line too long (80 > 79 characters)
+./tests/test_placeholder.py:1:1: D100 Missing docstring in public module
+./tests/test_placeholder.py:2:1: D200 One-line docstring should fit on one line with quotes
+./tests/test_session_management.py:19:1: E402 module level import not at top of file
+./tests/test_session_management.py:20:1: E402 module level import not at top of file
+./tests/test_session_management.py:21:1: E402 module level import not at top of file
+./tests/test_session_management.py:59:80: E501 line too long (81 > 79 characters)
+./tests/test_session_management.py:142:80: E501 line too long (86 > 79 characters)
+11    B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
+7     D100 Missing docstring in public module
+2     D101 Missing docstring in public class
+7     D102 Missing docstring in public method
+1     D103 Missing docstring in public function
+3     D104 Missing docstring in public package
+3     D107 Missing docstring in __init__
+20    D200 One-line docstring should fit on one line with quotes
+2     D205 1 blank line required between summary line and description
+1     D400 First line should end with a period
+19    D401 First line should be in imperative mood; try rephrasing
+6     E402 module level import not at top of file
+82    E501 line too long (80 > 79 characters)

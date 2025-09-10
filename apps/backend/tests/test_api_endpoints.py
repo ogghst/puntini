@@ -1,49 +1,39 @@
-"""
-Unit tests for API endpoints.
+"""Unit tests for API endpoints.
 
 This module contains comprehensive tests for all FastAPI endpoints
 to ensure proper functionality, error handling, and response validation.
 """
 
-import json
-import os
 import sys
 from pathlib import Path
 from uuid import uuid4
 
 import pytest
-import pytest_asyncio
 from fastapi.testclient import TestClient
 
 # Add the parent directory to the Python path to allow for relative imports
 sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 
-from main import create_app
 from api.session_manager import SessionManager
+from main import create_app
 
 
 @pytest.fixture(autouse=True)
 def reset_session_manager():
-    """
-    Reset the session manager singleton before each test to ensure test isolation.
-    """
+    """Reset the session manager singleton before each test to ensure test isolation."""
     SessionManager._instance = None
 
 
 @pytest.fixture
 def client():
-    """
-    Create a test client for the FastAPI application.
-    """
+    """Create a test client for the FastAPI application."""
     app = create_app()
     return TestClient(app)
 
 
 @pytest.fixture
 async def session_manager():
-    """
-    Create and start a session manager for testing.
-    """
+    """Create and start a session manager for testing."""
     manager = SessionManager()
     await manager.start()
     try:
@@ -59,7 +49,7 @@ class TestHealthEndpoints:
         """Test the root endpoint returns correct information."""
         response = client.get("/")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert data["message"] == "Hello World!"
         assert data["api"] == "Business Improvement Project Management API"
@@ -70,7 +60,7 @@ class TestHealthEndpoints:
         """Test the health endpoint returns correct status."""
         response = client.get("/health/")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert data["status"] == "healthy"
         assert data["service"] == "business-improvement-api"
@@ -93,12 +83,12 @@ class TestSessionEndpoints:
         session_data = {
             "user_id": "test_user_123",
             "project_id": str(uuid4()),
-            "metadata": {"test": "data"}
+            "metadata": {"test": "data"},
         }
-        
+
         response = client.post("/sessions/", json=session_data)
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "session_id" in data
         assert data["user_id"] == session_data["user_id"]
@@ -108,13 +98,11 @@ class TestSessionEndpoints:
 
     def test_create_session_minimal_data(self, client):
         """Test session creation with minimal required data."""
-        session_data = {
-            "user_id": "minimal_user"
-        }
-        
+        session_data = {"user_id": "minimal_user"}
+
         response = client.post("/sessions/", json=session_data)
         assert response.status_code == 200
-        
+
         data = response.json()
         assert data["user_id"] == session_data["user_id"]
         assert data["status"] == "active"
@@ -122,10 +110,8 @@ class TestSessionEndpoints:
     def test_create_session_invalid_data(self, client):
         """Test session creation with invalid data."""
         # Missing required user_id
-        session_data = {
-            "project_id": str(uuid4())
-        }
-        
+        session_data = {"project_id": str(uuid4())}
+
         response = client.post("/sessions/", json=session_data)
         assert response.status_code == 422
 
@@ -135,13 +121,13 @@ class TestSessionEndpoints:
         session_data = {"user_id": "test_user"}
         create_response = client.post("/sessions/", json=session_data)
         assert create_response.status_code == 200
-        
+
         session_id = create_response.json()["session_id"]
-        
+
         # Then retrieve it
         response = client.get(f"/sessions/{session_id}")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert data["session_id"] == session_id
         assert data["user_id"] == "test_user"
@@ -151,7 +137,7 @@ class TestSessionEndpoints:
         fake_session_id = str(uuid4())
         response = client.get(f"/sessions/{fake_session_id}")
         assert response.status_code == 404
-        
+
         data = response.json()
         assert "not found" in data["detail"].lower()
 
@@ -166,11 +152,11 @@ class TestSessionEndpoints:
         session_data = {"user_id": "test_user"}
         create_response = client.post("/sessions/", json=session_data)
         session_id = create_response.json()["session_id"]
-        
+
         # Then destroy it
         response = client.delete(f"/sessions/{session_id}")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "destroyed successfully" in data["message"]
 
@@ -184,7 +170,7 @@ class TestSessionEndpoints:
         """Test listing sessions when none exist."""
         response = client.get("/sessions/")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert data["total_count"] == 0
         assert data["active_count"] == 0
@@ -196,10 +182,10 @@ class TestSessionEndpoints:
         for i in range(3):
             session_data = {"user_id": f"user_{i}"}
             client.post("/sessions/", json=session_data)
-        
+
         response = client.get("/sessions/")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert data["total_count"] == 3
         assert data["active_count"] == 3
@@ -211,11 +197,11 @@ class TestSessionEndpoints:
         client.post("/sessions/", json={"user_id": "user1"})
         client.post("/sessions/", json={"user_id": "user1"})
         client.post("/sessions/", json={"user_id": "user2"})
-        
+
         # Filter by user1
         response = client.get("/sessions/?user_id=user1")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert data["total_count"] == 2
         assert all(session["user_id"] == "user1" for session in data["sessions"])
@@ -224,7 +210,7 @@ class TestSessionEndpoints:
         """Test session statistics endpoint."""
         response = client.get("/sessions/stats")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "total_sessions" in data
         assert "active_sessions" in data
@@ -239,17 +225,17 @@ class TestSessionEndpoints:
         session_data = {"user_id": "test_user"}
         create_response = client.post("/sessions/", json=session_data)
         session_id = create_response.json()["session_id"]
-        
+
         # Send a message
         message_data = {
             "content": "Hello, world!",
             "message_type": "user",
-            "metadata": {"test": "message"}
+            "metadata": {"test": "message"},
         }
-        
+
         response = client.post(f"/sessions/{session_id}/messages", json=message_data)
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "message_id" in data
         assert data["content"] == message_data["content"]
@@ -259,8 +245,10 @@ class TestSessionEndpoints:
         """Test sending message to non-existent session."""
         fake_session_id = str(uuid4())
         message_data = {"content": "Hello", "message_type": "user"}
-        
-        response = client.post(f"/sessions/{fake_session_id}/messages", json=message_data)
+
+        response = client.post(
+            f"/sessions/{fake_session_id}/messages", json=message_data
+        )
         assert response.status_code == 404
 
     def test_receive_message_success(self, client):
@@ -269,14 +257,14 @@ class TestSessionEndpoints:
         session_data = {"user_id": "test_user"}
         create_response = client.post("/sessions/", json=session_data)
         session_id = create_response.json()["session_id"]
-        
+
         message_data = {"content": "Test message", "message_type": "user"}
         client.post(f"/sessions/{session_id}/messages", json=message_data)
-        
+
         # Receive the message
         response = client.get(f"/sessions/{session_id}/messages")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert data["content"] == "Test message"
         assert data["message_type"] == "user"
@@ -287,10 +275,10 @@ class TestSessionEndpoints:
         session_data = {"user_id": "test_user"}
         create_response = client.post("/sessions/", json=session_data)
         session_id = create_response.json()["session_id"]
-        
+
         response = client.get(f"/sessions/{session_id}/context")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "project_context" in data
         assert "tasks" in data
@@ -302,12 +290,12 @@ class TestSessionEndpoints:
         session_data = {"user_id": "test_user"}
         create_response = client.post("/sessions/", json=session_data)
         session_id = create_response.json()["session_id"]
-        
+
         # Update context
         context_data = {"project_name": "Test Project", "status": "active"}
         response = client.put(f"/sessions/{session_id}/context", json=context_data)
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "updated successfully" in data["message"]
 
@@ -317,12 +305,12 @@ class TestSessionEndpoints:
         session_data = {"user_id": "test_user"}
         create_response = client.post("/sessions/", json=session_data)
         session_id = create_response.json()["session_id"]
-        
+
         # Add a task
         task_data = {"title": "Test Task", "description": "A test task"}
         response = client.post(f"/sessions/{session_id}/tasks", json=task_data)
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "added successfully" in data["message"]
 
@@ -332,10 +320,10 @@ class TestSessionEndpoints:
         session_data = {"user_id": "test_user"}
         create_response = client.post("/sessions/", json=session_data)
         session_id = create_response.json()["session_id"]
-        
+
         response = client.get(f"/sessions/{session_id}/tasks")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "tasks" in data
         assert "count" in data
@@ -349,7 +337,7 @@ class TestPlaceholderEndpoints:
         """Test the agent action placeholder endpoint."""
         response = client.post("/agent/act")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "placeholder" in data["status"]
         assert "Phase 1" in data["message"]
@@ -358,7 +346,7 @@ class TestPlaceholderEndpoints:
         """Test the graph patch placeholder endpoint."""
         response = client.post("/graph/patch")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "placeholder" in data["status"]
         assert "Phase 1" in data["message"]
@@ -367,7 +355,7 @@ class TestPlaceholderEndpoints:
         """Test the graph query placeholder endpoint."""
         response = client.get("/graph/query")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "placeholder" in data["status"]
         assert "Phase 1" in data["message"]
@@ -376,7 +364,7 @@ class TestPlaceholderEndpoints:
         """Test the TODO get placeholder endpoint."""
         response = client.get("/todo/")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "placeholder" in data["status"]
         assert "Phase 1" in data["message"]
@@ -385,7 +373,7 @@ class TestPlaceholderEndpoints:
         """Test the TODO post placeholder endpoint."""
         response = client.post("/todo/")
         assert response.status_code == 200
-        
+
         data = response.json()
         assert "placeholder" in data["status"]
         assert "Phase 1" in data["message"]
@@ -399,7 +387,7 @@ class TestErrorHandling:
         response = client.post(
             "/sessions/",
             data="invalid json",
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
         )
         assert response.status_code == 422
 
@@ -416,11 +404,8 @@ class TestErrorHandling:
     def test_large_request_body(self, client):
         """Test handling of large request bodies."""
         large_metadata = {"data": "x" * 10000}  # 10KB of data
-        session_data = {
-            "user_id": "test_user",
-            "metadata": large_metadata
-        }
-        
+        session_data = {"user_id": "test_user", "metadata": large_metadata}
+
         response = client.post("/sessions/", json=session_data)
         # Should either succeed or fail gracefully, not crash
         assert response.status_code in [200, 413, 422]

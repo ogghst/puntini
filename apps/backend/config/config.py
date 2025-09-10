@@ -1,21 +1,24 @@
-
+"""Configuration manager for the backend."""
 import json
 import logging
 import logging.handlers
-import os
 from pathlib import Path
 from typing import Any
 
 
 class ConfigManager:
+    """A singleton class to manage configuration."""
+
     _instance = None
 
     def __new__(cls, *args, **kwargs):
+        """Create a new instance of the ConfigManager."""
         if not cls._instance:
             cls._instance = super().__new__(cls)
         return cls._instance
 
     def __init__(self, config_path: str = "config.json"):
+        """Initialize the configuration manager."""
         if not hasattr(self, "initialized"):
             self.config_path = config_path
             self.config = self._load_config()
@@ -23,7 +26,7 @@ class ConfigManager:
             self.initialized = True
 
     def _load_config(self) -> dict[str, Any]:
-        """Loads the configuration from the JSON file."""
+        """Load the configuration from the JSON file."""
         try:
             with Path(self.config_path).open() as f:
                 return json.load(f)
@@ -35,7 +38,7 @@ class ConfigManager:
             raise
 
     def _setup_logging(self):
-        """Sets up the logging for the application."""
+        """Set up the logging for the application."""
         logging_config = self.config.get("logging", {})
         log_level = logging_config.get("log_level", "INFO").upper()
         console_logging = logging_config.get("console_logging", True)
@@ -55,7 +58,9 @@ class ConfigManager:
         if root_logger.hasHandlers():
             root_logger.handlers.clear()
 
-        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
 
         # File handler
         max_bytes = logging_config.get("max_bytes", 10485760)
@@ -75,38 +80,47 @@ class ConfigManager:
         logging.info("Logging configured.")
 
     def get(self, key: str, default: Any = None) -> Any:
-        """Retrieves a configuration value."""
+        """Retrieve a configuration value."""
         return self.config.get(key, default)
 
     @property
     def llm_provider(self) -> str:
+        """Return the LLM provider."""
         return self.get("llm_provider", "default_provider")
 
     @property
     def llm_config(self) -> dict[str, Any]:
+        """Return the LLM configuration."""
         return self.get("llm_config", {})
 
     @property
     def system(self) -> dict[str, Any]:
+        """Return the system configuration."""
         return self.get("system", {})
 
     @property
     def logging_config(self) -> dict[str, Any]:
+        """Return the logging configuration."""
         return self.get("logging", {})
 
     @property
     def runtime(self) -> dict[str, Any]:
+        """Return the runtime configuration."""
         return self.get("runtime", {})
 
     @property
     def server(self) -> dict[str, Any]:
+        """Return the server configuration."""
         return self.get("server", {})
+
 
 # Global instance - will be created when needed
 config_manager = None
 
+
 def get_config() -> ConfigManager:
-    global config_manager
+    """Get the global ConfigManager instance."""
+    global config_manager  # noqa: PLW0603
     if config_manager is None:
         # Look for config.json in the parent directory (backend folder)
         config_path = Path(__file__).parent.parent / "config.json"

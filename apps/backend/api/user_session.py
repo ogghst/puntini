@@ -1,5 +1,4 @@
-"""
-Individual user session management.
+"""Individual user session management.
 
 This module provides the Session class for managing individual user sessions
 with runtime orchestration and message queuing capabilities.
@@ -18,9 +17,8 @@ from models.session import Message, MessageType, SessionInfo, SessionStatus, Tas
 
 
 class UserSession:
-    """
-    Manages individual user sessions with runtime orchestration and message queuing.
-    
+    """Manages individual user sessions with runtime orchestration and message queuing.
+
     Main responsibilities:
     - Session Management: Creates and manages individual user sessions with unique IDs
     - Runtime Orchestration: Initializes and controls the agent runtime for each session
@@ -33,8 +31,9 @@ class UserSession:
         user_id: str,
         project_id: UUID | None = None,
         metadata: dict[str, Any] | None = None,
-        manager: SessionManager | None = None
+        manager: SessionManager | None = None,
     ):
+        """Initialize the user session."""
         self.session_id = session_id
         self.user_id = user_id
         self.project_id = project_id
@@ -136,18 +135,18 @@ class UserSession:
         self,
         content: Any,
         message_type: MessageType = MessageType.USER,
-        metadata: dict[str, Any] | None = None
+        metadata: dict[str, Any] | None = None,
     ) -> str:
-        """
-        Send a message to the session.
-        
+        """Send a message to the session.
+
         Args:
             content: Message content
             message_type: Type of message
             metadata: Optional message metadata
-            
+
         Returns:
             str: Message ID
+
         """
         message_id = f"{self.session_id}_{int(datetime.now(UTC).timestamp() * 1000)}"
 
@@ -156,7 +155,7 @@ class UserSession:
             content=content,
             timestamp=datetime.now(UTC),
             message_type=message_type,
-            metadata=metadata or {}
+            metadata=metadata or {},
         )
 
         await self._input_queue.put(message)
@@ -166,20 +165,19 @@ class UserSession:
         return message_id
 
     async def receive_message(self, timeout: float | None = None) -> Message | None:
-        """
-        Receive a message from the session.
-        
+        """Receive a message from the session.
+
         Args:
             timeout: Optional timeout in seconds
-            
+
         Returns:
             Message: The received message, or None if timeout
+
         """
         try:
             if timeout:
                 message = await asyncio.wait_for(
-                    self._output_queue.get(),
-                    timeout=timeout
+                    self._output_queue.get(), timeout=timeout
                 )
             else:
                 message = await self._output_queue.get()
@@ -191,16 +189,14 @@ class UserSession:
             return None
 
     def register_message_handler(
-        self,
-        message_type: MessageType,
-        handler: Callable[[Message], Awaitable[None]]
+        self, message_type: MessageType, handler: Callable[[Message], Awaitable[None]]
     ):
-        """
-        Register a message handler for a specific message type.
-        
+        """Register a message handler for a specific message type.
+
         Args:
             message_type: Type of message to handle
             handler: Async function to handle the message
+
         """
         self._message_handlers[message_type.value] = handler
         self._logger.debug(f"Registered handler for message type: {message_type.value}")
@@ -227,7 +223,7 @@ class UserSession:
             status=task_data.get("status", "pending"),
             priority=task_data.get("priority", "medium"),
             created_at=created_at,
-            metadata=task_data.get("metadata", {})
+            metadata=task_data.get("metadata", {}),
         )
 
         self._task_queue.append(task)
@@ -248,7 +244,7 @@ class UserSession:
         return self.status == SessionStatus.ACTIVE and not self.is_expired()
 
     async def _runtime_loop(self):
-        """Main runtime loop for processing messages and managing agents."""
+        """Process messages and manage agents."""
         self._logger.info(f"Starting runtime loop for session {self.session_id}")
 
         while self.status in [SessionStatus.ACTIVE, SessionStatus.PAUSED]:
@@ -265,7 +261,9 @@ class UserSession:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                self._logger.error(f"Error in runtime loop for session {self.session_id}: {e}")
+                self._logger.error(
+                    f"Error in runtime loop for session {self.session_id}: {e}"
+                )
                 self._error_count += 1
 
                 if self._error_count >= self._max_errors:
@@ -297,7 +295,9 @@ class UserSession:
                     if output:
                         await self._output_queue.put(output)
             except Exception as e:
-                self._logger.error(f"Error processing output from agent {agent_name}: {e}")
+                self._logger.error(
+                    f"Error processing output from agent {agent_name}: {e}"
+                )
 
     async def _handle_message(self, message: Message):
         """Handle a message using registered handlers."""
@@ -310,7 +310,9 @@ class UserSession:
                 self._logger.error(f"Error handling message {message.id}: {e}")
         else:
             # Default handling - just log and forward
-            self._logger.debug(f"No handler for message type {message.message_type.value}, forwarding")
+            self._logger.debug(
+                f"No handler for message type {message.message_type.value}, forwarding"
+            )
             await self._output_queue.put(message)
 
     def _register_default_handlers(self):
@@ -359,7 +361,9 @@ class UserSession:
                 task = asyncio.create_task(agent.run())
                 self._agent_tasks[agent_name] = task
 
-                self._logger.info(f"Initialized agent {agent_name} for session {self.session_id}")
+                self._logger.info(
+                    f"Initialized agent {agent_name} for session {self.session_id}"
+                )
 
             except Exception as e:
                 self._logger.error(f"Failed to initialize agent {agent_name}: {e}")
@@ -395,5 +399,5 @@ class UserSession:
             is_active=self.is_active(),
             agent_count=len(self._agents),
             task_count=len(self._task_queue),
-            metadata=self.metadata
+            metadata=self.metadata,
         )

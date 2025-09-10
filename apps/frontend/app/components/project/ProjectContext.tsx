@@ -27,9 +27,11 @@ import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { Textarea } from "../ui/textarea";
 
+type EditData = Record<string, string | number | boolean | object>;
+
 interface ProjectContextProps {
   sessionId: string | null;
-  onContextUpdate?: (context: Record<string, any>) => void;
+  onContextUpdate?: (context: Record<string, unknown>) => void;
 }
 
 export const ProjectContext: React.FC<ProjectContextProps> = ({
@@ -40,7 +42,7 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editData, setEditData] = useState<Record<string, any>>({});
+  const [editData, setEditData] = useState<EditData>({});
 
   // Load project context
   const loadContext = useCallback(async () => {
@@ -119,12 +121,12 @@ export const ProjectContext: React.FC<ProjectContextProps> = ({
   };
 
   // Update field value
-  const handleFieldChange = (key: string, value: any) => {
+  const handleFieldChange = (key: string, value: unknown) => {
     setEditData((prev) => ({ ...prev, [key]: value }));
   };
 
   // Render context field
-  const renderField = (key: string, value: any) => {
+  const renderField = (key: string, value: unknown) => {
     const isString = typeof value === "string";
     const isNumber = typeof value === "number";
     const isBoolean = typeof value === "boolean";
