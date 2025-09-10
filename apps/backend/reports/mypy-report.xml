@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<testsuite errors="0" failures="1" name="mypy" skips="0" tests="1" time="0.211">
-  <testcase classname="mypy" file="mypy" line="1" name="mypy-py3_11-linux" time="0.211">
-    <failure message="mypy produced messages">api/session_manager.py: error: Source file found twice under different module names: "backend.api.session_manager" and "api.session_manager"
-api/session_manager.py: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#mapping-file-paths-to-modules for more info
-api/session_manager.py: note: Common resolutions include: a) adding `__init__.py` somewhere, b) using `--explicit-package-bases` or adjusting MYPYPATH</failure>
-  </testcase>
-</testsuite>

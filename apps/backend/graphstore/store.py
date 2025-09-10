@@ -1,4 +1,5 @@
 """Abstract interface for a graph store."""
+
 from abc import ABC, abstractmethod
 from typing import Any, Literal
 

@@ -1,4 +1,5 @@
 """Defines the agent graph for the Puntini backend."""
+
 from typing import TypedDict
 
 from langgraph.graph import END, StateGraph

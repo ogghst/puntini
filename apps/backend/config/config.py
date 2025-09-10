@@ -1,4 +1,5 @@
 """Configuration manager for the backend."""
+
 import json
 import logging
 import logging.handlers
