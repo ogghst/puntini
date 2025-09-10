@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
-"""
-Startup script for the FastAPI server.
+"""Startup script for the FastAPI server.
 
 This script provides a convenient way to start the FastAPI development server
 with proper configuration and logging.
 """
 
-import uvicorn
 import sys
-import os
 from pathlib import Path
+
+import uvicorn
+
+from config.config import ConfigManager
 
 # Add the backend directory to Python path
 backend_dir = Path(__file__).parent
 sys.path.insert(0, str(backend_dir))
-
-from config.config import ConfigManager
 
 
 def main():
@@ -24,21 +23,24 @@ def main():
         # Get configuration
         config = ConfigManager()
         config_data = config.config
-        
+
         print("🚀 Starting Business Improvement Project Management API")
         print(f"📁 Backend directory: {backend_dir}")
         print(f"⚙️  Configuration loaded from: {config.config_path}")
-        
+
+        # Get server configuration
+        server_config = config_data.get("server", {})
+
         # Run the server
         uvicorn.run(
             "main:app",
-            host=config_data.get("api_host", "0.0.0.0"),
-            port=config_data.get("api_port", 8000),
+            host=server_config.get("host", "0.0.0.0"),  # noqa: S104
+            port=server_config.get("port", 8000),
             reload=config_data.get("api_reload", True),
             log_level=config_data.get("log_level", "info").lower(),
-            access_log=True
+            access_log=True,
         )
-        
+
     except KeyboardInterrupt:
         print("\n🛑 Server stopped by user")
     except Exception as e:

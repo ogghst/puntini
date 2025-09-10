@@ -38,6 +38,8 @@
   "runtime": {
     "max_concurrent_agents": 10,
     "session_timeout": 3600,
+    "cleanup_interval": 300,
+    "max_sessions": 1000,
     "enable_tracing": true,
     "tracing_endpoint": "http://localhost:4317"
   },

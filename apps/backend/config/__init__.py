@@ -1,6 +1,4 @@
-"""
-Configuration module for the backend application.
-"""
+"""Configuration module for the backend application."""
 
 from .config import ConfigManager
 
