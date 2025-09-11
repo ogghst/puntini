@@ -32,6 +32,12 @@ session_router = APIRouter(prefix="/sessions", tags=["sessions"], redirect_slash
 _session_creation_times = {}
 
 
+def reset_rate_limiting():
+    """Reset rate limiting state for testing."""
+    global _session_creation_times
+    _session_creation_times.clear()
+
+
 @health_router.get("/")
 async def health_status():
     """
@@ -267,6 +273,9 @@ async def destroy_session(
         if not success:
             raise HTTPException(status_code=404, detail="Session not found")
         return {"message": "Session destroyed successfully"}
+    except HTTPException:
+        # Re-raise HTTPException to let FastAPI handle it
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to destroy session: {e!s}") from e
 

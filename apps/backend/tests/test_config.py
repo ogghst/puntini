@@ -32,8 +32,14 @@ def mock_config_data() -> dict[str, Any]:
     Provides a dictionary with mock configuration data for testing.
     """
     return {
-        "llm_provider": "test_provider",
-        "llm_config": {"model": "test_model"},
+        "llm_provider": "deepseek",
+        "llm_config": {
+            "deepseek": {
+                "api_key": "test_key",
+                "api_url": "https://api.deepseek.com",
+                "model": "deepseek-chat"
+            }
+        },
         "system": {"logs_path": "test_logs"},
         "logging": {
             "log_level": "DEBUG",
@@ -98,7 +104,7 @@ def test_get_method(mock_config_file: str):
     Tests the get() method for retrieving configuration values.
     """
     cm = ConfigManager(config_path=mock_config_file)
-    assert cm.get("llm_provider") == "test_provider"
+    assert cm.get("llm_provider") == "deepseek"
     assert cm.get("non_existent_key", "default_value") == "default_value"
 
 
@@ -115,8 +121,8 @@ def test_properties(mock_config_file: str, mock_config_data: dict[str, Any]):
     assert cm.server == mock_config_data["server"]
 
 
-@patch("os.makedirs")
-@patch("os.path.exists", return_value=False)
+@patch("pathlib.Path.mkdir")
+@patch("pathlib.Path.exists", return_value=False)
 def test_setup_logging_creates_log_dir(mock_exists, mock_makedirs, mock_config_file: str):
     """
     Tests that the logging setup creates the log directory if it does not exist.
@@ -126,5 +132,5 @@ def test_setup_logging_creates_log_dir(mock_exists, mock_makedirs, mock_config_f
         ConfigManager(config_path=mock_config_file)
         # The log path is retrieved from the mock config data
         log_path = "test_logs"
-        mock_exists.assert_called_with(log_path)
-        mock_makedirs.assert_called_with(log_path)
+        mock_exists.assert_called_with()
+        mock_makedirs.assert_called_with(parents=True)

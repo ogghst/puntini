@@ -303,3 +303,10 @@ def get_session_manager() -> SessionManager:
     if _session_manager is None:
         _session_manager = SessionManager()
     return _session_manager
+
+
+def reset_session_manager():
+    """Reset the global session manager instance for testing."""
+    global _session_manager
+    # Simply reset the global variable - the old instance will be garbage collected
+    _session_manager = None

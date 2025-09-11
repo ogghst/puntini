@@ -26,8 +26,8 @@
     }
   },
   "system": {
-    "logs_path": "./logs",
-    "temp_path": "../temp"
+    "logs_path": "apps/backend/logs",
+    "temp_path": "apps/temp"
   },
   "instrumentation": {
     "langfuse": {
@@ -41,7 +41,7 @@
     "console_logging": false,
     "max_bytes": 10485760,
     "backup_count": 5,
-    "log_file": "../../logs/backend.log"
+    "log_file": "backend.log"
   },
   "runtime": {
     "max_concurrent_agents": 10,

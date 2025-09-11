@@ -52,13 +52,13 @@ class ConfigManager:
         console_logging = logging_config.get("console_logging", True)
 
         system_config = self.config.get("system", {})
-        logs_path = system_config.get("logs_path", "../logs")
+        logs_path = Path(system_config.get("logs_path", "logs"))
 
-        if not Path(logs_path).exists():
-            Path(logs_path).mkdir(parents=True)
+        if not logs_path.exists():
+            logs_path.mkdir(parents=True)
 
-        log_file = logging_config.get("log_file", "app.log")
-        log_file = Path(log_file) 
+        log_file_name = logging_config.get("log_file", "app.log")
+        log_file = logs_path / log_file_name
 
         root_logger = logging.getLogger()
         root_logger.setLevel(log_level)
@@ -105,6 +105,10 @@ class ConfigManager:
     @property
     def llm_provider(self) -> str:
         return self.get("llm_provider", "default_provider")
+    
+    def get_llm_provider(self) -> str:
+        """Get the LLM provider configuration"""
+        return self.llm_provider
 
     @property
     def llm_config(self) -> dict[str, Any]:

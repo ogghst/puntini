@@ -40,6 +40,27 @@ class AdaptiveContextManager:
         self.complexity_threshold = 0.7
         self.frustration_indicators = ["confused", "frustrated", "not working", "broken"]
     
+    def _initialize_escalation_patterns(self) -> Dict[str, Any]:
+        """Initialize escalation patterns and thresholds"""
+        return {
+            "error_patterns": {
+                "validation_cascade": {"threshold": 2, "severity": "medium"},
+                "identical_repeated": {"threshold": 3, "severity": "high"},
+                "timeout_errors": {"threshold": 2, "severity": "high"},
+                "connection_errors": {"threshold": 1, "severity": "critical"}
+            },
+            "complexity_patterns": {
+                "multi_entity_extraction": {"threshold": 0.8, "severity": "medium"},
+                "complex_relationships": {"threshold": 0.9, "severity": "high"},
+                "nested_operations": {"threshold": 0.7, "severity": "medium"}
+            },
+            "user_frustration": {
+                "negative_sentiment": {"threshold": 0.6, "severity": "medium"},
+                "repeated_requests": {"threshold": 3, "severity": "high"},
+                "explicit_escalation": {"threshold": 1, "severity": "critical"}
+            }
+        }
+    
     def analyze_escalation_signals(self, state: AgentState) -> List[EscalationSignal]:
         """Analyze multiple escalation signals using pattern recognition"""
         signals = []

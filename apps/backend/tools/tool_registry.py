@@ -1,4 +1,4 @@
-import pkg_resources
+import importlib.metadata
 from abc import ABC, abstractmethod
 from typing import Dict, List, Any, Optional, Protocol
 from pydantic import BaseModel
@@ -49,21 +49,34 @@ class ToolRegistry:
         if not self._discovery_enabled:
             return
         
-        for entry_point in pkg_resources.iter_entry_points(self.entry_point_group):
-            try:
-                tool_factory = entry_point.load()
-                tool_instance = tool_factory()
-                
-                self.register_tool(
-                    tool_instance=tool_instance,
-                    plugin_name=entry_point.name,
-                    version=entry_point.dist.version if entry_point.dist else "unknown"
-                )
-                
-                self.logger.info(f"Registered tool: {entry_point.name}")
-                
-            except Exception as e:
-                self.logger.error(f"Failed to load tool {entry_point.name}: {e}")
+        try:
+            # Use importlib.metadata instead of pkg_resources
+            entry_points = importlib.metadata.entry_points()
+            if hasattr(entry_points, 'select'):
+                # Python 3.10+ syntax
+                project_entry_points = entry_points.select(group=self.entry_point_group)
+            else:
+                # Python 3.8-3.9 syntax
+                project_entry_points = entry_points.get(self.entry_point_group, [])
+            
+            for entry_point in project_entry_points:
+                try:
+                    tool_factory = entry_point.load()
+                    tool_instance = tool_factory()
+                    
+                    self.register_tool(
+                        tool_instance=tool_instance,
+                        plugin_name=entry_point.name,
+                        version=entry_point.dist.version if entry_point.dist else "unknown"
+                    )
+                    
+                    self.logger.info(f"Registered tool: {entry_point.name}")
+                    
+                except Exception as e:
+                    self.logger.error(f"Failed to load tool {entry_point.name}: {e}")
+                    
+        except Exception as e:
+            self.logger.error(f"Failed to discover entry points for group {self.entry_point_group}: {e}")
     
     def register_tool(self, tool_instance: AgentTool, plugin_name: str, version: str):
         """Register a tool instance"""
