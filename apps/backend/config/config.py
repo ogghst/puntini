@@ -3,24 +3,35 @@ import json
 import logging
 import logging.handlers
 import os
+import threading
 from pathlib import Path
 from typing import Any
 
+from langfuse import Langfuse, get_client
+from langfuse.langchain import CallbackHandler
 
 class ConfigManager:
     _instance = None
+    _lock = threading.Lock()
+    _initialized = False
 
     def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super().__new__(cls)
+        if cls._instance is None:
+            with cls._lock:
+                # Double-checked locking pattern
+                if cls._instance is None:
+                    cls._instance = super(ConfigManager, cls).__new__(cls)
+                    cls._instance._initialize(*args, **kwargs)
         return cls._instance
 
-    def __init__(self, config_path: str = "config.json"):
-        if not hasattr(self, "initialized"):
+    def _initialize(self, config_path: str = "config.json"):
+        """Private initialization method called only once."""
+        if not self._initialized:
             self.config_path = config_path
             self.config = self._load_config()
             self._setup_logging()
-            self.initialized = True
+            self._setup_langfuse()
+            self._initialized = True
 
     def _load_config(self) -> dict[str, Any]:
         """Loads the configuration from the JSON file."""
@@ -46,7 +57,8 @@ class ConfigManager:
         if not Path(logs_path).exists():
             Path(logs_path).mkdir(parents=True)
 
-        log_file = Path(logs_path) / "app.log"
+        log_file = logging_config.get("log_file", "app.log")
+        log_file = Path(log_file) 
 
         root_logger = logging.getLogger()
         root_logger.setLevel(log_level)
@@ -73,6 +85,18 @@ class ConfigManager:
             root_logger.addHandler(console_handler)
 
         logging.info("Logging configured.")
+        
+    def _setup_langfuse(self):
+        """Sets up the langfuse for the application."""
+        langfuse_config = self.config.get("instrumentation", {}).get("langfuse", {})
+        Langfuse(
+            secret_key=langfuse_config.get("secret_key", ""),
+            public_key=langfuse_config.get("public_key", ""),
+            host=langfuse_config.get("host", "http://127.0.0.1:3000")
+        )   
+        self._langfuse = get_client()
+        self._langfuse_handler = CallbackHandler()
+        logging.info("Langfuse configured.")
 
     def get(self, key: str, default: Any = None) -> Any:
         """Retrieves a configuration value."""
@@ -101,14 +125,21 @@ class ConfigManager:
     @property
     def server(self) -> dict[str, Any]:
         return self.get("server", {})
+    
+    @property
+    def instrumentation(self) -> dict[str, Any]:
+        return self.get("instrumentation", {})
+    
+    @property
+    def langfuse_handler(self) -> CallbackHandler:
+        return self._langfuse_handler
 
-# Global instance - will be created when needed
-config_manager = None
 
+# Factory function - this is the only way to access ConfigManager
 def get_config() -> ConfigManager:
-    global config_manager
-    if config_manager is None:
-        # Look for config.json in the parent directory (backend folder)
-        config_path = Path(__file__).parent.parent / "config.json"
-        config_manager = ConfigManager(config_path=config_path)
-    return config_manager
+    """Get the global ConfigManager instance. This is the only way to access ConfigManager."""
+    config_path = Path(__file__).parent.parent / "config.json"
+    return ConfigManager(config_path=config_path)
+
+# Make ConfigManager constructor private by not exporting it
+__all__ = ["get_config"]

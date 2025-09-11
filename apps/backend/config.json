@@ -29,11 +29,19 @@
     "logs_path": "./logs",
     "temp_path": "../temp"
   },
+  "instrumentation": {
+    "langfuse": {
+      "secret_key": "sk-lf-d1b79ce9-4aa1-48ba-964e-19f70338b27e",
+      "public_key": "pk-lf-e725f176-2e5a-433e-996c-45081b6ee7b6",
+      "host": "http://127.0.0.1:3000"
+    }
+  },
   "logging": {
     "log_level": "DEBUG",
     "console_logging": false,
     "max_bytes": 10485760,
-    "backup_count": 5
+    "backup_count": 5,
+    "log_file": "../../logs/backend.log"
   },
   "runtime": {
     "max_concurrent_agents": 10,
@@ -45,6 +53,9 @@
   },
   "server": {
     "host": "0.0.0.0",
-    "port": 8001
+    "port": 8001,
+    "api_reload": true,
+    "log_level": "info",
+    "access_log": true
   }
 }

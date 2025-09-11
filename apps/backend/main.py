@@ -19,7 +19,7 @@ from api.routers import (
     todo_router,
 )
 from api.session_manager import get_session_manager
-from config.config import ConfigManager
+from config.config import get_config
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -35,8 +35,9 @@ async def lifespan(_app: FastAPI):
     application starts and stops.
     """
     # Startup
-    logger.info("Starting FastAPI application...")
-    config = ConfigManager()
+
+    config = get_config()
+    
     logger.info(f"Configuration loaded: {config.config}")
 
     # Initialize session manager
@@ -115,7 +116,7 @@ if __name__ == "__main__":
     import uvicorn
 
     # Get configuration
-    config = ConfigManager()
+    config = get_config()
     config_data = config.config
 
     # Run the server

@@ -32,3 +32,5 @@ fastapi
 uvicorn[standard]
 #linkml
 langgraph
+langchain
+langfuse

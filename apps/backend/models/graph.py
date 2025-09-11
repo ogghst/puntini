@@ -23,3 +23,4 @@ class Patch(BaseModel):
     op: Annotated[Literal["AddNode","UpdateProps","AddEdge","Delete"], Field(description="The operation to perform.")]
     node: Annotated[NodeSpec | None, Field(description="The node specification for the operation.")] = None
     edge: Annotated[EdgeSpec | None, Field(description="The edge specification for the operation.")] = None
+    reason: Annotated[str, Field(description="The reason for the operation.")] = ""
