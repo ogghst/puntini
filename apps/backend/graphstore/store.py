@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Literal
 
-from ..models.graph import Patch
+from models.graph import Patch
 
 
 class GraphStore(ABC):
