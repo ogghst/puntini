@@ -6,7 +6,7 @@ These tools use LLM to extract structured data from natural language.
 import logging
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
-from models.domain import Progetto, Utente, Epic, Issue
+from models.domain import Project, User, Epic, Issue
 from models.graph import Patch, NodeSpec, EdgeSpec
 from services.llm_service import get_llm_service, ModelConfig
 from tools.tool_registry import AgentTool
@@ -31,7 +31,7 @@ class ProjectExtractionTool(AgentTool):
             # Generate project data using LLM
             project_data = await self.llm_service.generate_structured_output(
                 prompt_template=self._get_extraction_prompt(),
-                output_schema=Progetto,
+                output_schema=Project,
                 context={"text": text},
                 model_config=ModelConfig(temperature=0.1)
             )
@@ -82,7 +82,7 @@ class ProjectExtractionTool(AgentTool):
         If multiple projects are mentioned, extract the main/primary project.
         """
     
-    def _create_project_patches(self, project: Progetto) -> List[Patch]:
+    def _create_project_patches(self, project: Project) -> List[Patch]:
         """Create patches for a project entity"""
         patches = []
         
@@ -90,13 +90,11 @@ class ProjectExtractionTool(AgentTool):
         project_patch = Patch(
             op="AddNode",
             node=NodeSpec(
-                label="Progetto",
+                label="Project",
                 key=project.key,
                 props={
-                    "nome": project.nome,
-                    "descrizione": project.descrizione or "",
-                    "created_at": project.created_at.isoformat(),
-                    "updated_at": project.updated_at.isoformat()
+                    "name": project.nome,
+                    "description": project.description or ""
                 }
             ),
             reason=f"Extract project: {project.nome}"
@@ -125,7 +123,7 @@ class UserExtractionTool(AgentTool):
             # Generate user data using LLM
             user_data = await self.llm_service.generate_structured_output(
                 prompt_template=self._get_extraction_prompt(),
-                output_schema=Utente,
+                output_schema=User,
                 context={"text": text},
                 model_config=ModelConfig(temperature=0.1)
             )
@@ -169,14 +167,14 @@ class UserExtractionTool(AgentTool):
         Text: "{text}"
         
         Extract the following information:
-        - User ID (required) - generate a unique identifier if not provided
+        - User ID (required) - blank if not provided
         - User name (required)
         - Any other relevant user details
         
         If multiple users are mentioned, extract all of them.
         """
     
-    def _create_user_patches(self, user: Utente) -> List[Patch]:
+    def _create_user_patches(self, user: User) -> List[Patch]:
         """Create patches for a user entity"""
         patches = []
         
@@ -184,15 +182,13 @@ class UserExtractionTool(AgentTool):
         user_patch = Patch(
             op="AddNode",
             node=NodeSpec(
-                label="Utente",
+                label="User",
                 key=user.user_id,
                 props={
-                    "nome": user.nome,
-                    "created_at": user.created_at.isoformat(),
-                    "updated_at": user.updated_at.isoformat()
+                    "name": user.name
                 }
             ),
-            reason=f"Extract user: {user.nome}"
+            reason=f"Extract user: {user.name}"
         )
         patches.append(user_patch)
         
@@ -212,24 +208,24 @@ class EpicExtractionTool(AgentTool):
         """Extract epic information from text"""
         try:
             text = input_data.get("text", "")
-            project_key = input_data.get("project_key", "")
+            project_id = input_data.get("project_id", "")
             
             if not text:
                 return {"success": False, "error": "No text provided"}
             
-            if not project_key:
+            if not project_id:
                 return {"success": False, "error": "Project key required for epic extraction"}
             
             # Generate epic data using LLM
             epic_data = await self.llm_service.generate_structured_output(
                 prompt_template=self._get_extraction_prompt(),
                 output_schema=Epic,
-                context={"text": text, "project_key": project_key},
+                context={"text": text, "project_id": project_id},
                 model_config=ModelConfig(temperature=0.1)
             )
             
             # Create patches for the epic
-            patches = self._create_epic_patches(epic_.dict(), project_key)
+            patches = self._create_epic_patches(epic_.dict(), project_id)
             
             return {
                 "success": True,
@@ -246,7 +242,7 @@ class EpicExtractionTool(AgentTool):
         """Validate input data"""
         return (
             "text" in input_data and isinstance(input_data["text"], str) and
-            "project_key" in input_data and isinstance(input_data["project_key"], str)
+            "project_id" in input_data and isinstance(input_data["project_id"], str)
         )
     
     def get_schema(self) -> Dict[str, Any]:
@@ -258,12 +254,12 @@ class EpicExtractionTool(AgentTool):
                     "type": "string",
                     "description": "Natural language description of the epic"
                 },
-                "project_key": {
+                "project_id": {
                     "type": "string",
                     "description": "Key of the project this epic belongs to"
                 }
             },
-            "required": ["text", "project_key"]
+            "required": ["text", "project_id"]
         }
     
     def _get_extraction_prompt(self) -> str:
@@ -272,7 +268,7 @@ class EpicExtractionTool(AgentTool):
         Extract epic information from the following text:
         
         Text: "{text}"
-        Project Key: "{project_key}"
+        Project ID: "{project_id}"
         
         Extract the following information:
         - Epic title (required)
@@ -282,7 +278,7 @@ class EpicExtractionTool(AgentTool):
         If multiple epics are mentioned, extract all of them.
         """
     
-    def _create_epic_patches(self, epic: Epic, project_key: str) -> List[Patch]:
+    def _create_epic_patches(self, epic: Epic, project_id: str) -> List[Patch]:
         """Create patches for an epic entity"""
         patches = []
         
@@ -291,15 +287,13 @@ class EpicExtractionTool(AgentTool):
             op="AddNode",
             node=NodeSpec(
                 label="Epic",
-                key=epic.key,
+                key=epic.id,
                 props={
-                    "titolo": epic.titolo,
-                    "progetto_id": str(epic.progetto_id),
-                    "created_at": epic.created_at.isoformat(),
-                    "updated_at": epic.updated_at.isoformat()
+                    "title": epic.title,
+                    "project_id": str(epic.project_id),
                 }
             ),
-            reason=f"Extract epic: {epic.titolo}"
+            reason=f"Extract epic: {epic.title}"
         )
         patches.append(epic_patch)
         
@@ -307,14 +301,14 @@ class EpicExtractionTool(AgentTool):
         relationship_patch = Patch(
             op="AddEdge",
             edge=EdgeSpec(
-                src_label="Progetto",
-                src_key=project_key,
+                src_label="Project",
+                src_key=project_id,
                 rel="HAS_EPIC",
                 dst_label="Epic",
-                dst_key=epic.key,
+                dst_key=epic.id,
                 props={}
             ),
-            reason=f"Link epic {epic.titolo} to project {project_key}"
+            reason=f"Link epic {epic.title} to project {project_id}"
         )
         patches.append(relationship_patch)
         
@@ -334,24 +328,24 @@ class IssueExtractionTool(AgentTool):
         """Extract issue information from text"""
         try:
             text = input_data.get("text", "")
-            epic_key = input_data.get("epic_key", "")
+            epic_id = input_data.get("epic_id", "")
             
             if not text:
                 return {"success": False, "error": "No text provided"}
             
-            if not epic_key:
+            if not epic_id:
                 return {"success": False, "error": "Epic key required for issue extraction"}
             
             # Generate issue data using LLM
             issue_data = await self.llm_service.generate_structured_output(
                 prompt_template=self._get_extraction_prompt(),
                 output_schema=Issue,
-                context={"text": text, "epic_key": epic_key},
+                context={"text": text, "epic_id": epic_id},
                 model_config=ModelConfig(temperature=0.1)
             )
             
             # Create patches for the issue
-            patches = self._create_issue_patches(issue_data, epic_key)
+            patches = self._create_issue_patches(issue_data, epic_id)
             
             return {
                 "success": True,
@@ -368,7 +362,7 @@ class IssueExtractionTool(AgentTool):
         """Validate input data"""
         return (
             "text" in input_data and isinstance(input_data["text"], str) and
-            "epic_key" in input_data and isinstance(input_data["epic_key"], str)
+            "epic_id" in input_data and isinstance(input_data["epic_id"], str)
         )
     
     def get_schema(self) -> Dict[str, Any]:
@@ -380,12 +374,12 @@ class IssueExtractionTool(AgentTool):
                     "type": "string",
                     "description": "Natural language description of the issue"
                 },
-                "epic_key": {
+                "epic_id": {
                     "type": "string",
                     "description": "Key of the epic this issue belongs to"
                 }
             },
-            "required": ["text", "epic_key"]
+            "required": ["text", "epic_id"]
         }
     
     def _get_extraction_prompt(self) -> str:
@@ -394,7 +388,7 @@ class IssueExtractionTool(AgentTool):
         Extract issue information from the following text:
         
         Text: "{text}"
-        Epic Key: "{epic_key}"
+        Epic ID: "{epic_id}"
         
         Extract the following information:
         - Issue title (required)
@@ -405,7 +399,7 @@ class IssueExtractionTool(AgentTool):
         If multiple issues are mentioned, extract all of them.
         """
     
-    def _create_issue_patches(self, issue: Issue, epic_key: str) -> List[Patch]:
+    def _create_issue_patches(self, issue: Issue, epic_id: str) -> List[Patch]:
         """Create patches for an issue entity"""
         patches = []
         
@@ -414,16 +408,14 @@ class IssueExtractionTool(AgentTool):
             op="AddNode",
             node=NodeSpec(
                 label="Issue",
-                key=issue.key,
+                key=issue.id,
                 props={
-                    "titolo": issue.titolo,
-                    "stato": issue.stato,
-                    "epic_key": epic_key,
-                    "created_at": issue.created_at.isoformat(),
-                    "updated_at": issue.updated_at.isoformat()
+                    "title": issue.title,
+                    "status": issue.status,
+                    "epic_id": epic_id,
                 }
             ),
-            reason=f"Extract issue: {issue.titolo}"
+            reason=f"Extract issue: {issue.title}"
         )
         patches.append(issue_patch)
         
@@ -432,13 +424,13 @@ class IssueExtractionTool(AgentTool):
             op="AddEdge",
             edge=EdgeSpec(
                 src_label="Epic",
-                src_key=epic_key,
+                src_key=epic_id,
                 rel="HAS_ISSUE",
                 dst_label="Issue",
-                dst_key=issue.key,
+                dst_key=issue.id,
                 props={}
             ),
-            reason=f"Link issue {issue.titolo} to epic {epic_key}"
+            reason=f"Link issue {issue.title} to epic {epic_id}"
         )
         patches.append(relationship_patch)
         

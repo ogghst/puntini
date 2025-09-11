@@ -36,14 +36,14 @@ class Neo4jStore(GraphStore):
         """Initialize Neo4j constraints for data integrity"""
         constraints = [
             # Node constraints
-            "CREATE CONSTRAINT proj_key_unique IF NOT EXISTS FOR (p:Progetto) REQUIRE p.key IS UNIQUE",
-            "CREATE CONSTRAINT user_id_unique IF NOT EXISTS FOR (u:Utente) REQUIRE u.user_id IS UNIQUE",
+            "CREATE CONSTRAINT proj_key_unique IF NOT EXISTS FOR (p:Project) REQUIRE p.key IS UNIQUE",
+            "CREATE CONSTRAINT user_id_unique IF NOT EXISTS FOR (u:User) REQUIRE u.user_id IS UNIQUE",
             "CREATE CONSTRAINT epic_key_unique IF NOT EXISTS FOR (e:Epic) REQUIRE e.key IS UNIQUE",
             "CREATE CONSTRAINT issue_key_unique IF NOT EXISTS FOR (i:Issue) REQUIRE i.key IS UNIQUE",
             
             # Indexes for performance
-            "CREATE INDEX proj_name_idx IF NOT EXISTS FOR (p:Progetto) ON (p.nome)",
-            "CREATE INDEX user_name_idx IF NOT EXISTS FOR (u:Utente) ON (u.nome)",
+            "CREATE INDEX proj_name_idx IF NOT EXISTS FOR (p:Project) ON (p.nome)",
+            "CREATE INDEX user_name_idx IF NOT EXISTS FOR (u:User) ON (u.nome)",
             "CREATE INDEX epic_title_idx IF NOT EXISTS FOR (e:Epic) ON (e.titolo)",
             "CREATE INDEX issue_title_idx IF NOT EXISTS FOR (i:Issue) ON (i.titolo)",
             "CREATE INDEX issue_status_idx IF NOT EXISTS FOR (i:Issue) ON (i.stato)",
@@ -293,13 +293,13 @@ class Neo4jStore(GraphStore):
     def _get_key_field(self, label: str) -> str:
         """Get the key field name for a given label"""
         key_fields = {
-            "Progetto": "key",
-            "Utente": "user_id", 
-            "Epic": "key",
-            "Issue": "key",
-            "Assignment": "key"
+            "Project": "id",
+            "User": "id", 
+            "Epic": "id",
+            "Issue": "id",
+            "Assignment": "id"
         }
-        return key_fields.get(label, "key")
+        return key_fields.get(label, "id")
     
     def close(self):
         """Close the database connection"""

@@ -6,7 +6,7 @@ including domain entities, graph operations, and session management.
 """
 
 from .base import BaseEntity
-from .domain import Epic, Issue, Progetto, Utente
+from .domain import Epic, Issue, Project, User
 from .session import (
     Message,
     MessageRequest,
@@ -30,7 +30,7 @@ __all__ = [
     "MessageRequest",
     "MessageResponse",
     "MessageType",
-    "Progetto",
+    "Project",
     "ProjectContextUpdate",
     "SessionCreateRequest",
     "SessionInfo",
@@ -39,5 +39,5 @@ __all__ = [
     "SessionStats",
     "SessionStatus",
     "TaskInfo",
-    "Utente"
+    "User"
 ]

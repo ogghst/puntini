@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from enum import Enum
 from pydantic import ValidationError
 from models.graph import Patch, NodeSpec, EdgeSpec
-from models.domain import Progetto, Utente, Epic, Issue
+from models.domain import Project, User, Epic, Issue
 from graphstore.store import GraphStore
 
 
@@ -45,8 +45,8 @@ class ValidationPipeline:
         
         # Domain model mapping
         self.domain_models = {
-            "Progetto": Progetto,
-            "Utente": Utente,
+            "Project": Project,
+            "User": User,
             "Epic": Epic,
             "Issue": Issue
         }
@@ -207,7 +207,7 @@ class ValidationPipeline:
             errors.append(f"Patch {patch_index}: Node key is required")
         
         # Check label validity
-        valid_labels = ["Progetto", "Utente", "Epic", "Issue", "Assignment"]
+        valid_labels = ["Project", "User", "Epic", "Issue", "Assignment"]
         if node.label and node.label not in valid_labels:
             errors.append(f"Patch {patch_index}: Invalid node label '{node.label}'. Must be one of: {valid_labels}")
         
@@ -337,10 +337,10 @@ class ValidationPipeline:
     def _get_expected_key_field(self, label: str) -> Optional[str]:
         """Get the expected key field for a label"""
         key_fields = {
-            "Progetto": "key",
-            "Utente": "user_id",
-            "Epic": "key",
-            "Issue": "key",
-            "Assignment": "key"
+            "Project": "id",
+            "User": "user_id",
+            "Epic": "id",
+            "Issue": "id",
+            "Assignment": "id"
         }
         return key_fields.get(label)

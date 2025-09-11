@@ -92,8 +92,8 @@ User Input → Planning → Tool Selection → Extraction → Validation → Exe
 
 ### Domain Entities
 
-- **Progetto**: Project with name, description, and metadata
-- **Utente**: User with ID, name, and metadata
+- **Project**: Project with name, description, and metadata
+- **User**: User with ID, name, and metadata
 - **Epic**: Epic with title, project relationship, and metadata
 - **Issue**: Issue with title, status, epic relationship, and metadata
 

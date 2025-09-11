@@ -35,7 +35,7 @@ from tools.tool_registry import ToolRegistry
 from context.context_manager import AdaptiveContextManager
 from graphstore.neo4j_store import Neo4jStore
 from models.graph import Patch, NodeSpec, EdgeSpec
-from models.domain import Progetto, Utente, Epic, Issue
+from models.domain import Project, User, Epic, Issue
 
 
 class TestF1Flow:
@@ -169,7 +169,7 @@ class TestF1Flow:
             Patch(
                 op="AddNode",
                 node=NodeSpec(
-                    label="Progetto",
+                    label="Project",
                     key="PROJ-TEST",
                     props={"nome": "Test Project", "descrizione": "A test project"}
                 ),
@@ -209,7 +209,7 @@ class TestF1Flow:
             Patch(
                 op="AddNode",
                 node=NodeSpec(
-                    label="Progetto",
+                    label="Project",
                     key="PROJ-TEST",
                     props={"nome": "Test Project", "descrizione": "A test project"}
                 ),

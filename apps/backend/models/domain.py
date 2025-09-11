@@ -6,22 +6,22 @@ from pydantic import Field
 from .base import BaseEntity
 
 
-class Progetto(BaseEntity):
+class Project(BaseEntity):
     """Represents a project."""
-    nome: Annotated[str, Field(description="The name of the project.")]
-    descrizione: Annotated[str | None, Field(description="A brief description of the project.")] = None
+    name: Annotated[str, Field(description="The name of the project.")]
+    description: Annotated[str | None, Field(description="A brief description of the project.")] = None
 
-class Utente(BaseEntity):
+class User(BaseEntity):
     """Represents a user."""
     user_id: Annotated[str, Field(description="The user's unique ID from an external system.")]
-    nome: Annotated[str, Field(description="The user's full name.")]
+    name: Annotated[str, Field(description="The user's full name.")]
 
 class Epic(BaseEntity):
     """Represents an epic within a project."""
-    titolo: Annotated[str, Field(description="The title of the epic.")]
-    progetto_id: Annotated[UUID, Field(description="The ID of the project this epic belongs to.")]
+    title: Annotated[str, Field(description="The title of the epic.")]
+    project_id: Annotated[UUID, Field(description="The ID of the project this epic belongs to.")]
 
 class Issue(BaseEntity):
     """Represents an issue within an epic."""
-    titolo: Annotated[str, Field(description="The title of the issue.")]
-    stato: Annotated[Literal["open","in_progress","done","blocked"], Field(description="The current status of the issue.")] = "open"
+    title: Annotated[str, Field(description="The title of the issue.")]
+    status: Annotated[Literal["open","in_progress","done","blocked"], Field(description="The current status of the issue.")] = "open"
