@@ -1,30 +1,34 @@
 """Graph-related models for the backend."""
 
-from typing import Any, Literal
+from typing import Dict, Literal, Optional
 
-from .base import BaseEntity
-
-
-class Node(BaseEntity):
-    """Node model."""
-
-    id: str
-    type: str
-    properties: dict[str, Any]
+from pydantic import BaseModel
 
 
-class Edge(BaseEntity):
-    """Edge model."""
+class NodeSpec(BaseModel):
+    """Node specification for patches."""
 
-    source: str
-    target: str
-    type: str
-    properties: dict[str, Any] | None = None
+    label: Literal["Project", "User", "Epic", "Issue", "ASSIGNMENT"]
+    key: str
+    props: Dict = {}
 
 
-class Patch(BaseEntity):
-    """Patch model."""
+class EdgeSpec(BaseModel):
+    """Edge specification for patches."""
 
-    op: Literal["add", "update", "delete"]
-    entity: Literal["node", "edge"]
-    data: dict[str, Any]
+    src_label: Literal["Project", "Epic", "Issue", "ASSIGNMENT"]
+    src_key: str
+    rel: Literal[
+        "HAS_EPIC", "HAS_ISSUE", "ASSIGNED_TO", "BLOCKS", "HAS_ASSIGNMENT", "ASSIGNMENT_OF"
+    ]
+    dst_label: Literal["Epic", "Issue", "User", "ASSIGNMENT"]
+    dst_key: str
+    props: Dict = {}
+
+
+class Patch(BaseModel):
+    """Patch model for graph operations."""
+
+    op: Literal["AddNode", "UpdateProps", "AddEdge", "Delete"]
+    node: Optional[NodeSpec] = None
+    edge: Optional[EdgeSpec] = None

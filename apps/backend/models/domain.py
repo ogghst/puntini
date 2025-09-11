@@ -1,6 +1,9 @@
 """Domain models for the backend."""
 
 from enum import Enum
+from typing import Literal, Optional
+
+from pydantic import BaseModel, Field
 
 from .base import BaseEntity
 
@@ -29,3 +32,34 @@ class Task(BaseEntity):
     description: str | None = None
     status: TaskStatus = TaskStatus.PENDING
     priority: Priority = Priority.MEDIUM
+
+
+class Project(BaseModel):
+    """Project model."""
+
+    key: str = Field(..., description="Unique project key")
+    name: str
+    description: Optional[str] = None
+
+
+class User(BaseModel):
+    """User model."""
+
+    user_id: str
+    name: str
+
+
+class Epic(BaseModel):
+    """Epic model."""
+
+    key: str
+    title: str
+    project_key: str
+
+
+class Issue(BaseModel):
+    """Issue model."""
+
+    key: str
+    title: str
+    status: Literal["open", "in_progress", "done", "blocked"] = "open"
