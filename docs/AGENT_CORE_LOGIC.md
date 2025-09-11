@@ -22,12 +22,6 @@ An intelligent conversational agent that transforms natural language project req
 - **NFR-4**: Complete observability with distributed tracing
 - **NFR-5**: Single-threaded execution with optional checkpointing
 
-# Product Specification: AI Agent for Agile/PMI Project Management
-
-## Executive Summary
-
-An intelligent conversational agent that transforms natural language project requirements into structured knowledge graphs, orchestrating the creation and management of Agile/PMI project entities through a controlled state machine with progressive context disclosure and intelligent escalation mechanisms.
-
 ## System Architecture Overview
 
 ```

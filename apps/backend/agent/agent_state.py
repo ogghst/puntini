@@ -247,7 +247,6 @@ async def main():
     
     # Initialize services
     tool_registry = ToolRegistry()
-    observability = ObservabilityService()  # Your observability implementation
     context_manager = AdaptiveContextManager(observability)
     graph_store = YourGraphStore()  # Your graph store implementation
     
