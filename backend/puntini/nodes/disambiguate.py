@@ -136,7 +136,7 @@ def disambiguate(state: "State", config: Optional[RunnableConfig] = None, runtim
             logger.error("LLM not found in runtime context")
             raise ValidationError("LLM not configured in graph context")
         
-        llm: BaseChatModel = runtime.context['llm']
+        llm: BaseChatModel = runtime.context.llm
         
         # Create prompt for generating disambiguation questions
         logger.debug("Creating disambiguation prompt template")

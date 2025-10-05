@@ -627,7 +627,8 @@ def evaluate(state: State, config: Optional[RunnableConfig] = None, runtime: Opt
         "result": response.result.model_dump() if response.result else None,
         "evaluate_response": response,
         "retry_count": response.result.retry_count if response.result else state_dict.get("retry_count", 0),
-        "todo_list": response.todo_list  # Include updated todo list
+        "todo_list": response.todo_list,  # Include updated todo list
+        "current_step_count": state_dict.get("current_step_count", 0) + 1  # Track step count to prevent infinite loops
     }
     
     # Return Command for atomic update+goto semantics

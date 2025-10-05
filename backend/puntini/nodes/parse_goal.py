@@ -98,7 +98,7 @@ def parse_goal(state: "State", config: Optional[RunnableConfig] = None, runtime:
             logger.error("LLM not found in runtime context")
             raise ValidationError("LLM not configured in graph context")
         
-        llm : BaseChatModel = runtime.context['llm']
+        llm : BaseChatModel = runtime.context.llm
       
         # Create structured LLM for goal parsing
         structured_llm = llm.with_structured_output(GoalSpec)

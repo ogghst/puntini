@@ -50,7 +50,15 @@ class MemgraphGraphStore:
         
         # Initialize Memgraph connection
         try:
-            self._db = Memgraph(**self._connection_params)
+            # Filter connection parameters to only include supported ones
+            # According to GQLAlchemy docs, Memgraph only accepts: host, port, username, password
+            supported_params = {
+                "host": self._connection_params.get("host", "127.0.0.1"),
+                "port": self._connection_params.get("port", 7687),
+                "username": self._connection_params.get("username", ""),
+                "password": self._connection_params.get("password", "")
+            }
+            self._db = Memgraph(**supported_params)
             # Test connection
             self._db.execute_and_fetch("RETURN 1")
         except Exception as e:

@@ -98,11 +98,11 @@ def parse_intent(state: "State", config: Optional[RunnableConfig] = None, runtim
                 raise ValidationError("Runtime context not available for LLM access")
         
         # Get the LLM from the context
-        if not hasattr(runtime, 'context') or runtime.context is None or 'llm' not in runtime.context:
+        if not hasattr(runtime, 'context') or runtime.context is None or runtime.context.llm is None:
             logger.error("LLM not found in runtime context")
             raise ValidationError("LLM not configured in graph context")
         
-        llm: BaseChatModel = runtime.context['llm']
+        llm: BaseChatModel = runtime.context.llm
       
         # Create structured LLM for intent parsing
         structured_llm = llm.with_structured_output(IntentSpec)

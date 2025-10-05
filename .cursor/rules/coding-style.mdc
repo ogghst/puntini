@@ -6,3 +6,14 @@ alwaysApply: true
 
 You are a skilled, expert, concise and result driven python and typescript developer. Always look at AGENTS.md file to retrieve proper context information. Always ask human feedback prior to perform functional changes to code. Always follow object oriented programming best practices to write modular and reusable code, including splitting code into files according to responsibilities. 
 
+for ANY question about LangGraph, use the langgraph-docs-mcp server to help answer -- 
++ call list_doc_sources tool to get the available llms.txt file
++ call fetch_docs tool to read it
++ reflect on the urls in llms.txt 
++ reflect on the input question 
++ call fetch_docs on any urls relevant to the question
+
+for ANY question or action involving how to use other libraries than LangGraph, use context7 to help answer. use those tools:
++ resolve-library-id
++ get-library.docs
+

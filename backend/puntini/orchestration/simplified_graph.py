@@ -19,7 +19,8 @@ This addresses the critical problems:
 - Meaningless intermediate results: Status fields that convey no information
 """
 
-from typing import Any, Dict, Literal, Optional, Union, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Union
+from dataclasses import dataclass
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.types import Command
@@ -27,18 +28,43 @@ from langgraph.runtime import Runtime
 from langchain_core.runnables import RunnableConfig
 from langgraph.errors import GraphRecursionError
 
-from ..logging import get_logger
 from .simplified_state import SimplifiedState, create_simplified_state, extract_node_context, update_state_with_node_output
 from .minimal_state import (
     NodeInput, ParseGoalInput, PlanStepInput, ResolveEntitiesInput,
     ExecuteToolInput, EvaluateInput, DiagnoseInput, EscalateInput, AnswerInput
 )
 from .checkpointer import create_checkpointer, get_checkpoint_config
-
-if TYPE_CHECKING:
-    from ..observability.tracer_factory import Tracer
+from ..models.goal_schemas import TodoItem
+from ..models.intent_schemas import IntentSpec, ResolvedGoalSpec
+from ..nodes.message import Artifact, Failure, ErrorContext, EscalateContext
+from ..logging.logger import get_logger
 
 logger = get_logger(__name__)
+
+
+@dataclass
+class GraphContextSchema:
+    """Context schema for the simplified graph.
+    
+    This schema defines the runtime context that is passed to all nodes
+    in the graph, following LangGraph best practices for accessing
+    shared services and configuration.
+    
+    All services are included in the context rather than the state to
+    ensure the state remains serializable and lightweight.
+    
+    Attributes:
+        llm: Language model for LLM operations
+        graph_store: Graph database connection
+        context_manager: Context management service
+        tool_registry: Tool registry for tool execution
+        tracer: Observability tracer
+    """
+    llm: Any
+    graph_store: Any
+    context_manager: Any
+    tool_registry: Any
+    tracer: Any
 
 
 def parse_intent(state: SimplifiedState, config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> Dict[str, Any]:
@@ -47,7 +73,7 @@ def parse_intent(state: SimplifiedState, config: Optional[RunnableConfig] = None
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
         Dictionary with parsed intent information and state updates
@@ -55,6 +81,7 @@ def parse_intent(state: SimplifiedState, config: Optional[RunnableConfig] = None
     Notes:
         This node implements the minimal state pattern by receiving only
         the essential shared state and creating its own context as needed.
+        Services are accessed through the LangGraph context mechanism.
     """
     logger.debug("Executing parse_intent node with simplified state")
     
@@ -68,6 +95,11 @@ def parse_intent(state: SimplifiedState, config: Optional[RunnableConfig] = None
     # Create node input with minimal state and context
     node_input = NodeInput(state, node_context)
     
+    # Get LLM from runtime context
+    llm = None
+    if runtime and hasattr(runtime, 'context') and runtime.context:
+        llm = runtime.context.llm
+    
     # Call the implementation
     from ..nodes.parse_intent import parse_intent as parse_intent_impl
     response = parse_intent_impl(node_input.state, config, runtime)
@@ -78,7 +110,7 @@ def parse_intent(state: SimplifiedState, config: Optional[RunnableConfig] = None
         {
             "current_step": response.current_step,
             "current_attempt": response.current_attempt,
-            "progress": [f"Parsed intent: {response.result.intent_type if response.result else 'unknown'}"],
+            "progress": [f"Parsed intent: {response.result.parsed_goal.get('intent_type', 'unknown') if response.result and response.result.parsed_goal else 'unknown'}"],
             "artifacts": response.artifacts,
             "failures": response.failures,
             "result": response.result.model_dump() if response.result else None
@@ -93,7 +125,7 @@ def resolve_entities(state: SimplifiedState, config: Optional[RunnableConfig] = 
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
         Dictionary with resolved entities and state updates
@@ -135,7 +167,7 @@ def disambiguate(state: SimplifiedState, config: Optional[RunnableConfig] = None
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
         Dictionary with disambiguation results and state updates
@@ -167,7 +199,7 @@ def plan_step(state: SimplifiedState, config: Optional[RunnableConfig] = None, r
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
         Dictionary with planned step information and state updates
@@ -190,64 +222,87 @@ def plan_step(state: SimplifiedState, config: Optional[RunnableConfig] = None, r
     response = plan_step_impl(node_input.state, config, runtime)
     
     # Update state with node output
-    return update_state_with_node_output(
+    logger.debug(f"Plan step response tool_signature: {response.tool_signature}")
+    updated_state = update_state_with_node_output(
         state,
         {
             "current_step": response.current_step,
-            "progress": [f"Planned step: {response.tool_signature.tool_name if response.tool_signature else 'unknown'}"],
+            "progress": [f"Planned step: {response.tool_signature.get('tool_name', 'unknown') if response.tool_signature else 'unknown'}"],
             "artifacts": response.artifacts,
             "failures": response.failures,
             "result": response.result.model_dump() if response.result else None,
-            "tool_signature": response.tool_signature.model_dump() if response.tool_signature else None
+            "tool_signature": response.tool_signature
         },
         "plan_step"
     )
+    logger.debug(f"Updated state tool_signature: {updated_state.get('tool_signature', 'NOT_FOUND')}")
+    logger.debug(f"Updated state keys: {list(updated_state.keys())}")
+    return updated_state
 
 
 def execute_tool(state: SimplifiedState, config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> Dict[str, Any]:
     """Execute tool with validation and execution in one atomic operation.
     
-    This function combines the functionality of route_tool and call_tool
-    nodes, eliminating unnecessary indirection as specified in Phase 3.
+    This node implements the merged route_tool + call_tool functionality
+    from Phase 4 of the progressive refactoring plan. It performs tool
+    selection, validation, and execution in a single atomic operation.
     
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
-        Dictionary with tool execution result and state updates
+        Dictionary with execution result and state updates
         
     Notes:
         This addresses the critical problem of unnecessary indirection
         where route_tool + call_tool were doing one job. Now it's
         one atomic operation with proper error handling.
+        Services are accessed through the LangGraph context mechanism.
     """
     logger.debug("Executing execute_tool node with simplified state")
     
     # Extract node-specific context
     context_data = extract_node_context(state, "execute_tool")
+    
+    # Get tool signature from state (set by plan_step)
+    tool_signature = state.get("tool_signature", {})
+    logger.debug(f"Tool signature from state: {tool_signature}")
+    
     node_context = ExecuteToolInput(
-        tool_signature=context_data.get("tool_signature", {}),
+        tool_signature=tool_signature,
         execution_context=context_data.get("execution_context")
     )
     
-    # Create node input with minimal state and context
-    node_input = NodeInput(state, node_context)
+    # Get tool_registry from runtime context
+    tool_registry = None
+    if runtime and hasattr(runtime, 'context') and runtime.context:
+        tool_registry = runtime.context.tool_registry
     
-    # Get tool from registry
-    tool_registry = state["shared_services"]["tool_registry"]
     if not tool_registry:
         return update_state_with_node_output(
             state,
             {
-                "progress": ["Error: No tool registry available"],
-                "failures": [{"message": "Tool registry not available", "type": "system_error"}]
+                "progress": ["Error: No tool registry available in context"],
+                "failures": [{"message": "Tool registry not available in context", "type": "system_error"}]
+            },
+            "execute_tool"
+        )
+    
+    # Check if tool_signature is None
+    if node_context.tool_signature is None:
+        return update_state_with_node_output(
+            state,
+            {
+                "progress": ["Error: No tool signature provided"],
+                "failures": [{"message": "Tool signature is None", "type": "system_error"}]
             },
             "execute_tool"
         )
     
     tool_name = node_context.tool_signature.get("tool_name")
+    logger.debug(f"Tool name: {tool_name}")
     tool_args = node_context.tool_signature.get("tool_args", {})
     
     try:
@@ -263,23 +318,56 @@ def execute_tool(state: SimplifiedState, config: Optional[RunnableConfig] = None
                 raise ValueError(f"Validation failed: {validation_result.errors}")
         
         # Execute (potentially slow)
-        result = tool.execute(**tool_args)
+        # LangChain tools are invoked directly, not through an execute method
+        result = tool.invoke(tool_args)
         
         return update_state_with_node_output(
             state,
             {
+                "current_step": "evaluate",
                 "progress": [f"Executed tool '{tool_name}' successfully"],
-                "result": {"status": "success", "tool_name": tool_name, "result": result}
+                "result": {
+                    "status": "success",
+                    "tool_name": tool_name,
+                    "result": result,
+                    "error": None,
+                    "error_type": None
+                },
+                "artifacts": [{
+                    "type": "tool_execution",
+                    "data": {
+                        "tool_name": tool_name,
+                        "tool_args": tool_args,
+                        "result": result,
+                        "execution_time": None  # TODO: Add timing
+                    }
+                }]
             },
             "execute_tool"
         )
         
     except Exception as e:
+        error_msg = f"Tool execution failed: {str(e)}"
+        logger.error(f"Tool execution error: {error_msg}")
+        
         return update_state_with_node_output(
             state,
             {
-                "progress": [f"Tool execution failed: {str(e)}"],
-                "failures": [{"message": str(e), "type": "execution_error", "tool_name": tool_name}]
+                "current_step": "evaluate",
+                "progress": [f"Tool execution failed: {error_msg}"],
+                "result": {
+                    "status": "error",
+                    "tool_name": tool_name,
+                    "result": None,
+                    "error": error_msg,
+                    "error_type": "tool_error"
+                },
+                "failures": [{
+                    "step": "execute_tool",
+                    "error": error_msg,
+                    "attempt": 1,
+                    "error_type": "tool_error"
+                }]
             },
             "execute_tool"
         )
@@ -291,7 +379,7 @@ def evaluate(state: SimplifiedState, config: Optional[RunnableConfig] = None, ru
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
         Command with evaluation results and routing decision
@@ -300,6 +388,7 @@ def evaluate(state: SimplifiedState, config: Optional[RunnableConfig] = None, ru
         Uses Command for atomic update+goto semantics as specified in AGENTS.md.
         The evaluate node makes intelligent routing decisions and returns
         both state updates and the next node to execute.
+        Services are accessed through the LangGraph context mechanism.
     """
     logger.debug("Executing evaluate node with simplified state")
     
@@ -341,7 +430,7 @@ def diagnose(state: SimplifiedState, config: Optional[RunnableConfig] = None, ru
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
         Dictionary with diagnosis results and state updates
@@ -383,7 +472,7 @@ def escalate(state: SimplifiedState, config: Optional[RunnableConfig] = None, ru
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
         Command with escalation handling and interrupt for human input
@@ -431,7 +520,7 @@ def answer(state: SimplifiedState, config: Optional[RunnableConfig] = None, runt
     Args:
         state: Simplified state with minimal shared data
         config: Optional RunnableConfig for additional configuration
-        runtime: Optional Runtime context for additional runtime information
+        runtime: Optional Runtime context for accessing context
         
     Returns:
         Dictionary with final answer and state updates
@@ -480,8 +569,10 @@ def route_after_parse_intent(state: SimplifiedState) -> str:
     if not result or result.get("status") == "error":
         return "diagnose"
     
-    intent_type = result.get("intent_type", "unknown")
-    requires_graph_context = result.get("requires_graph_context", False)
+    # Get the parsed_goal from the result
+    parsed_goal = result.get("parsed_goal", {})
+    intent_type = parsed_goal.get("intent_type", "unknown")
+    requires_graph_context = parsed_goal.get("requires_graph_context", False)
     
     if requires_graph_context:
         return "resolve_entities"
@@ -545,14 +636,19 @@ def route_after_diagnose(state: SimplifiedState) -> str:
 
 def create_simplified_agent_graph(
     checkpointer: BaseCheckpointSaver | None = None,
-    tracer: Optional["Tracer"] = None,
+    tracer: Optional[Any] = None,
     recursion_limit: int = 25
 ) -> StateGraph:
-    """Create the simplified agent's LangGraph state machine.
+    """Create a simplified agent graph with minimal state pattern.
+    
+    This function creates a LangGraph state machine that implements the
+    simplified architecture from Phase 3 of the progressive refactoring plan.
+    It uses the minimal state pattern with node-specific contexts to reduce
+    state bloat and improve data flow.
     
     Args:
         checkpointer: Optional checkpointer for state persistence
-        tracer: Optional tracer for observability and monitoring
+        tracer: Optional tracer for observability
         recursion_limit: Maximum number of supersteps allowed
         
     Returns:
@@ -566,8 +662,8 @@ def create_simplified_agent_graph(
         - Simplified state with node-specific contexts
         - Clear data flow with minimal state
     """
-    # Create the state graph with simplified state
-    workflow = StateGraph(SimplifiedState)
+    # Create the state graph with simplified state and context schema
+    workflow = StateGraph(SimplifiedState, context_schema=GraphContextSchema)
     
     # Add nodes (reduced from 10 to 8 nodes)
     workflow.add_node("parse_intent", parse_intent)
@@ -699,3 +795,28 @@ def create_simplified_production_agent(
         tracer=tracer,
         recursion_limit=recursion_limit
     )
+
+
+if __name__ == "__main__":
+    from ..observability.tracer_factory import make_tracer, TracerConfig
+
+    # Create checkpointer for persistence
+    checkpointer = create_checkpointer("memory")
+
+    # Create tracer for observability
+    try:
+        tracer_config = TracerConfig("langfuse")
+        tracer = make_tracer(tracer_config)
+    except Exception as e:
+        logger.warning(f"Failed to create langfuse tracer, falling back to noop tracer: {e}")
+        tracer_config = TracerConfig("noop")
+        tracer = make_tracer(tracer_config)
+
+    # Create the simplified agent with all production features
+    agent = create_simplified_agent_graph(
+        checkpointer=checkpointer,
+        tracer=tracer,
+        recursion_limit=25
+    )
+    
+    logger.info("Simplified agent graph created successfully")

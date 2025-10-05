@@ -141,7 +141,7 @@ def add_node(
     try:
         # Get graph store from runtime context
         runtime = get_runtime()
-        graph_store: GraphStore = runtime.context['graph_store']
+        graph_store: GraphStore = runtime.context.graph_store
         
         # Create node specification
         node_spec = NodeSpec(
@@ -192,7 +192,7 @@ def add_edge(
     try:
         # Get graph store from runtime context
         runtime = get_runtime()
-        graph_store: GraphStore = runtime.context['graph_store']
+        graph_store: GraphStore = runtime.context.graph_store
         
         # Look up source and target nodes to get their labels
         # We need to find nodes by their keys to get the labels
@@ -272,7 +272,7 @@ def update_props(
     try:
         # Get graph store from runtime context
         runtime = get_runtime()
-        graph_store: GraphStore = runtime.context['graph_store']
+        graph_store: GraphStore = runtime.context.graph_store
         
         # Create match specification
         match = MatchSpec(**match_spec)
@@ -314,7 +314,7 @@ def delete_node(
     try:
         # Get graph store from runtime context
         runtime = get_runtime()
-        graph_store: GraphStore = runtime.context['graph_store']
+        graph_store: GraphStore = runtime.context.graph_store
         
         # Create match specification
         match = MatchSpec(**match_spec)
@@ -356,7 +356,7 @@ def delete_edge(
     try:
         # Get graph store from runtime context
         runtime = get_runtime()
-        graph_store: GraphStore = runtime.context['graph_store']
+        graph_store: GraphStore = runtime.context.graph_store
         
         # Create match specification
         match = MatchSpec(**match_spec)
@@ -392,7 +392,7 @@ def query_graph(
     try:
         # Get graph store from runtime context
         runtime = get_runtime()
-        graph_store: GraphStore = runtime.context['graph_store']
+        graph_store: GraphStore = runtime.context.graph_store
         
         # Execute query
         results = graph_store.run_cypher(query, {"limit": limit})
@@ -429,7 +429,7 @@ def cypher_query(
     try:
         # Get graph store from runtime context
         runtime = get_runtime()
-        graph_store: GraphStore = runtime.context['graph_store']
+        graph_store: GraphStore = runtime.context.graph_store
         
         # Execute Cypher query
         results = graph_store.run_cypher(query, {"limit": limit})

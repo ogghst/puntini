@@ -116,11 +116,57 @@ def evaluate(
     if isinstance(state, dict):
         retry_count = state.get("retry_count", 0)
         max_retries = state.get("max_retries", 3)
+        todo_list = state.get("todo_list", [])
+        current_step_count = state.get("current_step_count", 0)
     else:
         retry_count = getattr(state, "retry_count", 0)
         max_retries = getattr(state, "max_retries", 3)
+        todo_list = getattr(state, "todo_list", [])
+        current_step_count = getattr(state, "current_step_count", 0)
     
-    logger.info(f"Evaluating step result: {execution_status} for tool '{tool_name}' (retry {retry_count}/{max_retries})")
+    # Increment step count to track progress
+    current_step_count += 1
+    
+    # Check if we've exceeded the maximum step limit (prevent infinite loops)
+    max_steps = 10  # Allow a reasonable number of steps
+    if current_step_count > max_steps:
+        logger.warning(f"Maximum step limit ({max_steps}) exceeded, escalating to human")
+        return EvaluateResponse(
+            current_step="escalate",
+            result=EvaluateResult(
+                status="error",
+                error=f"Maximum step limit ({max_steps}) exceeded without goal completion",
+                error_type="step_limit_exceeded",
+                retry_count=retry_count,
+                max_retries=max_retries,
+                evaluation_timestamp=datetime.utcnow().isoformat(),
+                decision_reason="Too many steps executed without completing the goal",
+                goal_complete=False,
+                next_action="escalate"
+            ),
+            progress=[f"Step limit exceeded: {current_step_count}/{max_steps} steps executed"],
+            artifacts=[Artifact(
+                type="step_limit_exceeded",
+                data={
+                    "step_count": current_step_count,
+                    "max_steps": max_steps,
+                    "reason": "Preventing infinite loop"
+                }
+            )],
+            todo_list=todo_list
+        )
+    
+    # Check if all todos are completed (alternative way to determine goal completion)
+    all_todos_completed = False
+    if todo_list:
+        # Check if all todos are marked as "done"
+        all_todos_completed = all(
+            (todo.get("status") if isinstance(todo, dict) else getattr(todo, "status", "planned")) == "done"
+            for todo in todo_list
+        )
+    
+    logger.info(f"Evaluating step result: {execution_status} for tool '{tool_name}' (retry {retry_count}/{max_retries}, step {current_step_count}/{max_steps})")
+    logger.info(f"Todo completion status: {all_todos_completed}, Total todos: {len(todo_list) if todo_list else 0}")
     
     try:
         # Get LLM from runtime context for structured evaluation
@@ -135,7 +181,7 @@ def evaluate(
             logger.warning("LLM not available in runtime context, using fallback evaluation")
             return _fallback_evaluation(state, result, retry_count, max_retries)
         
-        llm: BaseChatModel = runtime.context['llm']
+        llm: BaseChatModel = runtime.context.llm
         
         # Define structured output schema for evaluation
         class EvaluationDecision(BaseModel):
@@ -212,7 +258,7 @@ Evaluate this result and determine the next action.""")
         evaluation_decision: EvaluationDecision = evaluation_chain.invoke({
             "tool_name": tool_name,
             "execution_status": execution_status,
-            "execution_time": execution_time,
+            "execution_time": execution_time if execution_time is not None else 0.0,
             "error": error or "None",
             "error_type": error_type or "None",
             "retry_count": retry_count,
@@ -242,13 +288,21 @@ Evaluate this result and determine the next action.""")
             max_retries=max_retries,
             evaluation_timestamp=datetime.utcnow().isoformat(),
             decision_reason=evaluation_decision.reasoning,
-            goal_complete=evaluation_decision.decision == "advance" and evaluation_decision.goal_progress >= 0.9,
+            goal_complete=(
+                evaluation_decision.goal_progress >= 0.9 or 
+                all_todos_completed
+            ),
             next_action=evaluation_decision.next_action_hint
         )
         
-        # Determine next step based on decision
+        # Determine next step based on decision and progress
         if evaluation_decision.decision == "advance":
-            next_step = "answer" if evaluation_decision.goal_progress >= 0.9 else "plan_step"
+            # Check if goal is complete based on either LLM assessment or todo completion
+            goal_complete = (
+                evaluation_decision.goal_progress >= 0.9 or 
+                all_todos_completed
+            )
+            next_step = "answer" if goal_complete else "plan_step"
         elif evaluation_decision.decision == "retry":
             next_step = "plan_step"
             # Increment retry count
@@ -345,6 +399,20 @@ def _fallback_evaluation(
     """
     logger = get_logger(__name__)
     
+    # Get todo list from state to check completion status
+    all_todos_completed = False
+    if isinstance(state, dict):
+        todo_list = state.get("todo_list", [])
+    else:
+        todo_list = getattr(state, "todo_list", [])
+    
+    if todo_list:
+        # Check if all todos are marked as "done"
+        all_todos_completed = all(
+            (todo.get("status") if isinstance(todo, dict) else getattr(todo, "status", "planned")) == "done"
+            for todo in todo_list
+        )
+    
     # Handle both dict and CallToolResult objects
     if isinstance(result, dict):
         execution_status = result.get("status", "unknown")
@@ -382,7 +450,9 @@ def _fallback_evaluation(
     
     # Determine next step
     if decision == "advance":
-        next_step = "answer"
+        # Check if goal is complete based on todo completion
+        goal_complete = all_todos_completed or goal_progress >= 0.9
+        next_step = "answer" if goal_complete else "plan_step"
     elif decision == "retry":
         next_step = "plan_step"
         retry_count += 1
@@ -392,12 +462,12 @@ def _fallback_evaluation(
         next_step = "escalate"
     
     # Create evaluation result
-        evaluation_result = EvaluateResult(
+    evaluation_result = EvaluateResult(
         status="success" if not llm_error else "error",
         error=llm_error,
         error_type="llm_error" if llm_error else None,
-            retry_count=retry_count,
-            max_retries=max_retries,
+        retry_count=retry_count,
+        max_retries=max_retries,
         evaluation_timestamp=datetime.utcnow().isoformat(),
         decision_reason=f"Fallback evaluation: {reasoning}",
         goal_complete=decision == "advance" and goal_progress >= 0.9,
@@ -607,9 +677,7 @@ def _get_recent_failures(state: "State") -> str:
             error = failure.get("error", "unknown error")
             error_type = failure.get("error_type", "unknown")
             attempt = failure.get("attempt", 0)
-            failure_lines.append(f"- {step} (attempt {attempt}): {error_type} - {error}")
-        else:
-            # Handle Pydantic model
             failure_lines.append(f"- {failure.step} (attempt {failure.attempt}): {failure.error_type} - {failure.error}")
     
     return "\n".join(failure_lines) if failure_lines else "No recent failures"
+

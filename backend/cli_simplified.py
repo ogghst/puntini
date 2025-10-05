@@ -10,15 +10,11 @@ from pathlib import Path
 from typing import Any, Dict
 import uuid
 
-# Note: Path modification removed to avoid import conflicts
-# The CLI should be run as a module: python -m puntini.cli
-
 from puntini.utils.settings import settings
 from langfuse.langchain import CallbackHandler
 from langfuse import Langfuse
 from langfuse import get_client
 
-# Import the simplified agent components
 from puntini.orchestration.simplified_graph import create_simplified_agent_graph
 from puntini.orchestration.simplified_state import create_simplified_state
 from puntini.graph.graph_store_factory import create_memory_graph_store
@@ -39,12 +35,12 @@ def print_graph_summary(graph_store):
         nodes = graph_store.get_all_nodes()
         edges = graph_store.get_all_edges()
         
-        click.echo("\n" + "="*60)
+        click.echo("\\n" + "="*60)
         click.echo("📊 GRAPH SUMMARY")
         click.echo("="*60)
         
         # Print nodes
-        click.echo(f"\n🔵 NODES ({len(nodes)} total):")
+        click.echo(f"\\n🔵 NODES ({len(nodes)} total):")
         if not nodes:
             click.echo("  No nodes found in the graph.")
         else:
@@ -58,7 +54,7 @@ def print_graph_summary(graph_store):
                     click.echo("     Properties: None")
         
         # Print edges
-        click.echo(f"\n🔗 EDGES ({len(edges)} total):")
+        click.echo(f"\\n🔗 EDGES ({len(edges)} total):")
         if not edges:
             click.echo("  No edges found in the graph.")
         else:
@@ -72,7 +68,7 @@ def print_graph_summary(graph_store):
                     click.echo("     Properties: None")
         
         # Print graph statistics
-        click.echo(f"\n📈 STATISTICS:")
+        click.echo(f"\\n📈 STATISTICS:")
         click.echo(f"  Total Nodes: {len(nodes)}")
         click.echo(f"  Total Edges: {len(edges)}")
         
@@ -110,7 +106,6 @@ def print_graph_summary(graph_store):
                 click.echo(f"  Fallback also failed: {fallback_error}")
 
 
-
 @click.group()
 def cli():
     """Puntini Simplified Agent - A streamlined, observable multi-tool agent for graph manipulation."""
@@ -123,7 +118,7 @@ def cli():
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
 @click.option("--tracer", "-t", default="console", help="Tracer type (console, noop, langfuse)")
 def run(goal: str, config: str | None, verbose: bool, tracer: str):
-    """Run the simplified agent with a specific goal using LangGraph best practices.
+    """Run the simplified agent with a specific goal.
     
     Args:
         goal: The goal for the agent to accomplish.
@@ -132,62 +127,83 @@ def run(goal: str, config: str | None, verbose: bool, tracer: str):
         tracer: Type of tracer to use.
     """
     click.echo(f"🎯 Running simplified agent with goal: {goal}")
+    click.echo("🚀 Setting up agent components...")
     
-    # Create agent
-    if tracer == "noop":
-        from puntini.observability.tracer_factory import create_noop_tracer
-        tracer_instance = create_noop_tracer()
-    elif tracer == "console":
-        from puntini.observability.tracer_factory import create_console_tracer
-        tracer_instance = create_console_tracer()
-    elif tracer == "langfuse":
-        from puntini.observability.tracer_factory import create_langfuse_tracer
-        tracer_instance = create_langfuse_tracer()
-    else:
-        click.echo(f"❌ Unsupported tracer type: {tracer}")
+    # Create tracer
+    try:
+        if tracer == "noop":
+            from puntini.observability.tracer_factory import create_noop_tracer
+            tracer_instance = create_noop_tracer()
+        elif tracer == "console":
+            from puntini.observability.tracer_factory import create_console_tracer
+            tracer_instance = create_console_tracer()
+        elif tracer == "langfuse":
+            from puntini.observability.tracer_factory import create_langfuse_tracer
+            tracer_instance = create_langfuse_tracer()
+        else:
+            click.echo(f"❌ Unsupported tracer type: {tracer}")
+            return
+    except Exception as e:
+        click.echo(f"❌ Failed to create tracer {tracer}: {e}")
+        if verbose:
+            import traceback
+            traceback.print_exc()
         return
     
     # Create all required components for the simplified agent
-    graph_store = create_memory_graph_store()
-    context_manager = create_simple_context_manager()
-    tool_registry = create_tool_registry_with_validation()
+    try:
+        graph_store = create_memory_graph_store()
+        context_manager = create_simple_context_manager()
+        tool_registry = create_tool_registry_with_validation()
+    except Exception as e:
+        click.echo(f"❌ Failed to create required components: {e}")
+        if verbose:
+            import traceback
+            traceback.print_exc()
+        return
     
     # Create LLM for the graph context
-    llm_factory = LLMFactory()
-    llm = llm_factory.get_default_llm()
+    try:
+        llm_factory = LLMFactory()
+        llm = llm_factory.get_default_llm()
+    except Exception as e:
+        click.echo(f"❌ Failed to create LLM: {e}")
+        if verbose:
+            import traceback
+            traceback.print_exc()
+        return
     
     # Create simplified agent with the refactored graph
-    agent = create_simplified_agent_graph(
-        tracer=tracer_instance
-    )
+    try:
+        agent = create_simplified_agent_graph(
+            tracer=tracer_instance
+        )
+    except Exception as e:
+        click.echo(f"❌ Failed to create simplified agent graph: {e}")
+        if verbose:
+            import traceback
+            traceback.print_exc()
+        return
     
     # Create proper initial simplified state
-    initial_state = create_simplified_state(
-        session_id=str(uuid.uuid4()),
-        goal=goal,
-        graph_store=graph_store,
-        context_manager=context_manager,
-        tool_registry=tool_registry,
-        tracer=tracer_instance
-    )
-    
-    # Run the agent
     try:
-        #with tracer_instance.start_trace("agent-execution") as trace:
-        #    # Create config with thread_id for checkpointer
-        #    import uuid
-        #    thread_id = str(uuid.uuid4())
-        #    from puntini.observability.langfuse_callback import LangfuseCallbackHandler
-        #    langfuse_handler =  CallbackHandler()
-        #    config = {"configurable": {"thread_id": thread_id}, "callbacks": [langfuse_handler]}
-            
-        #    result = agent.invoke(initial_state, config=config)
-        #    click.echo(f"✅ Agent completed successfully!")
-        #    if verbose:
-        #        click.echo(f"Result: {result}")
-        
-        # Set up tracing with Langfuse if available
-        if settings.langfuse.secret_key and settings.langfuse.public_key:
+        initial_state = create_simplified_state(
+            session_id=str(uuid.uuid4()),
+            goal=goal
+        )
+    except Exception as e:
+        click.echo(f"❌ Failed to create initial state: {e}")
+        if verbose:
+            import traceback
+            traceback.print_exc()
+        return
+    
+    click.echo("🔧 Agent components ready, starting execution...")
+    
+    # Set up tracing with Langfuse if available
+    langfuse_handler = None
+    try:
+        if settings.langfuse.secret_key and settings.langfuse.public_key and settings.langfuse.host:
             Langfuse(
                 secret_key=settings.langfuse.secret_key,
                 public_key=settings.langfuse.public_key,
@@ -196,48 +212,68 @@ def run(goal: str, config: str | None, verbose: bool, tracer: str):
             langfuse = get_client()
             langfuse_handler = CallbackHandler()
         else:
-            langfuse_handler = None
+            click.echo("ℹ️  Langfuse not configured, continuing without tracing...")
+    except Exception as e:
+        click.echo(f"⚠️  Langfuse setup failed (continuing without tracing): {e}")
+        langfuse_handler = None
 
-        thread_id = str(uuid.uuid4())
-        
-        # Configure execution with recursion limit to prevent infinite loops
-        config = {
-            "configurable": {"thread_id": thread_id}, 
-            "recursion_limit": 100  # Increase from default 25 to 100
-        }
-        
-        # Include callback handlers if available
-        if langfuse_handler:
-            config["callbacks"] = [langfuse_handler]
-        
-        # Pass LLM and components through context
-        context = {
-            "llm": llm,
-            "graph_store": graph_store,
-            "context_manager": context_manager,
-            "tool_registry": tool_registry,
-            "tracer": tracer_instance
-        }
-        
-        # Run the simplified agent
-        result = agent.invoke(
-            initial_state, 
-            context=context, 
+    thread_id = str(uuid.uuid4())
+    
+    # Configure execution with recursion limit to prevent infinite loops
+    config = {
+        "configurable": {"thread_id": thread_id}, 
+        "recursion_limit": 100  # Increase from default 25 to 100
+    }
+    
+    # Include callback handlers if available
+    if langfuse_handler:
+        config["callbacks"] = [langfuse_handler]
+    
+    # Pass LLM and components through context
+    context = {
+        "llm": llm,
+        "graph_store": graph_store,
+        "context_manager": context_manager,
+        "tool_registry": tool_registry,
+        "tracer": tracer_instance
+    }
+    
+    click.echo("🚀 Starting agent execution...")
+    
+    # Run the simplified agent with basic interrupt handling
+    # Use stream() which can handle potential interrupts more gracefully than invoke()
+    try:
+        final_result = None
+        for state_update in agent.stream(
+            initial_state,
+            context=context,
             config=config
-        )
+        ):
+            final_result = state_update
+            # Check for interruptions that may require human input
+            if "__interrupt__" in state_update:
+                click.echo("📢 Agent is requesting human input.")
+                click.echo("This simplified CLI will continue without input.")
+                # Note: In a production setup, we would gather user input and resume
+                # the agent execution using checkpointing mechanisms
         
         click.echo(f"✅ Simplified agent completed successfully!")
-        if verbose:
-            click.echo(f"Result: {result}")
+        if verbose and final_result:
+            click.echo(f"Result: {final_result}")
         
         # Print graph summary
         print_graph_summary(graph_store)
         
+    except KeyboardInterrupt:
+        click.echo(f"⚠️  Agent execution interrupted by user.")
     except Exception as e:
-        click.echo(f"❌ Simplified agent failed: {e}")
+        click.echo(f"❌ Simplified agent failed during execution: {e}")
         if verbose:
             import traceback
             traceback.print_exc()
+        # Always print traceback for debugging
+        import traceback
+        traceback.print_exc()
 
 
 @cli.command()
@@ -349,4 +385,12 @@ LOG_LEVEL=INFO
 
 
 if __name__ == "__main__":
-    cli()
+    import sys
+    # Check if script is being executed directly with Python
+    # and forward arguments to the CLI
+    if len(sys.argv) > 1:
+        # Forward all arguments to the CLI
+        cli(sys.argv[1:])
+    else:
+        # No arguments provided, show help
+        cli()

@@ -58,11 +58,16 @@ def resolve_entities(state: "State", config: Optional[RunnableConfig] = None, ru
     if isinstance(state, dict):
         goal = state.get("goal")
         current_attempt = state.get("current_attempt", 1)
-        parse_goal_response = state.get("parse_intent_response")
+        result = state.get("result", {})
     else:
         goal = getattr(state, "goal", None)
         current_attempt = getattr(state, "current_attempt", 1)
-        parse_goal_response = getattr(state, "parse_intent_response", None)
+        result = getattr(state, "result", {})
+    
+    # Get the parsed intent from the result
+    parsed_goal = result.get("parsed_goal", {})
+    if not parsed_goal:
+        raise ValidationError("No parsed intent found from Phase 1")
     
     # Validate required fields
     if not isinstance(goal, str):
@@ -71,22 +76,9 @@ def resolve_entities(state: "State", config: Optional[RunnableConfig] = None, ru
     if not isinstance(current_attempt, int) or current_attempt < 1:
         raise ValidationError("Current attempt must be a positive integer")
     
-    # Get the parsed intent from Phase 1
-    if not parse_goal_response:
-        raise ValidationError("No parsed intent found from Phase 1")
-    
-    # Extract intent spec from the response
-    if isinstance(parse_goal_response, dict):
-        parsed_goal_dict = parse_goal_response.get("result", {}).get("parsed_goal", {})
-    else:
-        parsed_goal_dict = parse_goal_response.result.parsed_goal if parse_goal_response.result else {}
-    
-    if not parsed_goal_dict:
-        raise ValidationError("No parsed intent data found in response")
-    
     try:
         # Reconstruct IntentSpec from the parsed data
-        intent_spec = IntentSpec(**parsed_goal_dict)
+        intent_spec = IntentSpec(**parsed_goal)
     except Exception as e:
         raise ValidationError(f"Failed to reconstruct intent spec: {str(e)}")
     
@@ -114,17 +106,12 @@ def resolve_entities(state: "State", config: Optional[RunnableConfig] = None, ru
                 logger.error(f"Failed to get runtime context: {e}")
                 raise ValidationError("Runtime context not available for LLM access")
         
-        # Get the LLM from the context
-        if not hasattr(runtime, 'context') or 'llm' not in runtime.context:
-            logger.error("LLM not found in runtime context")
-            raise ValidationError("LLM not configured in graph context")
+        llm: BaseChatModel = runtime.context.llm
         
-        llm: BaseChatModel = runtime.context['llm']
-        
-        # Get graph store from context for entity resolution
+        # Get graph store from context
         graph_store = None
-        if hasattr(runtime, 'context') and 'graph_store' in runtime.context:
-            graph_store = runtime.context['graph_store']
+        if hasattr(runtime.context, 'graph_store'):
+            graph_store = runtime.context.graph_store
             logger.debug("Found graph store in runtime context")
         else:
             logger.warning("No graph store found in runtime context, using mock resolution")

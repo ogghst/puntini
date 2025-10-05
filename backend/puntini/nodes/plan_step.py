@@ -138,7 +138,7 @@ def plan_step(state: "State", config: Optional[RunnableConfig] = None, runtime: 
             logger.error("LLM not found in runtime context")
             raise ValidationError("LLM not configured in graph context")
 
-        llm : BaseChatModel = runtime.context['llm']
+        llm : BaseChatModel = runtime.context.llm
 
         structured_llm = llm.with_structured_output(StepPlan)
         
