@@ -14,15 +14,18 @@ from langgraph.runtime import Runtime, get_runtime
 from langchain_core.language_models.chat_models import BaseChatModel
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 from ..models.intent_schemas import IntentSpec, ResolvedGoalSpec, ResolvedEntity, Ambiguity
 from ..models.goal_schemas import GoalComplexity
 from ..models.errors import ValidationError
 from ..logging import get_logger
-from .message import ParseGoalResponse, ParseGoalResult, Artifact, Failure, ErrorContext
+from .streamlined_message import ParseGoalResponse, ParseGoalResult, Artifact, Failure, ErrorContext
+
+# Initialize logger for this module
+logger = get_logger(__name__)
 
 
-def resolve_entities(state: "State", config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> ParseGoalResponse:
+def resolve_entities(state: "SimplifiedState", config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> ParseGoalResponse:
     """Resolve entities with graph context (Phase 2 of two-phase parsing).
     
     This node takes the parsed intent from Phase 1 and resolves entities
@@ -49,8 +52,7 @@ def resolve_entities(state: "State", config: Optional[RunnableConfig] = None, ru
         This implements the standard knowledge graph pipeline:
         Raw Text → Entity Mentions → Entity Candidates → Entity Linking → Resolved Entities
     """
-    # Initialize logger for this module
-    logger = get_logger(__name__)
+
     
     # Access state attributes - handle both dict and object access
     logger.debug(f"State type: {type(state)}, State value: {state}")
@@ -379,6 +381,7 @@ def _get_graph_context(graph_store, mentioned_entities: List[str]) -> str:
         
         return "\n".join(context_parts)
     except Exception:
+        logger.error("Error retrieving graph context", extra={"error": str(e)})
         return "Error retrieving graph context"
 
 

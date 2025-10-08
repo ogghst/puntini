@@ -9,12 +9,12 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.runtime import Runtime
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
-from .message import EscalateResponse, EscalateContext
+    from ..orchestration.simplified_state import SimplifiedState
+from .streamlined_message import EscalateResponse, EscalateContext, EscalateResult
 
 
 def escalate(
-    state: "State",
+    state: "SimplifiedState",
     config: Optional[RunnableConfig] = None,
     runtime: Optional[Runtime] = None
 ) -> EscalateResponse:
@@ -64,7 +64,8 @@ def escalate(
     # Create escalation response
     response = EscalateResponse(
         current_step="answer",
-        escalation_context=escalation_context
+        escalation_context=escalation_context,
+        result=EscalateResult(status="success")
     )
     
     return response

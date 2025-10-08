@@ -14,6 +14,15 @@
             "args": "run --verbose --goal 'Create a project called Test, to create an open list manager software. This project is owned by Joe Pesci, the Operational Excellence Manager at ACME Industries.'"
         },
         {
+            "name": "Puntini CLI Simplified",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "program": "cli_simplified.py",
+            "console": "integratedTerminal",
+            "args": "run --verbose --goal 'Create a project called Test, to create an open list manager software. This project is owned by Joe Pesci, the Operational Excellence Manager at ACME Industries.'"
+        },
+        {
             "name": "Puntini API",
             "type": "debugpy",
             "request": "launch",

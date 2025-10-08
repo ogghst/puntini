@@ -154,6 +154,12 @@ class EscalateContext(BaseModel):
     recommended_action: str = Field(description="Recommended action")
 
 
+# Specific EscalateResponse class with escalation_context
+class EscalateResponse(GenericNodeResponse[EscalateResult]):
+    """Response from escalate node with escalation context."""
+    escalation_context: Optional[EscalateContext] = Field(default=None, description="Escalation context")
+
+
 # Type aliases for specific node responses using the generic wrapper
 ParseGoalResponse = GenericNodeResponse[ParseGoalResult]
 PlanStepResponse = GenericNodeResponse[PlanStepResult]
@@ -161,7 +167,7 @@ ExecuteToolResponse = GenericNodeResponse[ExecuteToolResult]
 EvaluateResponse = GenericNodeResponse[EvaluateResult]
 DiagnoseResponse = GenericNodeResponse[DiagnoseResult]
 AnswerResponse = GenericNodeResponse[AnswerResult]
-EscalateResponse = GenericNodeResponse[EscalateResult]
+# EscalateResponse is defined above with escalation_context field
 
 
 # For backward compatibility - union of all possible responses

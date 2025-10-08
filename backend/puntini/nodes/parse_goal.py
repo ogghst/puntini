@@ -13,14 +13,14 @@ from langgraph.runtime import Runtime, get_runtime
 from langchain_core.language_models.chat_models import BaseChatModel
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 from ..models.goal_schemas import GoalSpec, GoalComplexity
 from ..models.errors import ValidationError
 from ..logging import get_logger
-from .message import ParseGoalResponse, ParseGoalResult, Artifact, Failure, ErrorContext
+from .streamlined_message import ParseGoalResponse, ParseGoalResult, Artifact, Failure, ErrorContext
 
 
-def parse_goal(state: "State", config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> ParseGoalResponse:
+def parse_goal(state: "SimplifiedState", config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> ParseGoalResponse:
     """Parse the goal and extract structured information using LLM.
     
     This node extracts the goal, constraints, and domain hints from

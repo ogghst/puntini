@@ -15,14 +15,14 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langgraph.types import interrupt
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 from ..models.intent_schemas import ResolvedGoalSpec, Ambiguity, ResolvedEntity
 from ..models.errors import ValidationError
 from ..logging import get_logger
-from .message import ParseGoalResponse, ParseGoalResult, Artifact, Failure, ErrorContext
+from .streamlined_message import ParseGoalResponse, ParseGoalResult, Artifact, Failure, ErrorContext
 
 
-def disambiguate(state: "State", config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> ParseGoalResponse:
+def disambiguate(state: "SimplifiedState", config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> ParseGoalResponse:
     """Handle ambiguous entity references with user interaction.
     
     This node presents ambiguous entity references to the user and waits

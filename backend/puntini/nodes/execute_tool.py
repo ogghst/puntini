@@ -12,20 +12,19 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.runtime import Runtime
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 
 from ..interfaces.tool_registry import ToolRegistry
 from ..models.errors import ValidationError, NotFoundError, ToolError
 from ..logging import get_logger
 # Import both legacy and streamlined architectures for gradual migration
-from .message import ExecuteToolResponse, ExecuteToolResult, Artifact, ErrorContext
-from .streamlined_message import GenericNodeResponse, ExecuteToolResult as StreamlinedExecuteToolResult
+from .streamlined_message import ExecuteToolResponse, ExecuteToolResult, Artifact, ErrorContext
 
 logger = get_logger(__name__)
 
 
 def execute_tool(
-    state: "State", 
+    state: "SimplifiedState", 
     config: Optional[RunnableConfig] = None, 
     runtime: Optional[Runtime] = None
 ) -> ExecuteToolResponse:

@@ -9,12 +9,12 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.runtime import Runtime
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
-from .message import AnswerResponse, AnswerResult
+    from ..orchestration.simplified_state import SimplifiedState
+from .streamlined_message import AnswerResponse, AnswerResult
 
 
 def answer(
-    state: "State",
+    state: "SimplifiedState",
     config: Optional[RunnableConfig] = None,
     runtime: Optional[Runtime] = None
 ) -> AnswerResponse:

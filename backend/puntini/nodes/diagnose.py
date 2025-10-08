@@ -9,12 +9,12 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.runtime import Runtime
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
-from .message import DiagnoseResponse, DiagnoseResult, Artifact, ErrorContext
+    from ..orchestration.simplified_state import SimplifiedState
+from .streamlined_message import DiagnoseResponse, DiagnoseResult, Artifact, ErrorContext
 
 
 def diagnose(
-    state: "State",
+    state: "SimplifiedState",
     config: Optional[RunnableConfig] = None,
     runtime: Optional[Runtime] = None
 ) -> DiagnoseResponse:

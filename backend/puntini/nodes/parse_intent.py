@@ -14,15 +14,15 @@ from langgraph.runtime import Runtime, get_runtime
 from langchain_core.language_models.chat_models import BaseChatModel
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 from ..models.intent_schemas import IntentSpec, IntentType
 from ..models.goal_schemas import GoalComplexity
 from ..models.errors import ValidationError
 from ..logging import get_logger
-from .message import ParseGoalResponse, ParseGoalResult, Artifact, Failure, ErrorContext
+from .streamlined_message import ParseGoalResponse, ParseGoalResult, Artifact, Failure, ErrorContext
 
 
-def parse_intent(state: "State", config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> ParseGoalResponse:
+def parse_intent(state: "SimplifiedState", config: Optional[RunnableConfig] = None, runtime: Optional[Runtime] = None) -> ParseGoalResponse:
     """Parse minimal intent without graph context (Phase 1 of two-phase parsing).
     
     This node extracts only the essential intent information without attempting

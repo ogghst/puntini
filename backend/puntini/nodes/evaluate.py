@@ -14,15 +14,15 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 from ..logging import get_logger
 from ..models.errors import ValidationError, AgentError
 from ..models.goal_schemas import TodoStatus
-from .message import EvaluateResponse, EvaluateResult, Failure, Artifact, ErrorContext, ExecuteToolResponse
+from .streamlined_message import EvaluateResponse, EvaluateResult, Failure, Artifact, ErrorContext, ExecuteToolResponse
 
 
 def evaluate(
-    state: "State", 
+    state: "SimplifiedState", 
     config: Optional[RunnableConfig] = None, 
     runtime: Optional[Runtime] = None
 ) -> EvaluateResponse:
@@ -61,46 +61,43 @@ def evaluate(
     
     logger.info(f"Evaluating state: {state}")
     
-    # Get current step result from execute_tool_response (merged node from Phase 4)
+    # Get current step result from result field (simplified state architecture)
     if isinstance(state, dict):
-        execute_tool_response = state.get("execute_tool_response")
+        step_result = state.get("result")
     else:
-        execute_tool_response = getattr(state, "execute_tool_response", None)
-    if not execute_tool_response:
-        # Also check for legacy call_tool_response for backward compatibility
-        if isinstance(state, dict):
-            execute_tool_response = state.get("call_tool_response")
-        else:
-            execute_tool_response = getattr(state, "call_tool_response", None)
-        
-        if not execute_tool_response:
-            error_msg = "No execute_tool_response found in state for evaluation (neither execute_tool_response nor legacy call_tool_response)"
-            logger.error(error_msg)
-            return EvaluateResponse(
-                current_step="diagnose",
-                result=EvaluateResult(
-                    status="error",
-                    error=error_msg,
-                    error_type="validation_error",
-                    retry_count=state.get("retry_count", 0) if isinstance(state, dict) else getattr(state, "retry_count", 0),
-                    max_retries=state.get("max_retries", 3) if isinstance(state, dict) else getattr(state, "max_retries", 3),
-                    evaluation_timestamp=datetime.utcnow().isoformat(),
-                    decision_reason="Missing execute_tool_response for evaluation"
-                ),
-                error_context=ErrorContext(
-                    type="validation_error",
-                    message=error_msg,
-                    details={"missing_component": "execute_tool_response"}
-                )
-            )
+        step_result = getattr(state, "result", None)
     
-    # Extract result information - using ExecuteToolResponse structure
-    result = execute_tool_response.result
-    tool_name = result.tool_name if hasattr(result, 'tool_name') else None
-    execution_status = result.status if hasattr(result, 'status') else getattr(result, 'status', 'unknown')
-    execution_time = result.execution_time if hasattr(result, 'execution_time') else getattr(result, 'execution_time', 0.0)
-    error = result.error if hasattr(result, 'error') else getattr(result, 'error', None)
-    error_type = result.error_type if hasattr(result, 'error_type') else getattr(result, 'error_type', None)
+    if not step_result:
+        error_msg = "No result found in state for evaluation"
+        logger.error(error_msg)
+        return EvaluateResponse(
+            current_step="diagnose",
+            result=EvaluateResult(
+                status="error",
+                error=error_msg,
+                error_type="validation_error",
+                retry_count=state.get("retry_count", 0) if isinstance(state, dict) else getattr(state, "retry_count", 0),
+                max_retries=state.get("max_retries", 3) if isinstance(state, dict) else getattr(state, "max_retries", 3),
+                evaluation_timestamp=datetime.utcnow().isoformat(),
+                decision_reason="Missing result for evaluation"
+            ),
+            error_context=ErrorContext(
+                type="validation_error",
+                message=error_msg,
+                details={"missing_component": "result"}
+            )
+        )
+    
+    # Extract result information from simplified state result structure
+    execution_status = step_result.get("status", "unknown")
+    tool_name = step_result.get("tool_name")
+    execution_result = step_result.get("result", {})
+    error = step_result.get("error")
+    error_type = step_result.get("error_type")
+    
+    # Handle case where execution_result might be None
+    if execution_result is None:
+        execution_result = {}
     
     # If tool_name is still None, try to get it from the tool_signature in state
     if not tool_name and isinstance(state, dict):
@@ -173,15 +170,37 @@ def evaluate(
         if runtime is None:
             try:
                 runtime = get_runtime()
+                logger.debug(f"Got runtime: {type(runtime)}")
+                if hasattr(runtime, 'context'):
+                    logger.debug(f"Runtime context type: {type(runtime.context)}")
+                    logger.debug(f"Runtime context keys: {runtime.context.keys() if hasattr(runtime.context, 'keys') else 'No keys method'}")
             except Exception as e:
                 logger.error(f"Failed to get runtime context: {e}")
-                return _fallback_evaluation(state, result, retry_count, max_retries, f"Runtime error: {e}")
+                return _fallback_evaluation(state, step_result, retry_count, max_retries, f"Runtime error: {e}")
         
-        if not hasattr(runtime, 'context') or 'llm' not in runtime.context:
-            logger.warning("LLM not available in runtime context, using fallback evaluation")
-            return _fallback_evaluation(state, result, retry_count, max_retries)
+        if not hasattr(runtime, 'context'):
+            logger.warning("Runtime has no context attribute, using fallback evaluation")
+            return _fallback_evaluation(state, step_result, retry_count, max_retries)
         
-        llm: BaseChatModel = runtime.context.llm
+        logger.debug(f"Runtime context type: {type(runtime.context)}")
+        
+        # Check if context is a GraphContextSchema
+        from ..orchestration.simplified_graph import GraphContextSchema
+        if isinstance(runtime.context, GraphContextSchema):
+            logger.debug("Context is GraphContextSchema, accessing llm attribute")
+            if not hasattr(runtime.context, 'llm'):
+                logger.warning("GraphContextSchema has no llm attribute, using fallback evaluation")
+                return _fallback_evaluation(state, step_result, retry_count, max_retries)
+            llm = runtime.context.llm
+        elif isinstance(runtime.context, dict):
+            logger.debug("Context is dict, checking for llm key")
+            if 'llm' not in runtime.context:
+                logger.warning("Dict context has no llm key, using fallback evaluation")
+                return _fallback_evaluation(state, step_result, retry_count, max_retries)
+            llm = runtime.context['llm']
+        else:
+            logger.warning(f"Unknown context type: {type(runtime.context)}, using fallback evaluation")
+            return _fallback_evaluation(state, step_result, retry_count, max_retries)
         
         # Define structured output schema for evaluation
         class EvaluationDecision(BaseModel):
@@ -258,7 +277,7 @@ Evaluate this result and determine the next action.""")
         evaluation_decision: EvaluationDecision = evaluation_chain.invoke({
             "tool_name": tool_name,
             "execution_status": execution_status,
-            "execution_time": execution_time if execution_time is not None else 0.0,
+            "execution_time": execution_result.get("execution_time", 0.0),
             "error": error or "None",
             "error_type": error_type or "None",
             "retry_count": retry_count,
@@ -273,7 +292,7 @@ Evaluate this result and determine the next action.""")
         todo_updated_description = None
         if evaluation_decision.decision == "advance" and execution_status == "success":
             # Mark corresponding todo as done in state
-            todo_updated_description = _mark_todo_done_in_state(state, tool_name, result)
+            todo_updated_description = _mark_todo_done_in_state(state, tool_name, execution_result)
             if todo_updated_description:
                 # Get updated todo list from state
                 if isinstance(state, dict):
@@ -375,11 +394,11 @@ Evaluate this result and determine the next action.""")
         logger.error(error_msg)
         
         # Fallback to rule-based evaluation
-        return _fallback_evaluation(state, result, retry_count, max_retries, error_msg)
+        return _fallback_evaluation(state, step_result, retry_count, max_retries, error_msg)
 
 
 def _fallback_evaluation(
-    state: "State", 
+    state: "SimplifiedState", 
     result: Dict[str, Any], 
     retry_count: int, 
     max_retries: int,
@@ -413,14 +432,14 @@ def _fallback_evaluation(
             for todo in todo_list
         )
     
-    # Handle both dict and CallToolResult objects
+    # Handle both dict and simplified state result structure
     if isinstance(result, dict):
         execution_status = result.get("status", "unknown")
         error = result.get("error")
         error_type = result.get("error_type")
         tool_name = result.get("tool_name", "unknown")
     else:
-        # CallToolResult Pydantic object
+        # Result Pydantic object
         execution_status = getattr(result, "status", "unknown")
         error = getattr(result, "error", None)
         error_type = getattr(result, "error_type", None)
@@ -509,7 +528,7 @@ def _fallback_evaluation(
     return evaluation_response
 
 
-def _mark_todo_done_in_state(state: "State", tool_name: str, result: Dict[str, Any]) -> Optional[str]:
+def _mark_todo_done_in_state(state: "SimplifiedState", tool_name: str, result: Dict[str, Any]) -> Optional[str]:
     """Mark a todo item as done in the state's todo list.
     
     Args:
@@ -651,7 +670,7 @@ def _is_todo_completed_by_tool(todo_description: str, tool_name: str, result: Di
     return False
 
 
-def _get_recent_failures(state: "State") -> str:
+def _get_recent_failures(state: "SimplifiedState") -> str:
     """Get recent failures for evaluation context.
     
     Args:
@@ -677,7 +696,7 @@ def _get_recent_failures(state: "State") -> str:
             error = failure.get("error", "unknown error")
             error_type = failure.get("error_type", "unknown")
             attempt = failure.get("attempt", 0)
-            failure_lines.append(f"- {failure.step} (attempt {failure.attempt}): {failure.error_type} - {failure.error}")
+            failure_lines.append(f"- {step} (attempt {attempt}): {error_type} - {error}")
     
     return "\n".join(failure_lines) if failure_lines else "No recent failures"
 

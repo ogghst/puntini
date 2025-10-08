@@ -201,7 +201,7 @@ class TestStreamlinedMessageArchitecture:
         assert failure.step == "execute_tool"
         assert failure.error == "Timeout error"
         assert failure.attempt == 2
-        assert failure.error_type == "network_error
+        assert failure.error_type == "network_error"
     
     def test_error_context_model(self):
         """Test ErrorContext model has correct fields."""

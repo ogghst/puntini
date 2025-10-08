@@ -24,7 +24,7 @@ from operator import add
 
 from ..models.goal_schemas import TodoItem
 from ..models.intent_schemas import IntentSpec, ResolvedGoalSpec
-from ..nodes.message import Artifact, Failure, ErrorContext, EscalateContext
+from ..nodes.streamlined_message import Artifact, Failure, ErrorContext, EscalateContext
 
 T = TypeVar('T')
 

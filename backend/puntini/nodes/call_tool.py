@@ -10,7 +10,7 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.runtime import Runtime
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 from ..interfaces.tool_registry import ToolRegistry
 from ..models.errors import ValidationError, NotFoundError, ToolError
 from ..logging import get_logger
@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 
 
 def call_tool(
-    state: "State", 
+    state: "SimplifiedState", 
     config: Optional[RunnableConfig] = None, 
     runtime: Optional[Runtime] = None
 ) -> CallToolResponse:
