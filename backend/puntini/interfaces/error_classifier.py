@@ -7,7 +7,7 @@ of failures and determination of appropriate remediation strategies.
 from typing import Any, Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 
 
 class ErrorClassifier(Protocol):

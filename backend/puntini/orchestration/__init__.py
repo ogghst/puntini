@@ -5,15 +5,14 @@ including the state graph, state management, reducers, and checkpointer
 functionality. It handles the overall workflow and state transitions.
 """
 
-from .graph import (
-    create_agent_graph,
-    create_agent_with_checkpointer,
+from .simplified_graph import (
+    create_simplified_agent_graph,
+    create_simplified_production_agent,
     parse_intent,
     resolve_entities,
     disambiguate,
     plan_step,
-    route_tool,
-    call_tool,
+    execute_tool,
     evaluate,
     diagnose,
     escalate,
@@ -21,22 +20,25 @@ from .graph import (
     route_after_parse_intent,
     route_after_resolve_entities,
     route_after_disambiguate,
-    route_after_evaluate,
     route_after_diagnose,
 )
-from .state import (
-    State,
-    add_to_list,
-    update_dict,
-    increment_counter,
-    set_value,
+from .simplified_state import (
+    SimplifiedState,
+    create_simplified_state,
+    extract_node_context,
+    update_state_with_node_output,
 )
-from .reducers import (
-    add_to_list as reducer_add_to_list,
-    update_dict as reducer_update_dict,
-    increment_counter as reducer_increment_counter,
-    set_value as reducer_set_value,
-    append_to_string,
+from .minimal_state import (
+    MinimalState,
+    NodeInput,
+    ParseGoalInput,
+    PlanStepInput,
+    ResolveEntitiesInput,
+    ExecuteToolInput,
+    EvaluateInput,
+    DiagnoseInput,
+    EscalateInput,
+    AnswerInput,
 )
 from .checkpointer import (
     create_checkpointer,
@@ -45,16 +47,15 @@ from .checkpointer import (
 
 __all__ = [
     # Graph orchestration
-    "create_agent_graph",
-    "create_agent_with_checkpointer",
+    "create_simplified_agent_graph",
+    "create_simplified_production_agent",
     
     # Node functions
     "parse_intent",
     "resolve_entities",
     "disambiguate",
     "plan_step",
-    "route_tool",
-    "call_tool",
+    "execute_tool",
     "evaluate",
     "diagnose",
     "escalate",
@@ -64,22 +65,23 @@ __all__ = [
     "route_after_parse_intent",
     "route_after_resolve_entities",
     "route_after_disambiguate",
-    "route_after_evaluate", 
     "route_after_diagnose",
     
     # State management
-    "State",
-    "add_to_list",
-    "update_dict",
-    "increment_counter",
-    "set_value",
-    
-    # Reducers
-    "reducer_add_to_list",
-    "reducer_update_dict",
-    "reducer_increment_counter",
-    "reducer_set_value",
-    "append_to_string",
+    "SimplifiedState",
+    "create_simplified_state",
+    "extract_node_context",
+    "update_state_with_node_output",
+    "MinimalState",
+    "NodeInput",
+    "ParseGoalInput",
+    "PlanStepInput",
+    "ResolveEntitiesInput",
+    "ExecuteToolInput",
+    "EvaluateInput",
+    "DiagnoseInput",
+    "EscalateInput",
+    "AnswerInput",
     
     # Checkpointing
     "create_checkpointer",

@@ -21,6 +21,7 @@ This addresses the critical problems:
 
 from typing import Any, Dict, List, Optional, Union
 from dataclasses import dataclass
+from pydantic import BaseModel
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.types import Command
@@ -36,7 +37,7 @@ from .minimal_state import (
 from .checkpointer import create_checkpointer, get_checkpoint_config
 from ..models.goal_schemas import TodoItem
 from ..models.intent_schemas import IntentSpec, ResolvedGoalSpec
-from ..nodes.message import Artifact, Failure, ErrorContext, EscalateContext
+from ..nodes.streamlined_message import Artifact, Failure, ErrorContext, EscalateContext
 from ..logging.logger import get_logger
 
 logger = get_logger(__name__)
@@ -111,8 +112,8 @@ def parse_intent(state: SimplifiedState, config: Optional[RunnableConfig] = None
             "current_step": response.current_step,
             "current_attempt": response.current_attempt,
             "progress": [f"Parsed intent: {response.result.parsed_goal.get('intent_type', 'unknown') if response.result and response.result.parsed_goal else 'unknown'}"],
-            "artifacts": response.artifacts,
-            "failures": response.failures,
+            "artifacts": [artifact.model_dump() for artifact in response.artifacts],
+            "failures": [failure.model_dump() for failure in response.failures],
             "result": response.result.model_dump() if response.result else None
         },
         "parse_intent"
@@ -153,8 +154,8 @@ def resolve_entities(state: SimplifiedState, config: Optional[RunnableConfig] = 
             "current_step": response.current_step,
             "current_attempt": response.current_attempt,
             "progress": [f"Resolved entities: {len(response.result.entities) if response.result and hasattr(response.result, 'entities') else 0} entities"],
-            "artifacts": response.artifacts,
-            "failures": response.failures,
+            "artifacts": [artifact.model_dump() for artifact in response.artifacts],
+            "failures": [failure.model_dump() for failure in response.failures],
             "result": response.result.model_dump() if response.result else None
         },
         "resolve_entities"
@@ -185,8 +186,8 @@ def disambiguate(state: SimplifiedState, config: Optional[RunnableConfig] = None
             "current_step": response.current_step,
             "current_attempt": response.current_attempt,
             "progress": [f"Disambiguation completed: {response.result.status if response.result else 'unknown'}"],
-            "artifacts": response.artifacts,
-            "failures": response.failures,
+            "artifacts": [artifact.model_dump() for artifact in response.artifacts],
+            "failures": [failure.model_dump() for failure in response.failures],
             "result": response.result.model_dump() if response.result else None
         },
         "disambiguate"
@@ -228,15 +229,15 @@ def plan_step(state: SimplifiedState, config: Optional[RunnableConfig] = None, r
         {
             "current_step": response.current_step,
             "progress": [f"Planned step: {response.tool_signature.get('tool_name', 'unknown') if response.tool_signature else 'unknown'}"],
-            "artifacts": response.artifacts,
-            "failures": response.failures,
+            "artifacts": [artifact.model_dump() for artifact in response.artifacts],
+            "failures": [failure.model_dump() for failure in response.failures],
             "result": response.result.model_dump() if response.result else None,
             "tool_signature": response.tool_signature
         },
         "plan_step"
     )
-    logger.debug(f"Updated state tool_signature: {updated_state.get('tool_signature', 'NOT_FOUND')}")
-    logger.debug(f"Updated state keys: {list(updated_state.keys())}")
+    logger.debug(f"Updated state tool_signature: {updated_state.tool_signature}")
+    logger.debug(f"Updated state keys: {list(updated_state.model_dump().keys())}")
     return updated_state
 
 
@@ -267,7 +268,7 @@ def execute_tool(state: SimplifiedState, config: Optional[RunnableConfig] = None
     context_data = extract_node_context(state, "execute_tool")
     
     # Get tool signature from state (set by plan_step)
-    tool_signature = state.get("tool_signature", {})
+    tool_signature = state.tool_signature
     logger.debug(f"Tool signature from state: {tool_signature}")
     
     node_context = ExecuteToolInput(
@@ -410,10 +411,10 @@ def evaluate(state: SimplifiedState, config: Optional[RunnableConfig] = None, ru
     state_updates = {
         "current_step": response.current_step,
         "progress": [f"Evaluation completed: {response.result.next_action if response.result else 'unknown'}"],
-        "artifacts": response.artifacts,
-        "failures": response.failures,
+        "artifacts": [artifact.model_dump() for artifact in response.artifacts],
+        "failures": [failure.model_dump() for failure in response.failures],
         "result": response.result.model_dump() if response.result else None,
-        "retry_count": response.result.retry_count if response.result else state.get("retry_count", 0),
+        "retry_count": response.result.retry_count if response.result else state.retry_count,
         "todo_list": response.todo_list
     }
     
@@ -457,8 +458,8 @@ def diagnose(state: SimplifiedState, config: Optional[RunnableConfig] = None, ru
         {
             "current_step": response.current_step,
             "progress": [f"Diagnosis completed: {response.error_context.type if response.error_context else 'unknown'} error"],
-            "artifacts": response.artifacts,
-            "failures": response.failures,
+            "artifacts": [artifact.model_dump() for artifact in response.artifacts],
+            "failures": [failure.model_dump() for failure in response.failures],
             "result": response.result.model_dump() if response.result else None,
             "error_context": response.error_context.model_dump() if response.error_context else None
         },
@@ -497,8 +498,8 @@ def escalate(state: SimplifiedState, config: Optional[RunnableConfig] = None, ru
     state_updates = {
         "current_step": response.current_step,
         "progress": [f"Escalation: {node_context.escalation_reason}"],
-        "artifacts": response.artifacts,
-        "failures": response.failures,
+        "artifacts": [artifact.model_dump() for artifact in response.artifacts],
+        "failures": [failure.model_dump() for failure in response.failures],
         "result": response.result.model_dump() if response.result else None,
         "escalation_context": response.escalation_context.model_dump() if response.escalation_context else None
     }
@@ -547,8 +548,8 @@ def answer(state: SimplifiedState, config: Optional[RunnableConfig] = None, runt
         {
             "current_step": response.current_step,
             "progress": [f"Final answer: {node_context.completion_status}"],
-            "artifacts": response.artifacts,
-            "failures": response.failures,
+            "artifacts": [artifact.model_dump() for artifact in response.artifacts],
+            "failures": [failure.model_dump() for failure in response.failures],
             "result": response.result.model_dump() if response.result else None
         },
         "answer"
@@ -565,7 +566,7 @@ def route_after_parse_intent(state: SimplifiedState) -> str:
     Returns:
         The next node to execute
     """
-    result = state.get("result", {})
+    result = state.result
     if not result or result.get("status") == "error":
         return "diagnose"
     
@@ -589,7 +590,7 @@ def route_after_resolve_entities(state: SimplifiedState) -> str:
     Returns:
         The next node to execute
     """
-    result = state.get("result", {})
+    result = state.result
     if not result or result.get("status") == "error":
         return "diagnose"
     
@@ -609,7 +610,7 @@ def route_after_disambiguate(state: SimplifiedState) -> str:
     Returns:
         The next node to execute
     """
-    result = state.get("result", {})
+    result = state.result
     if not result or result.get("status") == "error":
         return "diagnose"
     
@@ -625,8 +626,8 @@ def route_after_diagnose(state: SimplifiedState) -> str:
     Returns:
         The next node to execute
     """
-    error_context = state.get("error_context", {})
-    error_type = error_context.get("type", "unknown")
+    error_context = state.result.get("error_context") if state.result else {}
+    error_type = error_context.get("type", "unknown") if error_context else "unknown"
     
     if error_type == "random":
         return "plan_step"  # Retry

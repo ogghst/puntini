@@ -56,12 +56,9 @@ def parse_intent(state: "SimplifiedState", config: Optional[RunnableConfig] = No
     # Access state attributes - handle both dict and object access
     logger.debug(f"State type: {type(state)}, State value: {state}")
     
-    if isinstance(state, dict):
-        goal = state.get("goal")
-        current_attempt = state.get("current_attempt", 1)
-    else:
-        goal = getattr(state, "goal", None)
-        current_attempt = getattr(state, "current_attempt", 1)
+    # For Pydantic model, access attributes directly
+    goal = state.goal
+    current_attempt = state.current_attempt
     
     # Validate required fields
     if not isinstance(goal, str):

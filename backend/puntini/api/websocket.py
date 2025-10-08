@@ -43,8 +43,9 @@ from ..agents.agent_factory import create_simple_agent, create_agent_with_compon
 from ..context.context_manager_factory import create_simple_context_manager
 from ..tools.tool_setup import create_configured_tool_registry
 from ..observability.tracer_factory import create_console_tracer
-from ..orchestration.state_schema import State
+from ..orchestration.simplified_state import SimplifiedState
 from ..models.goal_schemas import GoalSpec
+from ..orchestration.simplified_state import SimplifiedState
 
 
 class WebSocketManager:
@@ -414,7 +415,7 @@ class WebSocketManager:
                 return  # Connection closed, stop processing
             
             # Create initial state for agent
-            from ..orchestration.state_schema import State
+            from ..orchestration.simplified_state import SimplifiedState
             from ..agents.agent_factory import create_initial_state
             
             # Get components from the agent
@@ -541,7 +542,7 @@ class WebSocketManager:
             self.logger.error(f"Error handling agent chunk for session {session_id}: {e}")
             
             
-    async def _handle_values(self, session_id: str, data: State) -> None:
+    async def _handle_values(self, session_id: str, data: SimplifiedState) -> None:
         """Handle agent values.
         
         Args:

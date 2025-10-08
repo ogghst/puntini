@@ -6,7 +6,7 @@ for managing context preparation and progressive disclosure.
 
 from typing import Any, Dict, List
 from ..interfaces.context_manager import ContextManager, ModelInput
-from ..orchestration.state_schema import State
+from ..orchestration.simplified_state import SimplifiedState
 
 
 class SimpleContextManager:
@@ -24,7 +24,7 @@ class SimpleContextManager:
         """
         self._config = config or {}
     
-    def prepare_minimal_context(self, state: State) -> ModelInput:
+    def prepare_minimal_context(self, state: SimplifiedState) -> ModelInput:
         """Prepare minimal context for the first attempt.
 
         Args:
@@ -39,7 +39,7 @@ class SimpleContextManager:
             "available_tools": ["add_node", "add_edge", "cypher_qa"]
         }
     
-    def add_error_context(self, state: State, error: Dict[str, Any]) -> ModelInput:
+    def add_error_context(self, state: SimplifiedState, error: Dict[str, Any]) -> ModelInput:
         """Add error context for the second attempt.
 
         Args:
@@ -54,7 +54,7 @@ class SimpleContextManager:
         base_context["retry_count"] = state.get("retry_count", 0)
         return base_context
     
-    def add_historical_context(self, state: State) -> ModelInput:
+    def add_historical_context(self, state: SimplifiedState) -> ModelInput:
         """Add historical context for the third attempt.
 
         Args:
@@ -68,7 +68,7 @@ class SimpleContextManager:
         base_context["failures"] = state.get("failures", [])
         return base_context
     
-    def record_failure(self, state: State, error: Dict[str, Any]) -> State:
+    def record_failure(self, state: SimplifiedState, error: Dict[str, Any]) -> SimplifiedState:
         """Record a failure in the agent state.
 
         Args:
@@ -82,7 +82,7 @@ class SimpleContextManager:
         failures.append(error)
         return {**state, "failures": failures}
     
-    def advance_step(self, state: State, result: Dict[str, Any]) -> State:
+    def advance_step(self, state: SimplifiedState, result: Dict[str, Any]) -> SimplifiedState:
         """Advance to the next step in the agent's execution.
 
         Args:
@@ -96,7 +96,7 @@ class SimpleContextManager:
         progress.append(f"Step completed: {result.get('status', 'unknown')}")
         return {**state, "progress": progress}
     
-    def is_complete(self, state: State) -> bool:
+    def is_complete(self, state: SimplifiedState) -> bool:
         """Check if the agent's goal has been completed.
 
         Args:
@@ -125,7 +125,7 @@ class ProgressiveContextManager(SimpleContextManager):
         self._max_attempts = config.get("max_attempts", 3)
         self._disclosure_levels = config.get("disclosure_levels", ["minimal", "error", "historical"])
     
-    def prepare_minimal_context(self, state: State) -> ModelInput:
+    def prepare_minimal_context(self, state: SimplifiedState) -> ModelInput:
         """Prepare minimal context for the first attempt.
 
         Args:
@@ -139,7 +139,7 @@ class ProgressiveContextManager(SimpleContextManager):
         context["attempt"] = 1
         return context
     
-    def add_error_context(self, state: State, error: Dict[str, Any]) -> ModelInput:
+    def add_error_context(self, state: SimplifiedState, error: Dict[str, Any]) -> ModelInput:
         """Add error context for the second attempt.
 
         Args:
@@ -154,7 +154,7 @@ class ProgressiveContextManager(SimpleContextManager):
         context["attempt"] = 2
         return context
     
-    def add_historical_context(self, state: State) -> ModelInput:
+    def add_historical_context(self, state: SimplifiedState) -> ModelInput:
         """Add historical context for the third attempt.
 
         Args:

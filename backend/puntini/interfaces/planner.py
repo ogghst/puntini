@@ -7,7 +7,7 @@ individual steps in the agent's execution flow.
 from typing import Any, Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 
 
 class Planner(Protocol):
@@ -17,7 +17,7 @@ class Planner(Protocol):
     execution flow based on the current state and available tools.
     """
     
-    def plan_next_step(self, state: "State") -> dict[str, Any]:
+    def plan_next_step(self, state: "SimplifiedState") -> dict[str, Any]:
         """Plan the next step in the agent's execution.
 
         Args:

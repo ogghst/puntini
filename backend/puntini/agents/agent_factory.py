@@ -6,8 +6,8 @@ agent with all its dependencies configured.
 
 from typing import Any, Dict
 from langgraph.graph import StateGraph
-from ..orchestration.graph import create_agent_graph, create_agent_with_checkpointer
-from ..orchestration.state_schema import State
+from ..orchestration.simplified_graph import create_simplified_agent_graph
+from ..orchestration.simplified_state import SimplifiedState
 from ..interfaces.graph_store import GraphStore
 from ..interfaces.context_manager import ContextManager
 from ..interfaces.tool_registry import ToolRegistry
@@ -56,9 +56,9 @@ def make_agent(cfg: AgentConfig) -> StateGraph:
     
     # Create the agent graph
     if checkpointer:
-        return create_agent_with_checkpointer(**cfg.checkpointer)
+        return create_simplified_production_agent(**cfg.checkpointer)
     else:
-        return create_agent_graph()
+        return create_simplified_agent_graph()
 
 
 def create_simple_agent() -> StateGraph:
@@ -96,8 +96,8 @@ def create_agent_with_components(
         with different configurations. Graph store is now managed per session.
     """
     # Create the agent graph
-    from ..orchestration.graph import create_agent_graph
-    graph = create_agent_graph()
+    from ..orchestration.simplified_graph import create_simplified_agent_graph
+    graph = create_simplified_agent_graph()
     
     # Store components in the graph for runtime access
     # This allows tools to access components through get_runtime()
@@ -117,7 +117,7 @@ def create_initial_state(
     tool_registry: ToolRegistry,
     tracer: Tracer,
     **kwargs
-) -> State:
+) -> SimplifiedState:
     """Create initial state with components.
     
     Args:
@@ -130,7 +130,7 @@ def create_initial_state(
     Returns:
         Initial state with all components. Graph store is managed per session.
     """
-    return State(
+    return SimplifiedState(
         goal=goal,
         plan=[],
         progress=[],

@@ -21,17 +21,18 @@ This addresses the critical problems:
 from typing import Any, Dict, List, Optional, Union
 from typing_extensions import TypedDict, Annotated
 from operator import add
+from pydantic import BaseModel, Field
 
 from .minimal_state import MinimalState, Services, NodeInput
 from ..models.goal_schemas import TodoItem
 from ..models.intent_schemas import IntentSpec, ResolvedGoalSpec
-from ..nodes.message import Artifact, Failure, ErrorContext, EscalateContext
+from ..nodes.streamlined_message import Artifact, Failure, ErrorContext, EscalateContext
 from ..logging.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-class SimplifiedState(TypedDict):
+class SimplifiedState(BaseModel):
     """Simplified state schema implementing the minimal state pattern.
     
     This state schema addresses the state bloat problem by keeping only
@@ -55,24 +56,28 @@ class SimplifiedState(TypedDict):
         tool_signature: Tool signature for execution
     """
     # Session and execution tracking
-    session_id: str
-    current_node: str
+    session_id: str = Field(default="default")
+    current_node: str = Field(default="start")
     
     # Core shared state
-    goal: str
-    messages: Annotated[List[str], add]
-    artifacts: Annotated[List[Dict[str, Any]], add]
-    failures: Annotated[List[Dict[str, Any]], add]
-    progress: Annotated[List[str], add]
-    todo_list: Annotated[List[Dict[str, Any]], add]
+    goal: str = Field(default="")
+    messages: List[Any] = Field(default_factory=list)
+    artifacts: List[Dict[str, Any]] = Field(default_factory=list)
+    failures: List[Dict[str, Any]] = Field(default_factory=list)
+    progress: List[str] = Field(default_factory=list)
+    todo_list: List[Dict[str, Any]] = Field(default_factory=list)
     
     # Execution control
-    retry_count: int
-    max_retries: int
-    result: Optional[Dict[str, Any]]
-    current_step: str
-    current_attempt: int
-    tool_signature: Optional[Dict[str, Any]]
+    retry_count: int = Field(default=0)
+    max_retries: int = Field(default=3)
+    result: Optional[Dict[str, Any]] = Field(default=None)
+    current_step: str = Field(default="start")
+    current_attempt: int = Field(default=1)
+    tool_signature: Optional[Dict[str, Any]] = Field(default=None)
+
+    class Config:
+        # Allow arbitrary types for compatibility with LangGraph
+        arbitrary_types_allowed = True
 
 
 # Type aliases for backward compatibility during migration
@@ -102,7 +107,7 @@ def create_simplified_state(
     """
     return SimplifiedState(
         session_id=session_id,
-        current_node="start",
+        current_node=kwargs.get("current_node", "start"),
         goal=goal,
         messages=kwargs.get("messages", []),
         artifacts=kwargs.get("artifacts", []),
@@ -134,24 +139,22 @@ def migrate_from_bloated_state(bloated_state: Dict[str, Any]) -> SimplifiedState
         data that should be in node contexts. Services are moved to context.
     """
     # Extract essential shared fields
-    essential_fields = {
-        "session_id": bloated_state.get("session_id", "default"),
-        "current_node": bloated_state.get("current_node", "start"),
-        "goal": bloated_state.get("goal", ""),
-        "messages": bloated_state.get("messages", []),
-        "artifacts": bloated_state.get("artifacts", []),
-        "failures": bloated_state.get("failures", []),
-        "progress": bloated_state.get("progress", []),
-        "todo_list": bloated_state.get("todo_list", []),
-        "retry_count": bloated_state.get("retry_count", 0),
-        "max_retries": bloated_state.get("max_retries", 3),
-        "result": bloated_state.get("result"),
-        "current_step": bloated_state.get("current_step", "start"),
-        "current_attempt": bloated_state.get("current_attempt", 1),
-        "tool_signature": bloated_state.get("tool_signature")
-    }
-    
-    return SimplifiedState(**essential_fields)
+    return SimplifiedState(
+        session_id=bloated_state.get("session_id", "default"),
+        current_node=bloated_state.get("current_node", "start"),
+        goal=bloated_state.get("goal", ""),
+        messages=bloated_state.get("messages", []),
+        artifacts=bloated_state.get("artifacts", []),
+        failures=bloated_state.get("failures", []),
+        progress=bloated_state.get("progress", []),
+        todo_list=bloated_state.get("todo_list", []),
+        retry_count=bloated_state.get("retry_count", 0),
+        max_retries=bloated_state.get("max_retries", 3),
+        result=bloated_state.get("result"),
+        current_step=bloated_state.get("current_step", "start"),
+        current_attempt=bloated_state.get("current_attempt", 1),
+        tool_signature=bloated_state.get("tool_signature")
+    )
 
 
 def extract_node_context(state: SimplifiedState, node_name: str) -> Dict[str, Any]:
@@ -171,54 +174,54 @@ def extract_node_context(state: SimplifiedState, node_name: str) -> Dict[str, An
         through the LangGraph context mechanism, not state.
     """
     context = {
-        "session_id": state["session_id"],
+        "session_id": state.session_id,
         "current_node": node_name,
-        "goal": state["goal"],
-        "retry_count": state["retry_count"],
-        "max_retries": state["max_retries"]
+        "goal": state.goal,
+        "retry_count": state.retry_count,
+        "max_retries": state.max_retries
     }
     
     # Add node-specific context based on node type
     if node_name == "parse_intent":
         context.update({
-            "raw_goal": state["goal"],
-            "previous_attempts": [f["message"] for f in state["failures"][-3:]]
+            "raw_goal": state.goal,
+            "previous_attempts": [f["message"] for f in state.failures[-3:]]
         })
     elif node_name == "resolve_entities":
         context.update({
-            "intent_spec": state.get("result", {}).get("parsed_goal"),
-            "graph_context": state.get("graph_context")
+            "intent_spec": state.result.get("parsed_goal") if state.result else None,
+            "graph_context": state.result.get("graph_context") if state.result else None
         })
     elif node_name == "plan_step":
         context.update({
-            "goal_spec": state.get("result"),
-            "intent_spec": state.get("result", {}).get("parsed_goal"),
-            "current_step_number": len(state["progress"]) + 1
+            "goal_spec": state.result,
+            "intent_spec": state.result.get("parsed_goal") if state.result else None,
+            "current_step_number": len(state.progress) + 1
         })
     elif node_name == "execute_tool":
         context.update({
-            "tool_signature": state.get("tool_signature"),
-            "execution_context": state.get("execution_context")
+            "tool_signature": state.tool_signature,
+            "execution_context": state.result.get("execution_context") if state.result else None
         })
     elif node_name == "evaluate":
         context.update({
-            "execution_result": state.get("result", {}),
-            "goal_completion_status": state.get("goal_complete", False)
+            "execution_result": state.result or {},
+            "goal_completion_status": state.result.get("goal_complete", False) if state.result else False
         })
     elif node_name == "diagnose":
         context.update({
-            "error_context": state.get("error_context"),
-            "failure_history": state["failures"][-5:]  # Last 5 failures
+            "error_context": state.result.get("error_context") if state.result else None,
+            "failure_history": state.failures[-5:]  # Last 5 failures
         })
     elif node_name == "escalate":
         context.update({
-            "escalation_context": state.get("escalation_context"),
-            "escalation_reason": state.get("escalation_reason", "unknown")
+            "escalation_context": state.result.get("escalation_context") if state.result else None,
+            "escalation_reason": state.result.get("escalation_reason", "unknown") if state.result else "unknown"
         })
     elif node_name == "answer":
         context.update({
-            "final_result": state.get("result", {}),
-            "completion_status": state.get("completion_status", "success")
+            "final_result": state.result or {},
+            "completion_status": state.result.get("completion_status", "success") if state.result else "success"
         })
     
     return context
@@ -245,32 +248,33 @@ def update_state_with_node_output(
         state schema definition.
     """
     # Create a copy of the state
-    updated_state = state.copy()
+    state_dict = state.model_dump()
     
     # Apply updates using reducers
     for key, value in node_output.items():
         logger.debug(f"Updating state key: {key} with value: {value}")
-        if key in updated_state:
+        if key in state_dict:
             # Apply reducer based on field type
             if key in ["messages", "artifacts", "failures", "progress", "todo_list"]:
                 # These fields use append reducers
-                current_value = updated_state.get(key, [])
+                current_value = state_dict.get(key, [])
                 if isinstance(current_value, list) and isinstance(value, list):
-                    updated_state[key] = current_value + value
+                    state_dict[key] = current_value + value
                 else:
-                    updated_state[key] = value
+                    state_dict[key] = value
             else:
                 # Direct assignment for other fields
-                updated_state[key] = value
+                state_dict[key] = value
         else:
             # Add new key
-            updated_state[key] = value
-        logger.debug(f"State after update for key {key}: {updated_state.get(key, 'NOT_FOUND')}")
+            state_dict[key] = value
+        logger.debug(f"State after update for key {key}: {state_dict.get(key, 'NOT_FOUND')}")
     
     # Update current node
-    updated_state["current_node"] = node_name
+    state_dict["current_node"] = node_name
     
-    return updated_state
+    # Create new SimplifiedState instance
+    return SimplifiedState(**state_dict)
 
 
 # Reducer functions for the simplified state

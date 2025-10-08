@@ -7,7 +7,7 @@ to human input and manages the human-in-the-loop workflow.
 from typing import Any, Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 
 
 class EscalationHandler(Protocol):
@@ -17,7 +17,7 @@ class EscalationHandler(Protocol):
     including interrupt handling and resume capabilities.
     """
     
-    def should_escalate(self, state: "State") -> bool:
+    def should_escalate(self, state: "SimplifiedState") -> bool:
         """Determine if escalation to human input is needed.
 
         Args:
@@ -33,7 +33,7 @@ class EscalationHandler(Protocol):
         """
         ...
     
-    def prepare_escalation_context(self, state: "State") -> dict[str, Any]:
+    def prepare_escalation_context(self, state: "SimplifiedState") -> dict[str, Any]:
         """Prepare context for human escalation.
 
         Args:
@@ -67,7 +67,7 @@ class EscalationHandler(Protocol):
         """
         ...
     
-    def resume_after_escalation(self, state: "State") -> "State":
+    def resume_after_escalation(self, state: "SimplifiedState") -> "SimplifiedState":
         """Resume agent execution after human escalation.
 
         Args:

@@ -108,7 +108,7 @@ def plan_step(state: "SimplifiedState", config: Optional[RunnableConfig] = None,
     # Get goal information from SimplifiedState
     # In SimplifiedState, the parsed goal information is stored in the result field
 
-    result = state.get("result")
+    result = state.result
     goal_spec = result.get("parsed_goal") if result else None
     
     if not goal_spec:
@@ -204,11 +204,11 @@ Plan the next step to move towards achieving this goal.""")
                
         # Get state attributes with proper handling
         if isinstance(state, dict):
-            progress = state.get("progress", [])
-            state_todo_list = state.get("todo_list", [])
+            progress = state.progress
+            state_todo_list = state.todo_list
         else:
-            progress = getattr(state, "progress", [])
-            state_todo_list = getattr(state, "todo_list", [])
+            progress = state.progress
+            state_todo_list = state.todo_list
         
         previous_steps = _get_previous_steps(state)
         todo_list = _format_todo_list_from_state(state_todo_list)
@@ -311,9 +311,9 @@ def _get_previous_steps(state) -> str:
         String describing previous steps.
     """
     if isinstance(state, dict):
-        progress = state.get("progress", [])
+        progress = state.progress
     else:
-        progress = getattr(state, "progress", [])
+        progress = state.progress
     if not progress:
         return "No previous steps"
     
@@ -401,13 +401,13 @@ def _create_fallback_plan(state: "SimplifiedState") -> PlanStepResponse:
     """
     # Handle both dict and object access
     if isinstance(state, dict):
-        goal = state.get("goal", "Unknown goal")
-        progress = state.get("progress", [])
-        artifacts = state.get("artifacts", [])
+        goal = state.goal
+        progress = state.progress
+        artifacts = state.artifacts
     else:
-        goal = getattr(state, "goal", "Unknown goal")
-        progress = getattr(state, "progress", [])
-        artifacts = getattr(state, "artifacts", [])
+        goal = state.goal
+        progress = state.progress
+        artifacts = state.artifacts
     
     # Check if we've already executed query_graph multiple times
     #TODO This infinite loop escape logic is not correct as it tied to specifi prompt request. find a more elegant way to detect execution loops.

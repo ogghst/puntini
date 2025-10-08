@@ -7,7 +7,7 @@ and progressive disclosure strategies for the agent's state management.
 from typing import Any, Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 
 
 class ModelInput(Protocol):
@@ -27,7 +27,7 @@ class ContextManager(Protocol):
     the current attempt and failure patterns.
     """
     
-    def prepare_minimal_context(self, state: "State") -> ModelInput:
+    def prepare_minimal_context(self, state: "SimplifiedState") -> ModelInput:
         """Prepare minimal context for the first attempt.
 
         Args:
@@ -42,7 +42,7 @@ class ContextManager(Protocol):
         """
         ...
     
-    def add_error_context(self, state: "State", error: dict) -> ModelInput:
+    def add_error_context(self, state: "SimplifiedState", error: dict) -> ModelInput:
         """Add error context for the second attempt.
 
         Args:
@@ -58,7 +58,7 @@ class ContextManager(Protocol):
         """
         ...
     
-    def add_historical_context(self, state: "State") -> ModelInput:
+    def add_historical_context(self, state: "SimplifiedState") -> ModelInput:
         """Add historical context for the third attempt.
 
         Args:
@@ -73,7 +73,7 @@ class ContextManager(Protocol):
         """
         ...
     
-    def record_failure(self, state: "State", error: dict) -> "State":
+    def record_failure(self, state: "SimplifiedState", error: dict) -> "SimplifiedState":
         """Record a failure in the agent state.
 
         Args:
@@ -89,7 +89,7 @@ class ContextManager(Protocol):
         """
         ...
     
-    def advance_step(self, state: "State", result: dict) -> "State":
+    def advance_step(self, state: "SimplifiedState", result: dict) -> "SimplifiedState":
         """Advance to the next step in the agent's execution.
 
         Args:
@@ -105,7 +105,7 @@ class ContextManager(Protocol):
         """
         ...
     
-    def is_complete(self, state: "State") -> bool:
+    def is_complete(self, state: "SimplifiedState") -> bool:
         """Check if the agent's goal has been completed.
 
         Args:

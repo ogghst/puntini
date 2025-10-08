@@ -7,7 +7,7 @@ of tools and normalization of their results.
 from typing import Any, Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..orchestration.state_schema import State
+    from ..orchestration.simplified_state import SimplifiedState
 
 
 class Executor(Protocol):
